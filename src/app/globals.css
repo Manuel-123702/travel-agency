@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Variables ────────────────────────────────────────────────────────── */
+:root {
+  --navy: #0F172A;
+  --navy-800: #1a2744;
+  --blue: #1E40AF;
+  --gold: #F59E0B;
+  --gold-light: #FCD34D;
+  --white: #FFFFFF;
+  --light-gray: #F8FAFC;
+  --text: #111827;
+}
+
+/* ── Reset ────────────────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background: var(--white);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ── Components ───────────────────────────────────────────────────────────── */
+@layer components {
+
+  /* Glass card — light version (on dark backgrounds) */
+  .glass {
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  /* Glass card — elevated version */
+  .glass-elevated {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Premium card */
+  .card-premium {
+    @apply bg-white rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300;
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+  /* Primary (gold) — UIVERSE shimmer style */
+  .btn-primary {
+    @apply relative overflow-hidden bg-gold text-navy font-heading font-black px-8 py-4 rounded-full;
+    @apply hover:shadow-2xl hover:shadow-gold/40 hover:-translate-y-0.5 active:scale-95;
+    @apply transition-all duration-300;
+  }
+
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-20deg);
+    animation: shimmer-sweep 3s infinite 1s;
+  }
+
+  /* Outline white */
+  .btn-outline {
+    @apply border-2 border-white text-white font-heading font-bold px-8 py-4 rounded-full;
+    @apply hover:bg-white hover:text-navy active:scale-95 transition-all duration-300;
+  }
+
+  /* Outline navy */
+  .btn-outline-navy {
+    @apply border-2 border-navy text-navy font-heading font-bold px-8 py-4 rounded-full;
+    @apply hover:bg-navy hover:text-white active:scale-95 transition-all duration-300;
+  }
+
+  /* Navy solid */
+  .btn-navy {
+    @apply bg-navy text-white font-heading font-bold px-8 py-4 rounded-full;
+    @apply hover:bg-blue-800 hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transition-all duration-300;
+  }
+
+  /* ── Typography ─────────────────────────────────────────────────────────── */
+  .section-title {
+    @apply font-heading font-black text-3xl md:text-4xl lg:text-5xl text-navy leading-tight;
+  }
+
+  .section-subtitle {
+    @apply font-body text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto;
+  }
+
+  .gold-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-gold to-yellow-500;
+  }
+
+  /* ── Backgrounds ────────────────────────────────────────────────────────── */
+  .gradient-bg {
+    background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #1E40AF 100%);
+  }
+
+  .gradient-gold {
+    background: linear-gradient(135deg, #F59E0B, #FCD34D, #D97706);
+  }
+
+  /* ── Section spacing ────────────────────────────────────────────────────── */
+  .section-padding {
+    @apply py-20 md:py-28;
+  }
+}
+
+/* ── Utilities ────────────────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ── Keyframes ────────────────────────────────────────────────────────────── */
+@keyframes shimmer-sweep {
+  0%   { left: -100%; }
+  60%  { left: 150%; }
+  100% { left: 150%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-8px) rotate(2deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  50%       { box-shadow: 0 0 20px 8px rgba(245, 158, 11, 0.15); }
+}
+
+@keyframes slide-up-fade {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-float       { animation: float 3s ease-in-out infinite; }
+.animate-float-slow  { animation: float-slow 5s ease-in-out infinite; }
+.animate-pulse-glow  { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-gradient    { animation: gradient-shift 4s ease infinite; background-size: 200% 200%; }
+
+/* ── Page Loader ──────────────────────────────────────────────────────────── */
+.page-loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #0F172A, #1E3A8A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+/* ── Custom Scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: #F8FAFC; }
+::-webkit-scrollbar-thumb  { background: linear-gradient(180deg, #F59E0B, #1E40AF); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #0F172A; }
+
+/* ── Prose (blog) ─────────────────────────────────────────────────────────── */
+.prose h1, .prose h2, .prose h3 {
+  font-family: 'Poppins', sans-serif;
+  color: var(--navy);
+}
+.prose a { color: var(--gold); text-decoration: underline; }
+.prose blockquote {
+  border-left: 4px solid var(--gold);
+  background: #fffbeb;
+  padding: 1rem 1.5rem;
+  border-radius: 0 0.75rem 0.75rem 0;
+}

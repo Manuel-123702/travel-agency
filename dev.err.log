@@ -1,0 +1,8 @@
+Failed to proxy http://localhost:3001/ [Error: socket hang up] { code: 'ECONNRESET' }
+[Error: socket hang up] { code: 'ECONNRESET' }
+Failed to proxy http://localhost:3001/api/checkout/session [Error: socket hang up] { code: 'ECONNRESET' }
+[Error: socket hang up] { code: 'ECONNRESET' }
+Failed to proxy http://localhost:3001/destinations [Error: socket hang up] { code: 'ECONNRESET' }
+[Error: socket hang up] { code: 'ECONNRESET' }
+Failed to proxy http://localhost:3001/ [Error: socket hang up] { code: 'ECONNRESET' }
+[Error: socket hang up] { code: 'ECONNRESET' }

@@ -1,0 +1,339 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String         @id @default(cuid())
+  clerkId          String         @unique
+  email            String         @unique
+  firstName        String?
+  lastName         String?
+  avatarUrl        String?
+  role             UserRole       @default(CLIENT)
+  isActive         Boolean        @default(true)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  applications     Application[]
+  appointments     Appointment[]
+  auditLogs        AuditLog[]
+  client           Client?
+  documents        Document[]
+  invoices         Invoice[]      @relation("invoices")
+  receivedMessages Message[]      @relation("receiver")
+  sentMessages     Message[]      @relation("sender")
+  notifications    Notification[]
+  payments         Payment[]      @relation("payments")
+  staffProfile     StaffProfile?
+  profile          UserProfile?
+
+  @@index([clerkId])
+  @@index([email])
+  @@index([role])
+}
+
+model UserProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  phoneNumber     String?
+  address         String?
+  city            String?
+  state           String?
+  country         String?
+  postalCode      String?
+  dateOfBirth     DateTime?
+  nationality     String?
+  languagesSpoken String[]  @default([])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model StaffProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  department     String?
+  position       String?
+  specialization String[] @default([])
+  bio            String?
+  officeNumber   String?
+  availability   Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Client {
+  id                  String    @id @default(cuid())
+  userId              String    @unique
+  referralCode        String?   @unique
+  visaType            VisaType?
+  targetCountry       String?
+  applicationDeadline DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Application {
+  id                 String                @id @default(cuid())
+  userId             String
+  visaType           VisaType
+  country            String
+  status             ApplicationStatus     @default(DRAFT)
+  appliedDate        DateTime?
+  approvalDate       DateTime?
+  completionDate     DateTime?
+  rejectionReason    String?
+  progressPercentage Int                   @default(0)
+  currentStep        Int                   @default(1)
+  notes              String?
+  internalNotes      String?
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+  user               User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  timeline           ApplicationTimeline[]
+  appointments       Appointment[]
+  documents          Document[]
+  invoices           Invoice[]
+  payments           Payment[]
+}
+
+model ApplicationTimeline {
+  id            String            @id @default(cuid())
+  applicationId String
+  step          Int
+  title         String
+  description   String?
+  dueDate       DateTime?
+  completedDate DateTime?
+  status        ApplicationStatus
+  createdAt     DateTime          @default(now())
+  application   Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+model Document {
+  id            String       @id @default(cuid())
+  userId        String
+  applicationId String?
+  type          DocumentType
+  fileName      String
+  fileUrl       String
+  fileKey       String
+  fileSize      Int
+  mimeType      String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  application   Application? @relation(fields: [applicationId], references: [id])
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Appointment {
+  id            String            @id @default(cuid())
+  userId        String
+  applicationId String?
+  title         String
+  scheduledAt   DateTime
+  duration      Int               @default(30)
+  status        AppointmentStatus @default(SCHEDULED)
+  meetingType   String
+  meetingLink   String?
+  location      String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  application   Application?      @relation(fields: [applicationId], references: [id])
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id             String    @id @default(cuid())
+  participantIds String[]
+  subject        String?
+  lastMessage    String?
+  lastMessageAt  DateTime?
+  messages       Message[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  senderId       String
+  receiverId     String
+  content        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  receiver       User         @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender         User         @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id               String        @id @default(cuid())
+  applicationId    String
+  userId           String
+  amount           Int
+  currency         String        @default("USD")
+  status           PaymentStatus @default(PENDING)
+  createdAt        DateTime      @default(now())
+  stripeCustomerId String?
+  stripeInvoiceId  String?
+  stripePaymentId  String?       @unique
+  invoice          Invoice?
+  application      Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  user             User          @relation("payments", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id            String      @id @default(cuid())
+  applicationId String
+  userId        String
+  paymentId     String?     @unique
+  invoiceNumber String      @unique
+  amount        Int
+  currency      String      @default("USD")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  payment       Payment?    @relation(fields: [paymentId], references: [id])
+  user          User        @relation("invoices", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  userId     String
+  action     AuditAction
+  entityType String
+  entityId   String
+  createdAt  DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Country {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SystemSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  subject   String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+  CLIENT
+  SUPER_ADMIN
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  PROCESSING
+  COMPLETED
+  CANCELLED
+}
+
+enum VisaType {
+  STUDENT
+  WORK
+  FAMILY
+  SKILLED_MIGRATION
+  BUSINESS
+  TOURIST
+  PERMANENT_RESIDENCY
+  TEMPORARY
+}
+
+enum DocumentType {
+  PASSPORT
+  BIRTH_CERTIFICATE
+  MARRIAGE_CERTIFICATE
+  DIVORCE_CERTIFICATE
+  CV
+  COVER_LETTER
+  ACADEMIC_CERTIFICATE
+  WORK_EXPERIENCE_LETTER
+  BANK_STATEMENT
+  ADMISSION_LETTER
+  EMPLOYMENT_OFFER
+  POLICE_CLEARANCE
+  MEDICAL_CERTIFICATE
+  VACCINATION_CERTIFICATE
+  POLICE_REPORT
+  SCHOOL_CERTIFICATE
+  TRANSCRIPT
+  DEGREE
+  DIPLOMA
+  OTHER
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+  RESCHEDULED
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  SEEN
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  VIEW
+  APPROVE
+  REJECT
+  SEND_EMAIL
+  UPLOAD_FILE
+  DELETE_FILE
+}
