@@ -3,6 +3,7 @@ import Stripe from "stripe";
 
 import { getStripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
+import { captureException } from "@/lib/sentry";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
@@ -43,6 +44,7 @@ export async function POST(req: NextRequest) {
     );
   } catch (err) {
     console.error("Webhook verification failed:", err);
+    try { captureException(err); } catch (_) {}
 
     return NextResponse.json(
       {

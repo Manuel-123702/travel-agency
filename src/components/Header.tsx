@@ -105,8 +105,23 @@ export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname   = usePathname();
   const { isSignedIn } = useUser();
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
+    // fetch current user's role for conditional admin buttons
+    async function fetchRole() {
+      if (!isSignedIn) return setUserRole(null);
+      try {
+        const res = await fetch("/api/auth/me");
+        if (!res.ok) return setUserRole(null);
+        const data = await res.json();
+        setUserRole(data?.role ?? null);
+      } catch (err) {
+        setUserRole(null);
+      }
+    }
+
+    fetchRole();
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
@@ -181,8 +196,8 @@ export default function Header() {
             <Image
               src="/logo.png"
               alt="Travel Agency Logo"
-              width={70}
-              height={70}
+              width={96}
+              height={96}
               className="object-contain drop-shadow-lg"
               priority
             />
@@ -269,6 +284,18 @@ export default function Header() {
         <div className="hidden lg:flex items-center gap-2">
           {isSignedIn ? (
             <div className="flex items-center gap-3">
+              {userRole === "ADMIN" || userRole === "SUPER_ADMIN" ? (
+                <Link
+                  href="/studio"
+                  className={`text-sm font-semibold px-4 py-2 rounded-full transition-all ${
+                    scrolled
+                      ? "text-navy hover:bg-gray-100"
+                      : "text-white hover:bg-white/10"
+                  }`}
+                >
+                  CMS
+                </Link>
+              ) : null}
               <Link
                 href="/dashboard"
                 className={`text-sm font-semibold px-4 py-2 rounded-full transition-all ${
@@ -388,7 +415,12 @@ export default function Header() {
               <div className="pt-3 border-t border-gray-100 space-y-2">
                 {isSignedIn ? (
                   <div className="flex items-center gap-3 px-4">
-                    <UserButton afterSignOutUrl="/" />
+                      <UserButton afterSignOutUrl="/" />
+                      {userRole === "ADMIN" || userRole === "SUPER_ADMIN" ? (
+                        <Link href="/studio" onClick={() => setMobileOpen(false)} className="text-sm font-bold text-navy">
+                          CMS
+                        </Link>
+                      ) : null}
                     <Link
                       href="/dashboard"
                       onClick={() => setMobileOpen(false)}

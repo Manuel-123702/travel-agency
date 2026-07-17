@@ -2,6 +2,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import type { ApiResponse, PaginatedResponse } from './types';
+import { initSentry, captureException } from '@/lib/sentry';
+
+initSentry();
 
 // ===== Success Responses =====
 
@@ -168,6 +171,7 @@ export async function parseQueryParams(request: NextRequest) {
 
 export async function handleApiError(error: any) {
     console.error('API Error:', error);
+    try { captureException(error); } catch (_) {}
 
     if (error.message === 'Unauthorized') {
         return unauthorizedResponse();

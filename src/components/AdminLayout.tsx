@@ -19,6 +19,7 @@ const navItems = [
   { label: "Document Review", href: "/admin/documents", icon: FileText, badge: 3 },
   { label: "Alerts", href: "/admin/alerts", icon: Bell, badge: 2 },
   { label: "Analytics", href: "/admin/analytics", icon: TrendingUp },
+  { label: "AI Assistant", href: "/admin/ai", icon: Globe },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 

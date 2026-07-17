@@ -1,3 +1,56 @@
+import React, { useEffect, useState } from "react";
+import DocumentUploader from "@/components/DocumentUploader";
+
+type Doc = {
+  id: string;
+  fileName: string;
+  fileUrl: string;
+  mimeType: string;
+  createdAt: string;
+};
+
+export default function DocumentsPage() {
+  const [docs, setDocs] = useState<Doc[]>([]);
+
+  async function load() {
+    const res = await fetch(`/api/documents`);
+    if (!res.ok) return;
+    const data = await res.json();
+    setDocs(data);
+  }
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  return (
+    <div>
+      <h2 className="text-xl font-semibold mb-4">Documents</h2>
+
+      <div className="grid grid-cols-2 gap-6">
+        <div className="bg-white p-4 rounded-xl shadow-sm">
+          <h3 className="font-semibold mb-3">Upload Document</h3>
+          <DocumentUploader onUploaded={load} />
+        </div>
+
+        <div className="bg-white p-4 rounded-xl shadow-sm">
+          <h3 className="font-semibold mb-3">Your Documents</h3>
+          <ul className="space-y-2">
+            {docs.map((d) => (
+              <li key={d.id} className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">{d.fileName}</div>
+                  <div className="text-xs text-gray-500">{d.mimeType}</div>
+                </div>
+                <a href={d.fileUrl} className="text-sm text-gold">Download</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
 "use client";
 
 import { useState, useRef } from "react";

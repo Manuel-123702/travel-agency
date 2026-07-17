@@ -1,11 +1,45 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   Users, TrendingUp, FileText, MessageSquare, CheckCircle,
   AlertCircle, Clock, Globe, ArrowRight, Star, ArrowUpRight, Zap,
 } from "lucide-react";
+
+type HealthPayload = {
+  ok: boolean;
+  healthy: boolean;
+  environment: string;
+  sentry: { enabled: boolean; dsn: boolean };
+  redis: { enabled: boolean; healthy: boolean };
+  database: { healthy: boolean; error: string | null };
+  timestamp: string;
+};
+
+const statusText = (health: HealthPayload | null, error: string | null) => {
+  if (error) return "Health data unavailable";
+  if (!health) return "Loading system status...";
+  return health.healthy ? "All systems operational" : "Issues detected — check status";
+};
+
+export default function AdminOverview() {
+  const [health, setHealth] = useState<HealthPayload | null>(null);
+  const [healthError, setHealthError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/health", { cache: "no-store" })
+      .then(async (res) => {
+        if (!res.ok) {
+          const message = await res.text();
+          throw new Error(`Health check failed (${res.status}): ${message}`);
+        }
+        return (await res.json()) as HealthPayload;
+      })
+      .then(setHealth)
+      .catch((error) => setHealthError(error.message));
+  }, []);
 
 const kpis = [
   { icon: Users, label: "Active Clients", value: "12", change: "+3 this month", color: "blue", up: true },
@@ -46,16 +80,40 @@ export default function AdminOverview() {
             <h1 className="font-heading font-bold text-2xl md:text-3xl text-gray-900">
               Agency Overview
             </h1>
-            <p className="text-gray-500 mt-1">Monday, June 29, 2026 · All systems operational</p>
+            <p className="text-gray-500 mt-1">{statusText(health, healthError)}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 text-xs bg-green-50 border border-green-200 text-green-700 font-semibold px-3 py-1.5 rounded-full">
-              <Zap size={11} /> Live Dashboard
-            </span>
-            <Link href="/admin/clients"
-              className="flex items-center gap-2 bg-[#0A0F1E] text-white font-semibold text-sm px-4 py-2 rounded-xl hover:opacity-90 transition-opacity">
-              <Users size={14} /> All Clients
-            </Link>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2">
+            <div className="rounded-2xl border px-4 py-2 bg-slate-50 text-sm text-slate-700">
+              <p className="font-semibold text-slate-900">System health</p>
+              <p className="mt-1">{health ? (health.healthy ? "Healthy" : "Attention needed") : healthError ? "Unavailable" : "Loading..."}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="flex items-center gap-1.5 text-xs bg-green-50 border border-green-200 text-green-700 font-semibold px-3 py-1.5 rounded-full">
+                <Zap size={11} /> Live Dashboard
+              </span>
+              <Link href="/admin/clients"
+                className="flex items-center gap-2 bg-[#0A0F1E] text-white font-semibold text-sm px-4 py-2 rounded-xl hover:opacity-90 transition-opacity">
+                <Users size={14} /> All Clients
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <p className="text-xs uppercase tracking-[0.24em] text-gray-500">Health</p>
+            <p className="mt-3 text-xl font-semibold text-gray-900">{health ? (health.healthy ? "Healthy" : "Degraded") : healthError ? "Unavailable" : "Loading..."}</p>
+            <p className="mt-2 text-sm text-gray-500">Redis, database, and Sentry status in real time.</p>
+          </div>
+          <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <p className="text-xs uppercase tracking-[0.24em] text-gray-500">Redis</p>
+            <p className="mt-3 text-xl font-semibold text-gray-900">{health ? (health.redis.healthy ? "Healthy" : "Down") : "—"}</p>
+            <p className="mt-2 text-sm text-gray-500">Enabled: {health?.redis.enabled ? "Yes" : "No"}</p>
+          </div>
+          <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <p className="text-xs uppercase tracking-[0.24em] text-gray-500">Database</p>
+            <p className="mt-3 text-xl font-semibold text-gray-900">{health ? (health.database.healthy ? "Healthy" : "Issue") : "—"}</p>
+            <p className="mt-2 text-sm text-gray-500">{health?.database.error ?? "No issues"}</p>
           </div>
         </div>
       </motion.div>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
+import { captureException } from "@/lib/sentry";
 
 export async function GET(req: NextRequest) {
   try {
@@ -102,6 +103,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error(error);
+    try { captureException(error); } catch (_) {}
 
     return NextResponse.json(
       {

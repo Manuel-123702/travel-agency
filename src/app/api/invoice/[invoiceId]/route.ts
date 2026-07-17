@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import PDFDocument from "pdfkit";
 import { db } from "@/lib/db";
+import { captureException } from "@/lib/sentry";
 
 export async function GET(
   req: NextRequest,
@@ -159,6 +160,7 @@ return new NextResponse(uint8, {
   } catch (error) {
 
     console.error(error);
+    try { captureException(error); } catch (_) {}
 
     return NextResponse.json(
       {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { getStripe, PACKAGES, PackageKey } from "@/lib/stripe";
 import { db } from "@/lib/db";
+import { captureException } from "@/lib/sentry";
 
 export async function POST(req: NextRequest) {
   try {
@@ -131,6 +132,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error(error);
+    try { captureException(error); } catch (_) {}
 
     return NextResponse.json(
       {

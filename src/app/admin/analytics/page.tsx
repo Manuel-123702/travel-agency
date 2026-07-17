@@ -1,7 +1,45 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingUp, Users, CheckCircle, Clock, Globe, Star, ArrowUpRight } from "lucide-react";
+import { TrendingUp, Users, CheckCircle, Clock, Star, ArrowUpRight } from "lucide-react";
+
+type HealthPayload = {
+  ok: boolean;
+  healthy: boolean;
+  environment: string;
+  sentry: { enabled: boolean; dsn: boolean };
+  redis: { enabled: boolean; healthy: boolean };
+  database: { healthy: boolean; error: string | null };
+  timestamp: string;
+};
+
+type AnalyticsOverviewPayload = {
+  totalClients: number;
+  activeClients: number;
+  totalApplications: number;
+  pendingApplications: number;
+  approvedApplications: number;
+  revenue: number;
+};
+
+type RevenuePayload = {
+  months: string[];
+  series: number[];
+};
+
+type DestinationPayload = {
+  country: string;
+  count: number;
+  share: number;
+};
+
+type DailyAnalyticsPayload = {
+  labels: string[];
+  applications: number[];
+  payments: number[];
+  revenue: number[];
+};
 
 const monthlyData = [
   { month: "Jan", cases: 8, approved: 7, revenue: 22400 },
@@ -20,7 +58,13 @@ const advisors = [
   { name: "Ibrahim Sow", cases: 19, rate: "95%", avg: "12 wks", rating: 4.7 },
 ];
 
-const kpis = [
+const defaultDestinationStats: DestinationPayload[] = [
+  { country: "Canada", count: 33, share: 48 },
+  { country: "France", count: 23, share: 33 },
+  { country: "Luxembourg", count: 13, share: 19 },
+];
+
+const defaultKpis = [
   { icon: Users, label: "Total Clients (2026)", value: "69", change: "+34% YoY", color: "blue" },
   { icon: CheckCircle, label: "Cases Approved", value: "64", change: "93% approval", color: "green" },
   { icon: TrendingUp, label: "Revenue (YTD)", value: "$193K", change: "+28% vs 2025", color: "purple" },
@@ -28,11 +72,115 @@ const kpis = [
 ];
 
 export default function AnalyticsPage() {
+  const [health, setHealth] = useState<HealthPayload | null>(null);
+  const [healthError, setHealthError] = useState<string | null>(null);
+  const [overview, setOverview] = useState<AnalyticsOverviewPayload | null>(null);
+  const [overviewError, setOverviewError] = useState<string | null>(null);
+  const [revenue, setRevenue] = useState<RevenuePayload | null>(null);
+  const [revenueError, setRevenueError] = useState<string | null>(null);
+  const [dailyAnalytics, setDailyAnalytics] = useState<DailyAnalyticsPayload | null>(null);
+  const [dailyError, setDailyError] = useState<string | null>(null);
+  const [destinations, setDestinations] = useState<DestinationPayload[] | null>(null);
+  const [destinationError, setDestinationError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const abort = new AbortController();
+
+    const fetchHealth = async () => {
+      try {
+        const res = await fetch("/api/health", { cache: "no-store", signal: abort.signal });
+        if (!res.ok) throw new Error(`Health check failed (${res.status})`);
+        setHealth((await res.json()) as HealthPayload);
+      } catch (error) {
+        if (abort.signal.aborted) return;
+        setHealthError((error as Error).message);
+      }
+    };
+
+    const fetchOverview = async () => {
+      try {
+        const res = await fetch("/api/analytics/overview", { cache: "no-store", signal: abort.signal });
+        if (!res.ok) throw new Error(`Analytics overview failed (${res.status})`);
+        setOverview((await res.json()) as AnalyticsOverviewPayload);
+      } catch (error) {
+        if (abort.signal.aborted) return;
+        setOverviewError((error as Error).message);
+      }
+    };
+
+    const fetchRevenue = async () => {
+      try {
+        const res = await fetch("/api/analytics/revenue", { cache: "no-store", signal: abort.signal });
+        if (!res.ok) throw new Error(`Revenue analytics failed (${res.status})`);
+        setRevenue((await res.json()) as RevenuePayload);
+      } catch (error) {
+        if (abort.signal.aborted) return;
+        setRevenueError((error as Error).message);
+      }
+    };
+
+    const fetchDestinations = async () => {
+      try {
+        const res = await fetch("/api/analytics/destinations", { cache: "no-store", signal: abort.signal });
+        if (!res.ok) throw new Error(`Destination analytics failed (${res.status})`);
+        const payload = (await res.json()) as { destinations: DestinationPayload[] };
+        setDestinations(payload.destinations);
+      } catch (error) {
+        if (abort.signal.aborted) return;
+        setDestinationError((error as Error).message);
+      }
+    };
+
+    const fetchDailyAnalytics = async () => {
+      try {
+        const res = await fetch("/api/analytics/daily", { cache: "no-store", signal: abort.signal });
+        if (!res.ok) throw new Error(`Daily analytics failed (${res.status})`);
+        setDailyAnalytics((await res.json()) as DailyAnalyticsPayload);
+      } catch (error) {
+        if (abort.signal.aborted) return;
+        setDailyError((error as Error).message);
+      }
+    };
+
+    fetchHealth();
+    fetchOverview();
+    fetchRevenue();
+    fetchDailyAnalytics();
+    fetchDestinations();
+
+    return () => abort.abort();
+  }, []);
+
+  const kpis = overview
+    ? [
+        { icon: Users, label: "Total Clients", value: overview.totalClients.toString(), change: "Live", color: "blue" },
+        { icon: CheckCircle, label: "Cases Approved", value: overview.approvedApplications.toString(), change: "Live", color: "green" },
+        { icon: TrendingUp, label: "Revenue (YTD)", value: `$${overview.revenue.toLocaleString()}`, change: "Live", color: "purple" },
+        { icon: Clock, label: "Pending Applications", value: overview.pendingApplications.toString(), change: "Current", color: "orange" },
+      ]
+    : defaultKpis;
+
+  const revenueMonths = revenue?.months ?? monthlyData.map((d) => d.month);
+  const revenueSeries = revenue?.series ?? monthlyData.map((d) => d.revenue);
+  const maxRevenue = Math.max(...revenueSeries, 1);
+  const revenueBars = revenueMonths.map((month, index) => ({ month, value: revenueSeries[index] ?? 0 }));
+  const destinationStats = destinations ?? defaultDestinationStats;
+  const dailyLabels = dailyAnalytics?.labels ?? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const dailyApplications = dailyAnalytics?.applications ?? [2, 4, 3, 5, 1, 2, 4];
+  const dailyRevenue = dailyAnalytics?.revenue ?? [1200, 2500, 1800, 3200, 1200, 1900, 2600];
+  const maxDailyRevenue = Math.max(...dailyRevenue, 1);
+
   return (
     <div className="p-6 md:p-8 max-w-6xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="font-heading font-bold text-2xl text-gray-900 mb-1">Analytics</h1>
-        <p className="text-gray-500">Agency performance — January to June 2026</p>
+        <p className="text-gray-500">Agency performance — last 12 months</p>
+        <p className="text-sm text-slate-500 mt-3">Live metrics from the admin dashboard, updated on every page load.</p>
+        {overviewError && (
+          <div className="mt-4 rounded-2xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700">
+            Analytics overview unavailable: {overviewError}
+          </div>
+        )}
       </motion.div>
 
       {/* KPIs */}
@@ -59,60 +207,175 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6 mb-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+          className="lg:col-span-3 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
+            <div>
+              <h2 className="font-heading font-bold text-gray-900">System Health</h2>
+              <p className="text-gray-500 text-sm">Live runtime observability from the health endpoint.</p>
+            </div>
+            <div className="flex flex-wrap gap-2 text-sm">
+              <span className={`px-3 py-1 rounded-full font-semibold ${health?.healthy ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                {health ? (health.healthy ? "Healthy" : "Unhealthy") : "Loading..."}
+              </span>
+              <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700">{health?.environment ?? "—"}</span>
+              <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700">{health?.timestamp ? new Date(health.timestamp).toLocaleString() : "—"}</span>
+            </div>
+          </div>
+
+          {healthError ? (
+            <div className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-700">
+              {healthError}
+            </div>
+          ) : (
+            <>
+              <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 text-sm text-slate-700">
+                <p className="font-semibold text-slate-900">Monitoring endpoints</p>
+                <p className="mt-2">Health: <code className="rounded bg-slate-100 px-2 py-1">/api/health</code></p>
+                <p className="mt-1">Metrics: <code className="rounded bg-slate-100 px-2 py-1">/api/metrics</code></p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-4">
+              <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Redis</p>
+                <p className="mt-2 text-lg font-semibold text-gray-900">{health ? (health.redis.healthy ? "Healthy" : "Unhealthy") : "—"}</p>
+                <p className="text-xs text-gray-500">Enabled: {health?.redis.enabled ? "Yes" : "No"}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Database</p>
+                <p className="mt-2 text-lg font-semibold text-gray-900">{health ? (health.database.healthy ? "Healthy" : "Unhealthy") : "—"}</p>
+                <p className="text-xs text-gray-500">{health?.database.error ?? "No errors"}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Sentry</p>
+                <p className="mt-2 text-lg font-semibold text-gray-900">{health ? (health.sentry.enabled ? "Enabled" : "Disabled") : "—"}</p>
+                <p className="text-xs text-gray-500">DSN: {health?.sentry.dsn ? "Present" : "Missing"}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Overall</p>
+                <p className="mt-2 text-lg font-semibold text-gray-900">{health ? (health.healthy ? "Healthy" : "Issue") : "—"}</p>
+                <p className="text-xs text-gray-500">Snapshot refreshed on load.</p>
+              </div>
+            </div>
+          )}
+        </motion.div>
+
         {/* Monthly bar chart */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-heading font-bold text-gray-900">Monthly Cases</h2>
-            <div className="flex items-center gap-4 text-xs text-gray-500">
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-blue-600 inline-block" />New Cases</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-green-500 inline-block" />Approved</span>
+            <div>
+              <h2 className="font-heading font-bold text-gray-900">Monthly Revenue</h2>
+              <p className="text-gray-500 text-sm">Live completed payments over the last 12 months.</p>
             </div>
+            {revenueError && (
+              <span className="text-sm text-red-700 bg-red-50 px-3 py-1 rounded-full border border-red-100">
+                {revenueError}
+              </span>
+            )}
           </div>
-          <div className="flex items-end gap-4 h-48">
-            {monthlyData.map(({ month, cases, approved }, i) => (
-              <div key={month} className="flex-1 flex flex-col items-center gap-1.5">
-                <div className="w-full flex items-end gap-1 h-40">
+          <div className="flex items-end gap-3 h-48 overflow-x-auto pb-2">
+            {revenueBars.map(({ month, value }, i) => (
+              <div key={month} className="flex-1 min-w-[40px] flex flex-col items-center gap-1.5">
+                <div className="w-full flex items-end justify-center h-40">
                   <motion.div
                     initial={{ height: 0 }}
-                    animate={{ height: `${(cases / maxCases) * 100}%` }}
-                    transition={{ duration: 0.8, delay: 0.3 + i * 0.07, ease: "easeOut" }}
-                    className="flex-1 bg-blue-200 rounded-t-lg"
-                  />
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: `${(approved / maxCases) * 100}%` }}
-                    transition={{ duration: 0.8, delay: 0.4 + i * 0.07, ease: "easeOut" }}
-                    className="flex-1 bg-green-500 rounded-t-lg"
+                    animate={{ height: `${(value / maxRevenue) * 100}%` }}
+                    transition={{ duration: 0.8, delay: 0.2 + i * 0.03, ease: "easeOut" }}
+                    className="w-full bg-blue-600 rounded-t-xl"
                   />
                 </div>
                 <span className="text-xs text-gray-400 font-medium">{month}</span>
+                <span className="text-[10px] text-slate-500">${value.toLocaleString()}</span>
               </div>
             ))}
+          </div>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+          className="lg:col-span-3 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="font-heading font-bold text-gray-900">Weekly Activity</h2>
+              <p className="text-gray-500 text-sm">Daily applications and revenue for the last 7 days.</p>
+            </div>
+            {dailyError && (
+              <span className="text-sm text-red-700 bg-red-50 px-3 py-1 rounded-full border border-red-100">
+                {dailyError}
+              </span>
+            )}
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Applications</p>
+              <div className="mt-4 space-y-2">
+                {dailyLabels.map((label, index) => (
+                  <div key={label} className="flex items-center gap-3">
+                    <span className="w-12 text-xs text-gray-500">{label}</span>
+                    <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min((dailyApplications[index] / Math.max(...dailyApplications, 1)) * 100, 100)}%` }}
+                        className="h-full bg-blue-600 rounded-full"
+                      />
+                    </div>
+                    <span className="w-8 text-right text-xs text-gray-700">{dailyApplications[index]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Revenue</p>
+              <div className="mt-4 space-y-2">
+                {dailyLabels.map((label, index) => (
+                  <div key={label} className="flex items-center gap-3">
+                    <span className="w-12 text-xs text-gray-500">{label}</span>
+                    <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min((dailyRevenue[index] / maxDailyRevenue) * 100, 100)}%` }}
+                        className="h-full bg-green-500 rounded-full"
+                      />
+                    </div>
+                    <span className="w-14 text-right text-xs text-gray-700">${dailyRevenue[index].toLocaleString()}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </motion.div>
 
         {/* Destination breakdown */}
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}
           className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <h2 className="font-heading font-bold text-gray-900 mb-5">By Destination</h2>
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="font-heading font-bold text-gray-900">By Destination</h2>
+              <p className="text-gray-500 text-sm">Top countries by application volume.</p>
+            </div>
+            {destinationError && (
+              <span className="text-sm text-red-700 bg-red-50 px-3 py-1 rounded-full border border-red-100">
+                {destinationError}
+              </span>
+            )}
+          </div>
           <div className="space-y-4">
-            {[
-              { flag: "🇨🇦", name: "Canada", pct: 48, count: 33, color: "bg-red-500" },
-              { flag: "🇫🇷", name: "France", pct: 33, count: 23, color: "bg-blue-600" },
-              { flag: "🇱🇺", name: "Luxembourg", pct: 19, count: 13, color: "bg-sky-400" },
-            ].map(({ flag, name, pct, count, color }) => (
-              <div key={name}>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-sm font-semibold text-gray-700">{flag} {name}</span>
-                  <span className="text-sm font-bold text-gray-900">{count} <span className="text-gray-400 font-normal text-xs">({pct}%)</span></span>
+            {destinationStats.map((destination) => {
+              const flag = destination.country === "Canada" ? "🇨🇦" : destination.country === "France" ? "🇫🇷" : destination.country === "Luxembourg" ? "🇱🇺" : "🌍";
+              const color = destination.share > 40 ? "bg-red-500" : destination.share > 25 ? "bg-blue-600" : "bg-sky-400";
+
+              return (
+                <div key={destination.country}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-sm font-semibold text-gray-700">{flag} {destination.country}</span>
+                    <span className="text-sm font-bold text-gray-900">{destination.count} <span className="text-gray-400 font-normal text-xs">({destination.share}%)</span></span>
+                  </div>
+                  <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${destination.share}%` }} transition={{ duration: 0.9, delay: 0.5 }}
+                      className={`h-full ${color} rounded-full`} />
+                  </div>
                 </div>
-                <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                  <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.9, delay: 0.5 }}
-                    className={`h-full ${color} rounded-full`} />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-6 pt-5 border-t border-gray-100 space-y-2">

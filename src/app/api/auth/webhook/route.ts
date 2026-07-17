@@ -2,6 +2,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
+import { captureException } from "@/lib/sentry";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -38,6 +39,7 @@ export async function POST(req: Request) {
     }) as WebhookEvent;
   } catch (err) {
     console.error("Webhook verification failed:", err);
+    try { captureException(err); } catch (_) {}
 
     return new Response("Invalid webhook", {
       status: 400,
@@ -150,6 +152,7 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("Webhook processing error:", error);
+    try { captureException(error); } catch (_) {}
 
     return new Response("Internal Server Error", {
       status: 500,

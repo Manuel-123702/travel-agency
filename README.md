@@ -46,6 +46,8 @@ NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+SENTRY_DSN=https://examplePublicKey@o0.ingest.sentry.io/0
+SENTRY_TRACES_RATE=0.1
 ```
 
 > **Get Clerk keys**: Create a free account at [clerk.com](https://clerk.com), create a new application, and copy your API keys.
@@ -57,6 +59,32 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 4. Verify runtime services
+
+Visit the health endpoint to confirm Sentry, Redis, and database availability:
+
+```bash
+curl http://localhost:3000/api/health
+```
+
+This returns a JSON payload with `healthy`, `sentry.enabled`, `redis.enabled`, `redis.healthy`, and `database.healthy`. The endpoint returns `503` if Redis or database health checks fail.
+
+Expose Prometheus metrics for scraping at:
+
+```bash
+curl http://localhost:3000/api/metrics
+```
+
+The metrics endpoint includes rate limiter counters and a service health gauge that can be consumed by your monitoring stack.
+
+The project also exposes a daily analytics endpoint for admin dashboards:
+
+```bash
+curl http://localhost:3000/api/analytics/daily
+```
+
+This endpoint returns a 7-day series for daily applications, completed payments, and revenue totals.
 
 ### 4. Build for production
 
