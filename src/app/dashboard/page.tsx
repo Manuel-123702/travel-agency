@@ -19,48 +19,113 @@ import {
   Star,
 } from "lucide-react";
 
+const DashboardKpis = ({ stats }: { stats: any }) => {
+  const percent = stats?.totalApplications
+    ? Math.round((stats.approved / Math.max(1, stats.totalApplications)) * 100)
+    : 0;
+  return [
+    {
+      icon: ClipboardList,
+      label: "Active Clients",
+      value: stats?.totalClients ?? "—",
+      sub: "",
+      color: "blue",
+    },
+    {
+      icon: CheckCircle,
+      label: "Cases Approved",
+      value: stats?.approved ?? "—",
+      sub: "",
+      color: "green",
+    },
+    {
+      icon: TrendingUp,
+      label: "Completion",
+      value: `${percent}%`,
+      sub: "",
+      color: "purple",
+    },
+    {
+      icon: Clock,
+      label: "Total Applications",
+      value: stats?.totalApplications ?? "—",
+      sub: "",
+      color: "orange",
+    },
+  ];
+};
+
 const caseSteps = [
   {
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {kpis.map(({ icon: Icon, label, value, sub, color }, i) => (
-          <motion.div
-            key={label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
-            className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100"
-          >
-            <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${
-                color === "blue"
-                  ? "bg-blue-100"
-                  : color === "green"
-                    ? "bg-green-100"
-                    : color === "orange"
-                      ? "bg-orange-100"
-                      : "bg-purple-100"
-              }`}
-            >
-              <Icon
-                size={18}
-                className={
-                  color === "blue"
-                    ? "text-blue-700"
-                    : color === "green"
-                      ? "text-green-600"
-                      : color === "orange"
-                        ? "text-orange-600"
-                        : "text-purple-600"
-                }
-              />
-            </div>
-            <p className="text-gray-500 text-xs font-medium">{label}</p>
-            <p className="font-heading font-bold text-navy text-xl mt-0.5">{value}</p>
-            <p className="text-gray-400 text-xs">{sub}</p>
-          </motion.div>
-        ))}
-      </div>
+    step: "Profile Evaluation",
+    status: "completed",
+    date: "June 10, 2026",
+    detail: "Approved for Canada Express Entry + France Student pathway",
+  },
+  {
+    step: "File Preparation",
+    status: "in-progress",
+    date: "June 15 – July 2, 2026",
+    detail:
+      "4 of 9 documents collected. Missing: bank statement, reference letter.",
+  },
+  {
+    step: "Application Submission",
+    status: "pending",
+    date: "Est. July 5, 2026",
+    detail: "Pending document completion",
+  },
+  {
+    step: "Interview Preparation",
+    status: "pending",
+    date: "Est. July 15, 2026",
+    detail: "Consular interview coaching sessions",
+  },
+  {
+    step: "Visa Obtained",
+    status: "pending",
+    date: "Est. Aug–Sept 2026",
+    detail: "Final approval and travel preparation",
+  },
+];
+
+const quickActions = [
+  {
+    icon: FileText,
+    label: "Upload Documents",
+    href: "/dashboard/documents",
+    color: "bg-blue-100 text-blue-700",
+    desc: "Upload required files",
+  },
+  {
+    icon: MessageSquare,
+    label: "Message Advisor",
+    href: "/dashboard/messages",
+    color: "bg-green-100 text-green-700",
+    desc: "Contact your advisor",
+  },
+  {
+    icon: ClipboardList,
+    label: "View Full Case",
+    href: "/dashboard/case",
+    color: "bg-purple-100 text-purple-700",
+    desc: "Open case details",
+  },
+  {
+    icon: Calendar,
+    label: "Book a Call",
+    href: "/contact",
+    color: "bg-gold/20 text-yellow-700",
+    desc: "Schedule consultation",
+  },
+];
+
+const recentActivity = [
+  {
+    icon: CheckCircle,
+    color: "text-green-600",
+    text: "Your evaluation report was approved",
+    time: "2 days ago",
   },
   {
     icon: MessageSquare,
@@ -90,7 +155,7 @@ export default function DashboardOverview() {
     let mounted = true;
     async function load() {
       try {
-        const res = await fetch('/api/dashboard/stats');
+        const res = await fetch("/api/dashboard/stats");
         if (!res.ok) return;
         const data = await res.json();
         if (mounted) setStats(data);
@@ -99,7 +164,9 @@ export default function DashboardOverview() {
       }
     }
     load();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const kpis = DashboardKpis({ stats });

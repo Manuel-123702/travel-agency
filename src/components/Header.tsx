@@ -64,46 +64,49 @@ const socials = [
 
 // ── Navigation links ──────────────────────────────────────────────────────────
 const navLinks = [
-  { label: "Home",     href: "/" },
-  { label: "About",   href: "/about" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
   {
     label: "Services",
     href: "/services",
     children: [
       { label: "Student Immigration", href: "/services#student" },
-      { label: "Work Permits",        href: "/services#work" },
-      { label: "Visitor Visa",        href: "/services#visitor" },
-      { label: "Business Visa",       href: "/services#business" },
-      { label: "Family Reunification",href: "/services#family" },
+      { label: "Work Permits", href: "/services#work" },
+      { label: "Visitor Visa", href: "/services#visitor" },
+      { label: "Business Visa", href: "/services#business" },
+      { label: "Family Reunification", href: "/services#family" },
     ],
   },
   {
     label: "Countries",
     href: "/countries",
     children: [
-      { label: "🇫🇷 France",      href: "/countries/france"     },
-      { label: "🇨🇦 Canada",      href: "/countries/canada"     },
-      { label: "🇱🇺 Luxembourg",  href: "/countries/luxembourg" },
-      { label: "🇩🇪 Germany",     href: "/countries/germany"    },
-      { label: "🇧🇪 Belgium",     href: "/countries/belgium"    },
-      { label: "🇮🇪 Ireland",     href: "/countries/ireland"    },
-      { label: "🇫🇮 Finland",     href: "/countries/finland"    },
-      { label: "🇬🇧 UK",          href: "/countries/uk"         },
-      { label: "🇺🇸 USA",         href: "/countries/usa"        },
-      { label: "🇦🇺 Australia",   href: "/countries/australia"  },
+      { label: "🇫🇷 France", href: "/countries/france" },
+      { label: "🇨🇦 Canada", href: "/countries/canada" },
+      { label: "🇱🇺 Luxembourg", href: "/countries/luxembourg" },
+      { label: "🇩🇪 Germany", href: "/countries/germany" },
+      { label: "🇧🇪 Belgium", href: "/countries/belgium" },
+      { label: "🇮🇪 Ireland", href: "/countries/ireland" },
+      { label: "🇫🇮 Finland", href: "/countries/finland" },
+      { label: "🇬🇧 UK", href: "/countries/uk" },
+      { label: "🇺🇸 USA", href: "/countries/usa" },
+      { label: "🇦🇺 Australia", href: "/countries/australia" },
     ],
   },
-  { label: "Pricing",  href: "/pricing" },
-  { label: "Blog",     href: "/blog" },
-  { label: "FAQ",      href: "/faq" },
-  { label: "Contact",  href: "/contact" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Destinations", href: "/destinations" },
+  { label: "Blog", href: "/blog" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Contact", href: "/contact" },
+  { label: "Privacy", href: "/privacy-policy" },
+  { label: "Terms", href: "/terms" },
 ];
 
 export default function Header() {
-  const [scrolled,       setScrolled]       = useState(false);
-  const [mobileOpen,     setMobileOpen]     = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const pathname   = usePathname();
+  const pathname = usePathname();
   const { isSignedIn } = useUser();
   const [userRole, setUserRole] = useState<string | null>(null);
 
@@ -183,7 +186,9 @@ export default function Header() {
             </div>
             <span className="text-white/20">|</span>
             <span className="text-white/50 text-xs">Mon–Fri: 9AM–6PM</span>
-            <span className="text-gold font-semibold text-xs">24/7 WhatsApp</span>
+            <span className="text-gold font-semibold text-xs">
+              24/7 WhatsApp
+            </span>
           </div>
         </div>
       </div>
@@ -226,7 +231,9 @@ export default function Header() {
             <div
               key={link.href}
               className="relative"
-              onMouseEnter={() => link.children && setActiveDropdown(link.label)}
+              onMouseEnter={() =>
+                link.children && setActiveDropdown(link.label)
+              }
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <Link
@@ -235,12 +242,14 @@ export default function Header() {
                   isActive(link.href)
                     ? "text-gold"
                     : scrolled
-                    ? "text-navy hover:text-gold"
-                    : "text-white/90 hover:text-gold"
+                      ? "text-navy hover:text-gold"
+                      : "text-white/90 hover:text-gold"
                 }`}
               >
                 {link.label}
-                {link.children && <ChevronDown size={12} className="opacity-60" />}
+                {link.children && (
+                  <ChevronDown size={12} className="opacity-60" />
+                )}
                 {/* Animated underline */}
                 {isActive(link.href) && (
                   <motion.div
@@ -267,7 +276,9 @@ export default function Header() {
                         key={child.href}
                         href={child.href}
                         className={`block px-5 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-navy/5 hover:text-gold hover:pl-6 ${
-                          pathname === child.href ? "text-gold bg-gold/5" : "text-navy"
+                          pathname === child.href
+                            ? "text-gold bg-gold/5"
+                            : "text-navy"
                         }`}
                       >
                         {child.label}
@@ -341,7 +352,9 @@ export default function Header() {
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className={`lg:hidden p-2 rounded-full transition-all ${
-            scrolled ? "text-navy hover:bg-gray-100" : "text-white hover:bg-white/10"
+            scrolled
+              ? "text-navy hover:bg-gray-100"
+              : "text-white hover:bg-white/10"
           }`}
           aria-label="Toggle mobile menu"
         >
@@ -415,12 +428,16 @@ export default function Header() {
               <div className="pt-3 border-t border-gray-100 space-y-2">
                 {isSignedIn ? (
                   <div className="flex items-center gap-3 px-4">
-                      <UserButton afterSignOutUrl="/" />
-                      {userRole === "ADMIN" || userRole === "SUPER_ADMIN" ? (
-                        <Link href="/studio" onClick={() => setMobileOpen(false)} className="text-sm font-bold text-navy">
-                          CMS
-                        </Link>
-                      ) : null}
+                    <UserButton afterSignOutUrl="/" />
+                    {userRole === "ADMIN" || userRole === "SUPER_ADMIN" ? (
+                      <Link
+                        href="/studio"
+                        onClick={() => setMobileOpen(false)}
+                        className="text-sm font-bold text-navy"
+                      >
+                        CMS
+                      </Link>
+                    ) : null}
                     <Link
                       href="/dashboard"
                       onClick={() => setMobileOpen(false)}

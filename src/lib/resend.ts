@@ -1,6 +1,4 @@
 import { Resend } from "resend";
-import React from "react";
-import ReactDOMServer from "react-dom/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "");
 
@@ -50,7 +48,7 @@ export async function sendTemplatedEmail(
     return null;
   }
 
-  let Component: React.FC<any> | null = null;
+  let Component: any | null = null;
   if (name === "appointment") {
     Component = (await import("@/emails/AppointmentConfirmation")).default;
   }
@@ -59,6 +57,10 @@ export async function sendTemplatedEmail(
   }
 
   if (!Component) throw new Error("Unknown email template");
+
+  // Dynamically import react and react-dom/server to avoid bundling into client code
+  const React = await import("react");
+  const ReactDOMServer = await import("react-dom/server");
 
   const element = React.createElement(Component, props);
   const html = ReactDOMServer.renderToStaticMarkup(element);

@@ -1,113 +1,105 @@
-import { Counter, Gauge, collectDefaultMetrics, register } from "prom-client";
+let register: any = null;
+let metricsContentType = "text/plain; version=0.0.4; charset=utf-8";
 
-collectDefaultMetrics({ register });
+let rateLimitExceeded: any = null;
+let rateLimitAllowed: any = null;
+let healthCheckTotal: any = null;
+let aiAssistantRequests: any = null;
+let aiDocumentChecks: any = null;
+let aiIngestRequests: any = null;
+let serviceHealthStatus: any = null;
+let redisHealthStatus: any = null;
 
-const rateLimitExceeded = new Counter({
-  name: "rate_limit_exceeded_total",
-  help: "Total number of rate limit rejections",
-});
+try {
+  // Dynamically require prom-client so local dev without the package doesn't crash
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const promClient = require("prom-client");
+  const { Counter, Gauge, collectDefaultMetrics } = promClient;
+  register = promClient.register;
+  collectDefaultMetrics({ register });
 
-const rateLimitAllowed = new Counter({
-  name: "rate_limit_allowed_total",
-  help: "Total number of allowed requests under rate limits",
-});
+  rateLimitExceeded = new Counter({
+    name: "rate_limit_exceeded_total",
+    help: "Total number of rate limit rejections",
+  });
+  rateLimitAllowed = new Counter({
+    name: "rate_limit_allowed_total",
+    help: "Total number of allowed requests under rate limits",
+  });
+  healthCheckTotal = new Counter({
+    name: "health_check_total",
+    help: "Total number of health check requests",
+  });
+  aiAssistantRequests = new Counter({
+    name: "ai_assistant_requests_total",
+    help: "Total number of AI assistant requests",
+  });
+  aiDocumentChecks = new Counter({
+    name: "ai_document_checks_total",
+    help: "Total number of AI document checker requests",
+  });
+  aiIngestRequests = new Counter({
+    name: "ai_ingest_requests_total",
+    help: "Total number of AI content ingestion requests",
+  });
+  serviceHealthStatus = new Gauge({
+    name: "service_healthy",
+    help: "Overall service health status where 1 indicates healthy and 0 indicates unhealthy",
+  });
+  redisHealthStatus = new Gauge({
+    name: "redis_healthy",
+    help: "Redis health status where 1 indicates healthy and 0 indicates unhealthy",
+  });
 
-const healthCheckTotal = new Counter({
-  name: "health_check_total",
-  help: "Total number of health check requests",
-});
+  metricsContentType = register.contentType || metricsContentType;
+} catch (e) {
+  // prom-client not installed — expose no-op functions
+  // console.warn("prom-client not available, metrics disabled");
+}
 
-const aiAssistantRequests = new Counter({
-  name: "ai_assistant_requests_total",
-  help: "Total number of AI assistant requests",
-});
+function safeInc(counter: any) {
+  try {
+    counter?.inc?.();
+  } catch (e) {
+    /* ignore */
+  }
+}
 
-const aiDocumentChecks = new Counter({
-  name: "ai_document_checks_total",
-  help: "Total number of AI document checker requests",
-});
-
-const aiIngestRequests = new Counter({
-  name: "ai_ingest_requests_total",
-  help: "Total number of AI content ingestion requests",
-});
-
-const serviceHealthStatus = new Gauge({
-  name: "service_healthy",
-  help: "Overall service health status where 1 indicates healthy and 0 indicates unhealthy",
-});
-
-const redisHealthStatus = new Gauge({
-  name: "redis_healthy",
-  help: "Redis health status where 1 indicates healthy and 0 indicates unhealthy",
-});
+function safeSet(gauge: any, v: number) {
+  try {
+    gauge?.set?.(v);
+  } catch (e) {
+    /* ignore */
+  }
+}
 
 export function incRateAllowed() {
-  try {
-    rateLimitAllowed.inc();
-  } catch (e) {
-    console.error("metrics incRateAllowed error", e);
-  }
+  safeInc(rateLimitAllowed);
 }
-
 export function incRateExceeded() {
-  try {
-    rateLimitExceeded.inc();
-  } catch (e) {
-    console.error("metrics incRateExceeded error", e);
-  }
+  safeInc(rateLimitExceeded);
 }
-
 export function incAiAssistantRequest() {
-  try {
-    aiAssistantRequests.inc();
-  } catch (e) {
-    console.error("metrics incAiAssistantRequest error", e);
-  }
+  safeInc(aiAssistantRequests);
 }
-
 export function incAiDocumentCheck() {
-  try {
-    aiDocumentChecks.inc();
-  } catch (e) {
-    console.error("metrics incAiDocumentCheck error", e);
-  }
+  safeInc(aiDocumentChecks);
 }
-
 export function incAiIngestRequest() {
-  try {
-    aiIngestRequests.inc();
-  } catch (e) {
-    console.error("metrics incAiIngestRequest error", e);
-  }
+  safeInc(aiIngestRequests);
 }
-
 export function incHealthCheck() {
-  try {
-    healthCheckTotal.inc();
-  } catch (e) {
-    console.error("metrics incHealthCheck error", e);
-  }
+  safeInc(healthCheckTotal);
 }
-
 export function setServiceHealthy(isHealthy: boolean) {
-  try {
-    serviceHealthStatus.set(isHealthy ? 1 : 0);
-  } catch (e) {
-    console.error("metrics setServiceHealthy error", e);
-  }
+  safeSet(serviceHealthStatus, isHealthy ? 1 : 0);
 }
-
 export function setRedisHealthy(isHealthy: boolean) {
-  try {
-    redisHealthStatus.set(isHealthy ? 1 : 0);
-  } catch (e) {
-    console.error("metrics setRedisHealthy error", e);
-  }
+  safeSet(redisHealthStatus, isHealthy ? 1 : 0);
 }
 
 export async function getMetrics() {
-  return await register.metrics();
+  return register ? await register.metrics() : "";
 }
 
-export const metricsContentType = register.contentType || "text/plain; version=0.0.4; charset=utf-8";
+export { metricsContentType };

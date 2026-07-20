@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import AppointmentForm from "@/components/AppointmentForm";
 
@@ -39,7 +41,9 @@ export default function AppointmentsPage() {
               <li key={a.id} className="flex items-center justify-between">
                 <div>
                   <div className="font-medium">{a.title}</div>
-                  <div className="text-xs text-gray-500">{new Date(a.scheduledAt).toLocaleString()}</div>
+                  <div className="text-xs text-gray-500">
+                    {new Date(a.scheduledAt).toLocaleString()}
+                  </div>
                 </div>
                 <div className="text-sm text-gray-600">{a.status}</div>
               </li>
