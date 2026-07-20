@@ -1,8 +1,6 @@
 import type { ReactNode } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 
-import { LanguageProvider } from "@/contexts/LanguageContext";
-
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -15,25 +13,23 @@ import LiveChat from "@/components/LiveChat";
 export default function WebsiteLayout({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider>
-      <LanguageProvider>
-        <PageLoader />
+      <PageLoader />
 
-        <Header />
+      <Header />
 
-        <main>{children}</main>
+      <main>{children}</main>
 
-        <Footer />
+      <Footer />
 
-        <WhatsAppButton />
+      <WhatsAppButton />
 
-        <BackToTop />
+      <BackToTop />
 
-        <CookieConsent />
+      <CookieConsent />
 
-        <SocialProofToast />
+      <SocialProofToast />
 
-        <LiveChat />
-      </LanguageProvider>
+      <LiveChat />
     </ClerkProvider>
   );
 }

@@ -92,7 +92,7 @@ export async function updateUser(
     avatarUrl?: string;
     role?: UserRole;
     isActive?: boolean;
-  }
+  },
 ) {
   return db.user.update({
     where: {
@@ -141,7 +141,7 @@ export async function createApplication(
     status?: ApplicationStatus;
     notes?: string;
     internalNotes?: string;
-  }
+  },
 ) {
   return db.application.create({
     data: {
@@ -198,7 +198,7 @@ export async function updateApplication(
     rejectionReason: string;
     completionDate: Date;
     approvalDate: Date;
-  }>
+  }>,
 ) {
   return db.application.update({
     where: {
@@ -229,7 +229,7 @@ export async function uploadDocument(
     fileKey: string;
     fileSize: number;
     mimeType: string;
-  }
+  },
 ) {
   return db.document.create({
     data: {
@@ -268,9 +268,7 @@ export async function getUserDocuments(userId: string) {
   });
 }
 
-export async function getApplicationDocuments(
-  applicationId: string
-) {
+export async function getApplicationDocuments(applicationId: string) {
   return db.document.findMany({
     where: {
       applicationId,
@@ -368,7 +366,7 @@ export async function updateAppointment(
     location: string;
     meetingType: string;
     status: AppointmentStatus;
-  }>
+  }>,
 ) {
   return db.appointment.update({
     where: {
@@ -392,7 +390,7 @@ export async function deleteAppointment(id: string) {
 
 export async function createConversation(
   participantIds: string[],
-  subject?: string
+  subject?: string,
 ) {
   return db.conversation.create({
     data: {
@@ -453,9 +451,7 @@ export async function createMessage(data: {
   });
 }
 
-export async function getConversationMessages(
-  conversationId: string
-) {
+export async function getConversationMessages(conversationId: string) {
   return db.message.findMany({
     where: {
       conversationId,
@@ -518,9 +514,7 @@ export async function getPaymentById(id: string) {
   });
 }
 
-export async function getPaymentByStripePaymentId(
-  stripePaymentId: string
-) {
+export async function getPaymentByStripePaymentId(stripePaymentId: string) {
   return db.payment.findUnique({
     where: {
       stripePaymentId,
@@ -531,9 +525,7 @@ export async function getPaymentByStripePaymentId(
   });
 }
 
-export async function getApplicationPayments(
-  applicationId: string
-) {
+export async function getApplicationPayments(applicationId: string) {
   return db.payment.findMany({
     where: {
       applicationId,
@@ -567,7 +559,7 @@ export async function updatePaymentStatus(
   status: PaymentStatus,
   stripePaymentId?: string,
   stripeCustomerId?: string,
-  stripeInvoiceId?: string
+  stripeInvoiceId?: string,
 ) {
   return db.payment.update({
     where: {
@@ -675,9 +667,7 @@ export async function getUserNotifications(userId: string) {
   });
 }
 
-export async function getUnreadNotifications(
-  userId: string
-) {
+export async function getUnreadNotifications(userId: string) {
   return db.notification.findMany({
     where: {
       userId,
@@ -689,9 +679,7 @@ export async function getUnreadNotifications(
   });
 }
 
-export async function markNotificationAsRead(
-  id: string
-) {
+export async function markNotificationAsRead(id: string) {
   return db.notification.update({
     where: {
       id,
@@ -702,9 +690,7 @@ export async function markNotificationAsRead(
   });
 }
 
-export async function markAllNotificationsAsRead(
-  userId: string
-) {
+export async function markAllNotificationsAsRead(userId: string) {
   return db.notification.updateMany({
     where: {
       userId,
@@ -723,166 +709,7 @@ export async function deleteNotification(id: string) {
     },
   });
 }
-// =====================================================
-// PAYMENTS
-// =====================================================
 
-export async function createPayment(data: {
-  applicationId: string;
-  userId: string;
-  amount: number;
-  currency?: string;
-}) {
-  return db.payment.create({
-    data: {
-      applicationId: data.applicationId,
-      userId: data.userId,
-      amount: data.amount,
-      currency: data.currency ?? "USD",
-    },
-  });
-}
-
-export async function getApplicationPayments(
-  applicationId: string
-) {
-  return db.payment.findMany({
-    where: {
-      applicationId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-}
-
-export async function getUserPayments(userId: string) {
-  return db.payment.findMany({
-    where: {
-      userId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-}
-
-export async function updatePaymentStatus(
-  paymentId: string,
-  status: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED" | "CANCELLED",
-  stripePaymentId?: string
-) {
-  return db.payment.update({
-    where: {
-      id: paymentId,
-    },
-    data: {
-      status,
-      stripePaymentId,
-    },
-  });
-}
-
-// =====================================================
-// INVOICES
-// =====================================================
-
-export async function createInvoice(data: {
-  applicationId: string;
-  userId: string;
-  paymentId?: string;
-  amount: number;
-  currency?: string;
-}) {
-  return db.invoice.create({
-    data: {
-      applicationId: data.applicationId,
-      userId: data.userId,
-      paymentId: data.paymentId,
-      amount: data.amount,
-      currency: data.currency ?? "USD",
-      invoiceNumber: `INV-${Date.now()}`,
-    },
-  });
-}
-
-export async function getInvoice(id: string) {
-  return db.invoice.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      payment: true,
-      application: true,
-      user: true,
-    },
-  });
-}
-
-export async function getUserInvoices(userId: string) {
-  return db.invoice.findMany({
-    where: {
-      userId,
-    },
-    include: {
-      payment: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-}
-
-// =====================================================
-// NOTIFICATIONS
-// =====================================================
-
-export async function createNotification(data: {
-  userId: string;
-  title: string;
-  message: string;
-  type: string;
-}) {
-  return db.notification.create({
-    data,
-  });
-}
-
-export async function getUserNotifications(userId: string) {
-  return db.notification.findMany({
-    where: {
-      userId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-}
-
-export async function markNotificationRead(id: string) {
-  return db.notification.update({
-    where: {
-      id,
-    },
-    data: {
-      isRead: true,
-    },
-  });
-}
-
-export async function markAllNotificationsRead(
-  userId: string
-) {
-  return db.notification.updateMany({
-    where: {
-      userId,
-      isRead: false,
-    },
-    data: {
-      isRead: true,
-    },
-  });
-}
 // =====================================================
 // AUDIT LOGS
 // =====================================================
@@ -999,8 +826,7 @@ export async function getAdminDashboardStats() {
 
     totalCountries,
 
-    totalRevenue:
-      totalPayments._sum.amount ?? 0,
+    totalRevenue: totalPayments._sum.amount ?? 0,
   };
 }
 
@@ -1008,87 +834,65 @@ export async function getAdminDashboardStats() {
 // CLIENT DASHBOARD
 // =====================================================
 
-export async function getClientDashboardStats(
-  userId: string
-) {
-  const [
-    applications,
+export async function getClientDashboardStats(userId: string) {
+  const [applications, documents, appointments, unreadNotifications, payments] =
+    await Promise.all([
+      db.application.findMany({
+        where: {
+          userId,
+        },
+      }),
 
-    documents,
+      db.document.findMany({
+        where: {
+          userId,
+        },
+      }),
 
-    appointments,
+      db.appointment.findMany({
+        where: {
+          userId,
+        },
+      }),
 
-    unreadNotifications,
+      db.notification.count({
+        where: {
+          userId,
+          isRead: false,
+        },
+      }),
 
-    payments,
-  ] = await Promise.all([
-    db.application.findMany({
-      where: {
-        userId,
-      },
-    }),
+      db.payment.findMany({
+        where: {
+          userId,
+        },
+      }),
+    ]);
 
-    db.document.findMany({
-      where: {
-        userId,
-      },
-    }),
+  const activeApplications = applications.filter((app) =>
+    ["SUBMITTED", "UNDER_REVIEW", "PROCESSING"].includes(app.status),
+  ).length;
 
-    db.appointment.findMany({
-      where: {
-        userId,
-      },
-    }),
+  const upcomingAppointments = appointments.filter(
+    (appointment) =>
+      appointment.scheduledAt > new Date() &&
+      appointment.status !== "CANCELLED",
+  ).length;
 
-    db.notification.count({
-      where: {
-        userId,
-        isRead: false,
-      },
-    }),
-
-    db.payment.findMany({
-      where: {
-        userId,
-      },
-    }),
-  ]);
-
-  const activeApplications =
-    applications.filter((app) =>
-      [
-        "SUBMITTED",
-        "UNDER_REVIEW",
-        "PROCESSING",
-      ].includes(app.status)
-    ).length;
-
-  const upcomingAppointments =
-    appointments.filter(
-      (appointment) =>
-        appointment.scheduledAt > new Date() &&
-        appointment.status !== "CANCELLED"
-    ).length;
-
-  const totalPayments =
-    payments.reduce(
-      (sum, payment) => sum + payment.amount,
-      0
-    );
+  const totalPayments = payments.reduce(
+    (sum, payment) => sum + payment.amount,
+    0,
+  );
 
   return {
-    totalApplications:
-      applications.length,
+    totalApplications: applications.length,
 
     activeApplications,
 
-    approvedApplications:
-      applications.filter(
-        (a) => a.status === "APPROVED"
-      ).length,
+    approvedApplications: applications.filter((a) => a.status === "APPROVED")
+      .length,
 
-    totalDocuments:
-      documents.length,
+    totalDocuments: documents.length,
 
     upcomingAppointments,
 
@@ -1102,9 +906,7 @@ export async function getClientDashboardStats(
 // SYSTEM SETTINGS
 // =====================================================
 
-export async function getSystemSetting(
-  key: string
-) {
+export async function getSystemSetting(key: string) {
   return db.systemSettings.findUnique({
     where: {
       key,
@@ -1112,10 +914,7 @@ export async function getSystemSetting(
   });
 }
 
-export async function updateSystemSetting(
-  key: string,
-  value: unknown
-) {
+export async function updateSystemSetting(key: string, value: unknown) {
   return db.systemSettings.upsert({
     where: {
       key,
@@ -1134,9 +933,7 @@ export async function updateSystemSetting(
 // EMAIL TEMPLATES
 // =====================================================
 
-export async function getEmailTemplate(
-  name: string
-) {
+export async function getEmailTemplate(name: string) {
   return db.emailTemplate.findUnique({
     where: {
       name,

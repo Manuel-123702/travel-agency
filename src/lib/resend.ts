@@ -1,13 +1,22 @@
-import Resend from "resend";
+import { Resend } from "resend";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "");
 
-export async function sendEmail(opts: { to: string; subject: string; html: string; from?: string }) {
-  const from = opts.from || process.env.RESEND_FROM_EMAIL || "no-reply@travelagency.com";
+export async function sendEmail(opts: {
+  to: string;
+  subject: string;
+  html: string;
+  from?: string;
+}) {
+  const from =
+    opts.from || process.env.RESEND_FROM_EMAIL || "no-reply@travelagency.com";
   if (!process.env.RESEND_API_KEY) {
-    console.warn("RESEND_API_KEY not configured, skipping email send for:", opts.subject);
+    console.warn(
+      "RESEND_API_KEY not configured, skipping email send for:",
+      opts.subject,
+    );
     return null;
   }
 
@@ -27,9 +36,17 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
 
 type TemplateName = "appointment" | "payment";
 
-export async function sendTemplatedEmail(name: TemplateName, to: string, props: any, subject?: string) {
+export async function sendTemplatedEmail(
+  name: TemplateName,
+  to: string,
+  props: any,
+  subject?: string,
+) {
   if (!process.env.RESEND_API_KEY) {
-    console.warn("RESEND_API_KEY not configured, skipping templated email send: ", name);
+    console.warn(
+      "RESEND_API_KEY not configured, skipping templated email send: ",
+      name,
+    );
     return null;
   }
 

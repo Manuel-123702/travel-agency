@@ -1,3 +1,30 @@
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
+
+export async function GET() {
+  try {
+    const totalClients = await db.user.count();
+    const totalApplications = await db.application.count();
+    const approved = await db.application.count({ where: { status: "APPROVED" } });
+    const pending = await db.application.count({ where: { status: "PENDING" } });
+
+    const revenue = await db.payment.aggregate({
+      _sum: { amount: true },
+      where: { status: "COMPLETED" },
+    });
+
+    return NextResponse.json({
+      totalClients,
+      totalApplications,
+      approved,
+      pending,
+      revenue: revenue._sum.amount ?? 0,
+    });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "failed" }, { status: 500 });
+  }
+}
 import { currentUser } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
