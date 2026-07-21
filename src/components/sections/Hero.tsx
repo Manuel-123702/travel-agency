@@ -8,12 +8,13 @@ import { ArrowRight, CheckCircle, Star, Sparkles, Play } from "lucide-react";
 import {
   heroFlags,
   heroFeatures,
-  heroStats,
   heroDestinations,
   heroContent,
 } from "@/data/home";
+import { useWebsiteStats } from "@/hooks/useWebsiteData";
 
 export default function Hero() {
+  const { stats } = useWebsiteStats();
   const ref = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -378,7 +379,12 @@ flex items-center justify-center
               </div>
 
               <div className="grid grid-cols-2 gap-3 mb-6">
-                {heroStats.map((item) => (
+                {stats ? [
+                  { number: stats.totalApplications?.toLocaleString() || "2,500+", label: "Cases Processed" },
+                  { number: stats.successRate + "%", label: "Success Rate" },
+                  { number: stats.countries?.toString() || "3", label: "Destinations" },
+                  { number: "24/7", label: "Client Support" }
+                ].map((item) => (
                   <div
                     key={item.label}
                     className="
@@ -405,7 +411,42 @@ text-white/60 text-xs
                       {item.label}
                     </p>
                   </div>
-                ))}
+                )) : (
+                  // Fallback to hardcoded stats while loading
+                  [
+                    { number: "2,500+", label: "Cases Processed" },
+                    { number: "97%", label: "Success Rate" },
+                    { number: "3", label: "Destinations" },
+                    { number: "24/7", label: "Client Support" }
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="
+bg-white/10
+rounded-2xl
+p-4
+text-center
+"
+                    >
+                      <p
+                        className="
+font-heading font-black
+text-2xl text-gold
+"
+                      >
+                        {item.number}
+                      </p>
+
+                      <p
+                        className="
+text-white/60 text-xs
+"
+                      >
+                        {item.label}
+                      </p>
+                    </div>
+                  ))
+                )}
               </div>
 
               <div

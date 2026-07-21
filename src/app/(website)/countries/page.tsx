@@ -44,101 +44,10 @@ const countries = [
     tags: ["Skilled Worker", "EU Blue Card", "Business Visa"],
     desc: "The richest country in the EU with excellent salaries and quality of life.",
   },
-  {
-    slug: "germany",
-    flag: "🇩🇪",
-    name: "Germany",
-    capital: "Berlin",
-    tagline: "Engineering & Innovation Hub",
-    color: "from-gray-900 via-red-600 to-yellow-400",
-    bg: "from-gray-900 to-red-800",
-    highlight: "#EAB308",
-    stats: { visaRate: "95%", processingTime: "4–10 wks", universities: "400+", avgSalary: "€45k/yr" },
-    tags: ["Job Seeker Visa", "Student Visa", "EU Blue Card"],
-    desc: "Europe's largest economy — tuition-free universities and top engineering careers.",
-  },
-  {
-    slug: "belgium",
-    flag: "🇧🇪",
-    name: "Belgium",
-    capital: "Brussels",
-    tagline: "Heart of the European Union",
-    color: "from-black via-yellow-400 to-red-600",
-    bg: "from-gray-900 to-yellow-800",
-    highlight: "#EAB308",
-    stats: { visaRate: "93%", processingTime: "6–10 wks", universities: "40+", avgSalary: "€42k/yr" },
-    tags: ["Work Permit", "Student Visa", "Family Visa"],
-    desc: "Home to EU institutions and a multilingual, vibrant business environment.",
-  },
-  {
-    slug: "ireland",
-    flag: "🇮🇪",
-    name: "Ireland",
-    capital: "Dublin",
-    tagline: "Tech Capital of Europe",
-    color: "from-green-700 via-white to-orange-500",
-    bg: "from-green-900 to-green-700",
-    highlight: "#16A34A",
-    stats: { visaRate: "96%", processingTime: "4–8 wks", universities: "30+", avgSalary: "€50k/yr" },
-    tags: ["Critical Skills", "Study Visa", "Stamp 4"],
-    desc: "Hub for Google, Meta, Apple — with English as first language and booming tech scene.",
-  },
-  {
-    slug: "finland",
-    flag: "🇫🇮",
-    name: "Finland",
-    capital: "Helsinki",
-    tagline: "World's Happiest Country",
-    color: "from-blue-600 to-white",
-    bg: "from-blue-800 to-blue-600",
-    highlight: "#2563EB",
-    stats: { visaRate: "95%", processingTime: "4–8 wks", universities: "15+", avgSalary: "€40k/yr" },
-    tags: ["Residence Permit", "Student Visa", "Startup Visa"],
-    desc: "Ranked #1 for happiness, safety, and education quality year after year.",
-  },
-  {
-    slug: "uk",
-    flag: "🇬🇧",
-    name: "United Kingdom",
-    capital: "London",
-    tagline: "Oxford, Cambridge & Prestige",
-    color: "from-blue-800 via-red-600 to-red-400",
-    bg: "from-blue-900 to-red-900",
-    highlight: "#DC2626",
-    stats: { visaRate: "93%", processingTime: "3–8 wks", universities: "150+", avgSalary: "£38k/yr" },
-    tags: ["Skilled Worker", "Student Route", "Graduate Visa"],
-    desc: "Legendary universities, global finance hub, and pathway to indefinite leave to remain.",
-  },
-  {
-    slug: "usa",
-    flag: "🇺🇸",
-    name: "United States",
-    capital: "Washington D.C.",
-    tagline: "Land of Endless Opportunity",
-    color: "from-blue-700 via-white to-red-500",
-    bg: "from-blue-900 to-red-800",
-    highlight: "#2563EB",
-    stats: { visaRate: "91%", processingTime: "8–16 wks", universities: "500+", avgSalary: "$65k/yr" },
-    tags: ["F-1 Student", "H-1B Work", "O-1 Talent"],
-    desc: "Harvard, MIT, Silicon Valley — the world's #1 destination for ambitious professionals.",
-  },
-  {
-    slug: "australia",
-    flag: "🇦🇺",
-    name: "Australia",
-    capital: "Canberra",
-    tagline: "Sun, Quality & Skills Migration",
-    color: "from-yellow-500 via-red-600 to-blue-600",
-    bg: "from-blue-900 to-yellow-700",
-    highlight: "#EAB308",
-    stats: { visaRate: "96%", processingTime: "4–12 wks", universities: "40+", avgSalary: "AUD 72k/yr" },
-    tags: ["Skilled Visa", "Student Visa", "Working Holiday"],
-    desc: "A top destination with skills-based migration, beautiful lifestyle, and PR pathways.",
-  },
 ];
 
 const overallStats = [
-  { icon: Globe,      value: "10+",    label: "Countries"          },
+  { icon: Globe,      value: "3",      label: "Countries"          },
   { icon: Users,      value: "2,500+", label: "Clients Placed"     },
   { icon: Star,       value: "97%",    label: "Success Rate"       },
   { icon: TrendingUp, value: "10+",    label: "Years Experience"   },
@@ -170,7 +79,7 @@ export default function CountriesPage() {
             className="inline-flex items-center gap-2 bg-gold/20 border border-gold/30 rounded-full px-4 py-2 mb-6"
           >
             <Globe size={14} className="text-gold" />
-            <span className="text-gold text-sm font-bold">10 Destinations Worldwide</span>
+            <span className="text-gold text-sm font-bold">3 Destinations Worldwide</span>
           </motion.div>
 
           <motion.h1
@@ -191,7 +100,7 @@ export default function CountriesPage() {
             transition={{ delay: 0.2 }}
             className="text-white/70 text-xl max-w-2xl mx-auto mb-12"
           >
-            Expert immigration assistance to 10 of the world's most desirable countries.
+            Expert immigration assistance to France, Canada, and Luxembourg.
             Your dream destination is just a consultation away.
           </motion.p>
 

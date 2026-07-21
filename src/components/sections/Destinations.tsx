@@ -6,9 +6,12 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { destinationsData } from "@/data/home";
+import { useCountries } from "@/hooks/useWebsiteData";
 
 
 export default function Destinations() {
+  const { countries: dynamicCountries, loading } = useCountries();
+  const countriesToUse = dynamicCountries || destinationsData;
 
   const {
     ref,
@@ -173,23 +176,24 @@ export default function Destinations() {
 
 
           {
-            destinationsData.map(
+            countriesToUse.map(
               (
-                {
-                  flag,
-                  country,
-                  href,
-                  tagline,
-                  image,
-                  color,
-                  opportunities,
-                  highlights,
-                  featured
-                },
+                item: any,
                 i
-              ) => (
+              ) => {
+                // Handle both API response and hardcoded data formats
+                const country = item.country || item.name || item;
+                const name = item.name || item.country;
+                const href = item.href || `/${item.slug || item.country?.toLowerCase()}`;
+                const flag = item.flag;
+                const tagline = item.tagline;
+                const imageData = item.image;
+                const colorData = item.color;
+                const opportunitiesData = item.opportunities;
+                const highlightsData = item.highlights;
+                const featuredData = item.featured;
 
-
+                return (
               <motion.div
 
                 key={country}
@@ -225,7 +229,7 @@ export default function Destinations() {
                 hover:-translate-y-2
                 transition-all
                 ${
-                  featured
+                  featuredData
                   ?
                   "ring-2 ring-gold ring-offset-2"
                   :
@@ -236,7 +240,7 @@ export default function Destinations() {
 
 
                 {
-                  featured && (
+                  featuredData && (
 
                     <div
                       className="
@@ -276,7 +280,7 @@ export default function Destinations() {
                 >
 
                   <img
-                    src={image}
+                    src={imageData}
                     alt={country}
                     className="
                     w-full
@@ -294,7 +298,7 @@ export default function Destinations() {
                     absolute
                     inset-0
                     bg-gradient-to-b
-                    ${color}
+                    ${colorData}
                     `}
                   />
 
@@ -370,12 +374,12 @@ export default function Destinations() {
                   >
 
                     {
-                      opportunities.map(
+                      opportunitiesData.map(
                         ({
                           icon: Icon,
                           label,
                           value
-                        }) => (
+                        }: any) => (
 
                         <div
                           key={label}
@@ -459,7 +463,7 @@ export default function Destinations() {
                   >
 
                     {
-                      highlights.map((item)=>(
+                      highlightsData.map((item: any)=>(
                         <span
                           key={item}
                           className="
@@ -520,8 +524,8 @@ export default function Destinations() {
               </motion.div>
 
 
-              )
-            )
+                );
+              })
           }
 
 

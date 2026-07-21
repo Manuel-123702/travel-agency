@@ -9,6 +9,35 @@ import {
   Camera,
 } from "lucide-react";
 
+// Fetch dynamic data from API
+async function fetchWebsiteStats() {
+  try {
+    const response = await fetch('/api/website/stats', {
+      cache: 'no-store' // Always get fresh data
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (error) {
+    console.error('Failed to fetch website stats:', error);
+  }
+  return null;
+}
+
+async function fetchCountries() {
+  try {
+    const response = await fetch('/api/website/countries', {
+      cache: 'no-store'
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (error) {
+    console.error('Failed to fetch countries:', error);
+  }
+  return null;
+}
+
 // =============================
 // HERO DATA
 // =============================
@@ -29,28 +58,7 @@ export const heroFlags = [
     delay: 0.4,
   },
   {
-    emoji: "🇩🇪",
-    label: "Germany",
-    top: "62%",
-    left: "6%",
-    delay: 0.8,
-  },
-  {
-    emoji: "🇬🇧",
-    label: "UK",
-    top: "70%",
-    right: "8%",
-    delay: 0.2,
-  },
-  {
-    emoji: "🇦🇺",
-    label: "Australia",
-    top: "40%",
-    right: "4%",
-    delay: 1,
-  },
-  {
-    emoji: "🇱🇺",
+    emoji: "LU",
     label: "Luxembourg",
     top: "48%",
     left: "3%",
@@ -76,7 +84,7 @@ export const heroStats = [
     label: "Years Experience",
   },
   {
-    number: "10",
+    number: "3",
     label: "Destinations",
   },
   {
@@ -96,16 +104,8 @@ export const heroDestinations = [
     code: "CA",
   },
   {
-    flag: "🇩🇪",
-    code: "DE",
-  },
-  {
-    flag: "🇬🇧",
-    code: "UK",
-  },
-  {
-    flag: "🇦🇺",
-    code: "AU",
+    flag: "�",
+    code: "LU",
   },
 ];
 
@@ -132,8 +132,7 @@ export const heroContent = {
   countries: [
     "France",
     "Canada",
-    "Germany",
-    "7+ more countries",
+    "Luxembourg",
   ],
 
   successRate:
@@ -326,6 +325,84 @@ export const destinationsData = [
       "Schengen Access",
       "Quality of Life",
     ],
+    featured: true,
+  },
+  {
+    flag: "🇨🇦",
+    country: "Canada",
+    href: "/canada",
+
+    tagline:
+      "Land of Opportunities & Multiculturalism",
+
+    image:
+      "https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=800&q=80",
+
+    color:
+      "from-red-900/90 to-red-700/70",
+
+    opportunities: [
+      {
+        icon: GraduationCap,
+        label: "World-Class Education",
+        value: "Top-ranked universities",
+      },
+      {
+        icon: Briefcase,
+        label: "Career Growth",
+        value: "Strong job market",
+      },
+      {
+        icon: TrendingUp,
+        label: "Immigration Pathways",
+        value: "Express Entry & PR",
+      },
+    ],
+
+    highlights: [
+      "Permanent Residency Options",
+      "Welcoming Society",
+      "High Standard of Living",
+    ],
+    featured: false,
+  },
+  {
+    flag: "🇱🇺",
+    country: "Luxembourg",
+    href: "/luxembourg",
+
+    tagline:
+      "Financial Hub & European Excellence",
+
+    image:
+      "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&q=80",
+
+    color:
+      "from-navy-900/90 to-navy-700/70",
+
+    opportunities: [
+      {
+        icon: Briefcase,
+        label: "Financial Center",
+        value: "Banking & finance hub",
+      },
+      {
+        icon: GraduationCap,
+        label: "Quality Education",
+        value: "Multilingual programs",
+      },
+      {
+        icon: TrendingUp,
+        label: "High Salaries",
+        value: "Top EU wages",
+      },
+    ],
+
+    highlights: [
+      "EU Blue Card Access",
+      "Multilingual Environment",
+      "Strategic Location",
+    ],
     featured: false,
   },
 ];
@@ -405,7 +482,7 @@ export const faqData = [
   {
     question: "Which countries do you support?",
     answer:
-      "We provide immigration guidance for destinations including France, Canada, Germany, Luxembourg, and other international opportunities.",
+      "We provide immigration guidance for France, Canada, and Luxembourg with expert support for students, professionals, and families.",
   },
   {
     question: "Can I apply if I do not have all my documents yet?",
@@ -556,7 +633,7 @@ export const aboutData = {
       label: "Years Experience",
     },
     {
-      number: "10",
+      number: "3",
       label: "Countries",
     },
   ],
@@ -615,18 +692,6 @@ export const visaCalculatorData = [
   },
 
   {
-    country: "Germany",
-    flag: "🇩🇪",
-    processingTime: "20 - 60 days",
-    requirements: [
-      "Passport",
-      "Qualification documents",
-      "Financial guarantee",
-      "Health insurance",
-    ],
-  },
-
-  {
     country: "Luxembourg",
     flag: "🇱🇺",
     processingTime: "30 - 45 days",
@@ -663,7 +728,6 @@ export const immigrationQuizData = {
       options: [
         "France",
         "Canada",
-        "Germany",
         "Luxembourg",
       ],
     },

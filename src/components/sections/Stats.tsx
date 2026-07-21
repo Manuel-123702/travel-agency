@@ -5,9 +5,11 @@ import CountUp from "react-countup";
 import { motion } from "framer-motion";
 
 import { homeStats } from "@/data/home";
+import { useWebsiteStats } from "@/hooks/useWebsiteData";
 
 
 export default function Stats() {
+  const { stats } = useWebsiteStats();
 
   const {
     ref,
@@ -16,6 +18,42 @@ export default function Stats() {
     triggerOnce: true,
     threshold: 0.3,
   });
+
+  // Use dynamic stats if available, otherwise fallback to hardcoded data
+  const dynamicStats = stats ? [
+    {
+      icon: homeStats[0].icon,
+      number: stats.totalApplications || 2500,
+      suffix: homeStats[0].suffix,
+      label: homeStats[0].label,
+      sub: homeStats[0].sub,
+      color: homeStats[0].color
+    },
+    {
+      icon: homeStats[1].icon,
+      number: stats.successRate || 97,
+      suffix: "%",
+      label: "Success Rate",
+      sub: homeStats[1].sub,
+      color: homeStats[1].color
+    },
+    {
+      icon: homeStats[2].icon,
+      number: stats.countries || 3,
+      suffix: "",
+      label: "Countries",
+      sub: homeStats[2].sub,
+      color: homeStats[2].color
+    },
+    {
+      icon: homeStats[3].icon,
+      number: stats.totalUsers || 1500,
+      suffix: "+",
+      label: "Happy Clients",
+      sub: homeStats[3].sub,
+      color: homeStats[3].color
+    }
+  ] : homeStats;
 
 
   return (
@@ -87,7 +125,7 @@ export default function Stats() {
 
 
           {
-            homeStats.map(
+            dynamicStats.map(
               (
                 {
                   icon: Icon,
