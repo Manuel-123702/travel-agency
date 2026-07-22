@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -97,6 +98,33 @@ const socials = [
 ];
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.ok) {
+        setSubscribed(true);
+        setEmail("");
+      }
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <footer className="bg-navy text-white">
       {/* Newsletter band */}
@@ -110,17 +138,21 @@ export default function Footer() {
               Get the latest visa updates, policy changes, and success stories.
             </p>
           </div>
-          <form className="flex gap-3 w-full md:w-auto" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex gap-3 w-full md:w-auto" onSubmit={handleSubscribe}>
             <input
               type="email"
               placeholder="Your email address"
-              className="flex-1 md:w-72 px-5 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/50 text-sm focus:outline-none focus:border-gold focus:bg-white/15 transition-all"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={subscribed || loading}
+              className="flex-1 md:w-72 px-5 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/50 text-sm focus:outline-none focus:border-gold focus:bg-white/15 transition-all disabled:opacity-50"
             />
             <button
               type="submit"
-              className="bg-gold text-navy font-bold px-6 py-3 rounded-full hover:shadow-lg hover:shadow-gold/30 transition-all text-sm flex-shrink-0"
+              disabled={subscribed || loading || !email}
+              className="bg-gold text-navy font-bold px-6 py-3 rounded-full hover:shadow-lg hover:shadow-gold/30 transition-all text-sm flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Subscribe
+              {loading ? "Subscribing..." : subscribed ? "Subscribed!" : "Subscribe"}
             </button>
           </form>
         </div>

@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -47,7 +47,7 @@ model UserProfile {
   postalCode      String?
   dateOfBirth     DateTime?
   nationality     String?
-  languagesSpoken String[]  @default([])
+  languagesSpoken String   @default("[]")
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -60,7 +60,7 @@ model StaffProfile {
   userId         String   @unique
   department     String?
   position       String?
-  specialization String[] @default([])
+  specialization String  @default("[]")
   bio            String?
   officeNumber   String?
   availability   Json?
@@ -155,7 +155,7 @@ model Appointment {
 
 model Conversation {
   id             String    @id @default(cuid())
-  participantIds String[]
+  participantIds String  @default("[]")
   subject        String?
   lastMessage    String?
   lastMessageAt  DateTime?
@@ -193,10 +193,24 @@ model Payment {
   amount           Int
   currency         String        @default("USD")
   status           PaymentStatus @default(PENDING)
+  paymentMethod    PaymentMethod @default(STRIPE)
   createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  // Stripe fields
   stripeCustomerId String?
   stripeInvoiceId  String?
   stripePaymentId  String?       @unique
+  // PayPal fields
+  paypalOrderId    String?       @unique
+  paypalPaymentId  String?       @unique
+  // Orange Money fields
+  orangeTransactionId String?    @unique
+  orangePhoneNumber   String?
+  // MTN MoMo fields
+  mtnTransactionId String?       @unique
+  mtnPhoneNumber   String?
+  // Receipt generation
+  receiptUrl       String?
   invoice          Invoice?
   application      Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   user             User          @relation("payments", fields: [userId], references: [id], onDelete: Cascade)
@@ -324,6 +338,13 @@ enum PaymentStatus {
   FAILED
   REFUNDED
   CANCELLED
+}
+
+enum PaymentMethod {
+  STRIPE
+  PAYPAL
+  ORANGE_MONEY
+  MTN_MOMO
 }
 
 enum AuditAction {

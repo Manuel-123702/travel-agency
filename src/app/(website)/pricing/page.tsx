@@ -26,7 +26,7 @@ const packages = [
     badge: null,
     color: "border-gray-200",
     headerBg: "bg-gray-50",
-    btnClass: "bg-navy text-white hover:bg-blue-800",
+    btnClass: "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5",
     icon: Shield,
     features: [
       "Free profile evaluation",
@@ -55,7 +55,7 @@ const packages = [
     badge: "Most Popular",
     color: "border-blue-500",
     headerBg: "bg-navy",
-    btnClass: "bg-gold text-navy hover:shadow-xl hover:shadow-gold/30",
+    btnClass: "bg-gradient-to-r from-amber-500 to-amber-600 text-navy hover:from-amber-600 hover:to-amber-700 shadow-lg hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-300 transform hover:-translate-y-0.5",
     icon: Star,
     features: [
       "Everything in Starter",
@@ -85,7 +85,7 @@ const packages = [
     badge: "Best Results",
     color: "border-gold",
     headerBg: "bg-gradient-to-br from-[#0A0F1E] to-blue-900",
-    btnClass: "bg-gold text-navy hover:shadow-xl hover:shadow-gold/30",
+    btnClass: "bg-gradient-to-r from-amber-400 to-amber-500 text-navy hover:from-amber-500 hover:to-amber-600 shadow-lg hover:shadow-xl hover:shadow-amber-400/30 transition-all duration-300 transform hover:-translate-y-0.5",
     icon: Zap,
     features: [
       "Everything in Premium",
@@ -148,7 +148,14 @@ function PricingContent() {
         body: JSON.stringify({ packageKey }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Something went wrong");
+      if (!res.ok) {
+        // If no application exists, redirect to create one
+        if (data.error === "Please create an application first.") {
+          router.push("/dashboard?newApplication=true&package=" + packageKey);
+          return;
+        }
+        throw new Error(data.error || "Something went wrong");
+      }
       if (data.url) window.location.href = data.url;
     } catch (err: unknown) {
       setError(
@@ -402,11 +409,11 @@ function PricingContent() {
                         {isLoading ? (
                           <>
                             <div className="w-5 h-5 border-2 border-current/30 border-t-current rounded-full animate-spin" />
-                            Redirecting...
+                            Processing...
                           </>
                         ) : (
                           <>
-                            Get Started
+                            Proceed to Payment
                             <ArrowRight size={16} />
                           </>
                         )}

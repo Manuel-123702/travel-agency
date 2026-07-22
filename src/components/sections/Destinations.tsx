@@ -402,12 +402,16 @@ export default function Destinations() {
                             "
                           >
 
-                            <Icon
-                              size={16}
-                              className="
-                              text-blue-700
-                              "
-                            />
+                            {typeof Icon === 'function' ? (
+                              <Icon
+                                size={16}
+                                className="
+                                text-blue-700
+                                "
+                              />
+                            ) : (
+                              <span className="text-blue-700 text-sm">✓</span>
+                            )}
 
                           </div>
 

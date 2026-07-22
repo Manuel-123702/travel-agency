@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { getStripe, PACKAGES, PackageKey } from "@/lib/stripe";
 import { db } from "@/lib/db";
-import { captureException } from "@/lib/sentry";
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,16 +16,30 @@ export async function POST(req: NextRequest) {
 
     const clerkUser = await currentUser();
 
-    const prismaUser = await db.user.findUnique({
-      where: {
-        clerkId,
-      },
-    });
+    let prismaUser;
+    try {
+      prismaUser = await db.user.findUnique({
+        where: {
+          clerkId,
+        },
+      });
+    } catch (dbError) {
+      console.error("Database connection error:", dbError);
+      return NextResponse.json(
+        {
+          error: "Database connection failed. Please try again later.",
+          details: "Unable to connect to the database server.",
+        },
+        {
+          status: 503,
+        }
+      );
+    }
 
     if (!prismaUser) {
       return NextResponse.json(
         {
-          error: "User not found.",
+          error: "User not found. Please complete your profile first.",
         },
         {
           status: 404,
@@ -131,12 +144,12 @@ export async function POST(req: NextRequest) {
       url: session.url,
     });
   } catch (error) {
-    console.error(error);
-    try { captureException(error); } catch (_) {}
+    console.error("Checkout error:", error);
 
     return NextResponse.json(
       {
         error: "Unable to create checkout session.",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
       {
         status: 500,
