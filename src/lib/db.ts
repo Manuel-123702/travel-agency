@@ -395,7 +395,7 @@ export async function createConversation(
 ) {
   return db.conversation.create({
     data: {
-      participantIds,
+      participantIds: JSON.stringify(participantIds),
       subject,
     },
   });
@@ -420,7 +420,7 @@ export async function getUserConversations(userId: string) {
   return db.conversation.findMany({
     where: {
       participantIds: {
-        has: userId,
+        contains: userId,
       },
     },
     include: {

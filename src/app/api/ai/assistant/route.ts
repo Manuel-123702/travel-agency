@@ -3,7 +3,7 @@ import { getEmbedding } from "@/lib/ai/embeddings";
 import { queryVectors } from "@/lib/ai/vectorStore";
 import { requireAdmin } from "@/lib/auth";
 import { rateLimit } from "@/lib/rateLimiter";
-import { getAuth } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { captureException } from "@/lib/sentry";
 import { incAiAssistantRequest } from "@/lib/metrics";
 
@@ -20,8 +20,8 @@ export async function POST(req: Request) {
   }
 
   // Rate limit per-user or per-IP
-  const auth = getAuth();
-  const userId = auth.userId;
+  const authObj = await auth();
+  const userId = authObj.userId;
   const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
   const key = userId ? `rl:user:${userId}` : `rl:ip:${ip}`;
   const rl = await rateLimit(key, 20, 60 * 60); // 20 requests per hour

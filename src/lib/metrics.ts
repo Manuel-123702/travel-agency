@@ -13,7 +13,8 @@ let redisHealthStatus: any = null;
 try {
   // Dynamically require prom-client so local dev without the package doesn't crash
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const promClient = require("prom-client");
+  const dynamicRequire = eval("require");
+  const promClient = dynamicRequire("prom-client");
   const { Counter, Gauge, collectDefaultMetrics } = promClient;
   register = promClient.register;
   collectDefaultMetrics({ register });

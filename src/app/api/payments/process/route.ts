@@ -93,6 +93,14 @@ export async function POST(req: NextRequest) {
         );
     }
 
+    // Extract metadata and clientSecret safely if present in result
+    const metadata =
+      "metadata" in paymentResult && paymentResult.metadata
+        ? paymentResult.metadata
+        : {};
+    const clientSecret =
+      "clientSecret" in paymentResult ? paymentResult.clientSecret : null;
+
     // Update payment with result
     const updatedPayment = await db.payment.update({
       where: { id: payment.id },
@@ -100,7 +108,7 @@ export async function POST(req: NextRequest) {
         status: paymentResult.success
           ? PaymentStatus.COMPLETED
           : PaymentStatus.FAILED,
-        ...paymentResult.metadata,
+        ...metadata,
       },
     });
 
@@ -114,7 +122,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: paymentResult.success,
       payment: updatedPayment,
-      clientSecret: paymentResult.clientSecret,
+      clientSecret,
     });
   } catch (error) {
     console.error("Payment processing error:", error);

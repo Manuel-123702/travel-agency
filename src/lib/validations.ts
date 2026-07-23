@@ -60,6 +60,7 @@ export type UploadDocument = z.infer<typeof uploadDocumentSchema>;
 // ===== Appointment Schemas =====
 
 export const createAppointmentSchema = z.object({
+    applicationId: z.string().optional(),
     title: z.string().min(3, 'Title is required'),
     description: z.string().optional(),
     scheduledAt: z.coerce.date().refine(

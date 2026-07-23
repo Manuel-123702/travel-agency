@@ -187,15 +187,15 @@ export default function Header() {
       </div>
 
       {/* ── Main nav ───────────────────────────────────────────────────────── */}
-      <nav className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-0 py-1 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 flex-shrink-0">
           <div className="relative">
             <Image
               src="/logo.png"
               alt="Travel Agency Logo"
-              width={96}
-              height={96}
+              width={110}
+              height={110}
               className="object-contain drop-shadow-lg"
               priority
             />
@@ -316,7 +316,14 @@ export default function Header() {
             <>
               <SignInButton mode="modal">
                 <button
-                  className={`text-sm font-semibold px-4 py-2 rounded-full transition-all ${
+                  className={`cursor-pointer text-white font-bold relative text-[14px] w-[9em] h-[3em] 
+                    text-center bg-gradient-to-r from-violet-500 from-10% via-sky-500 via-30% to-pink-500 
+                    to-90% bg-[length:400%] rounded-[30px] z-10 hover:animate-gradient-xy hover:bg-[length:100%] 
+                    before:content-[''] before:absolute before:-top-[5px] before:-bottom-[5px] before:-left-[5px] 
+                    before:-right-[5px] before:bg-gradient-to-r before:from-violet-500 before:from-10% before:via-sky-500 
+                    before:via-30% before:to-pink-500 before:bg-[length:400%] before:-z-10 before:rounded-[35px] before:hover:blur-xl 
+                    before:transition-all before:ease-in-out before:duration-[1s] before:hover:bg-[length:10%] active:bg-violet-700 focus:ring-violet-700 
+                    hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px] ${
                     scrolled
                       ? "text-navy hover:bg-gray-100"
                       : "text-white hover:bg-white/10"
@@ -327,15 +334,10 @@ export default function Header() {
               </SignInButton>
               <Link
                 href="/contact"
-                className="relative overflow-hidden bg-gold text-navy font-heading font-bold text-sm px-5 py-2.5 rounded-full group hover:shadow-xl hover:shadow-gold/40 hover:-translate-y-0.5 transition-all duration-300"
+                className="relative rounded-full bg-blue-500 px-4 py-2 font-mono font-bold text-white transition-colors duration-300 ease-linear before:absolute before:right-1/2 before:top-1/2 before:-z-[1] before:h-3/4 before:w-2/3 before:origin-bottom-left before:-translate-y-1/2 before:translate-x-1/2 before:animate-ping before:rounded-full before:bg-blue-500 hover:bg-blue-700 hover:before:bg-blue-700"
               >
                 <span className="relative z-10">Free Consultation</span>
-                <motion.div
-                  className="absolute inset-0 bg-yellow-300"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ duration: 0.3 }}
-                />
+                
               </Link>
             </>
           )}

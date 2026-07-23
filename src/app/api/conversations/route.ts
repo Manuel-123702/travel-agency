@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
-import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { db, createConversation } from "@/lib/db";
 
 export async function POST(req: Request) {
-  const { userId } = getAuth();
+  const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const user = await db.user.findUnique({ where: { clerkId: userId } });
@@ -13,6 +13,6 @@ export async function POST(req: Request) {
   // Ensure the creator is included
   const ids = Array.from(new Set([...participantIds, user.id]));
 
-  const convo = await db.createConversation(ids, subject);
+  const convo = await createConversation(ids, subject);
   return NextResponse.json(convo);
 }

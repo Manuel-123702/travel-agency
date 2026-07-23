@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
-import stripe from "@/lib/stripe";
+import { auth } from "@clerk/nextjs/server";
+import { getStripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
 
 export async function POST(req: Request) {
-  const { userId } = getAuth();
+  const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const user = await db.user.findUnique({ where: { clerkId: userId } });
@@ -12,6 +12,7 @@ export async function POST(req: Request) {
 
   const { applicationId, amount, currency = "USD", successUrl, cancelUrl } = await req.json();
 
+  const stripe = getStripe();
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",

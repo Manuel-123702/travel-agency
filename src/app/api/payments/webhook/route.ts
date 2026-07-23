@@ -1,17 +1,7 @@
 import { NextResponse } from "next/server";
-import stripe from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
 import { captureException } from "@/lib/sentry";
-
-export const config = { api: { bodyParser: false } } as any;
-
-async function buffer(readable: any) {
-  const chunks: Buffer[] = [];
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-  }
-  return Buffer.concat(chunks);
-}
 
 export async function POST(req: Request) {
   const sig = req.headers.get("stripe-signature") || "";
@@ -20,6 +10,7 @@ export async function POST(req: Request) {
   let event: any;
 
   try {
+    const stripe = getStripe();
     event = stripe.webhooks.constructEvent(raw, sig, process.env.STRIPE_WEBHOOK_SECRET || "");
   } catch (err: any) {
     try { captureException(err); } catch (_) {}

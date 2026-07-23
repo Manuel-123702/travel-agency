@@ -256,6 +256,7 @@ export default function AnalyticsPage() {
                 <p className="text-xs text-gray-500">Snapshot refreshed on load.</p>
               </div>
             </div>
+            </>
           )}
         </motion.div>
 
