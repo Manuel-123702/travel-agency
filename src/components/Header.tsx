@@ -187,7 +187,7 @@ export default function Header() {
       </div>
 
       {/* ── Main nav ───────────────────────────────────────────────────────── */}
-      <nav className="max-w-7xl mx-auto px-0 py-1 flex items-center justify-between">
+      <nav className="w-full px-4 lg:px-8 py-1 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 flex-shrink-0">
           <div className="relative">
@@ -219,7 +219,7 @@ export default function Header() {
         </Link>
 
         {/* Desktop nav links */}
-        <div className="hidden lg:flex items-center gap-0.5">
+        <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
           {navLinks.map((link) => (
             <div
               key={link.href}
@@ -231,7 +231,7 @@ export default function Header() {
             >
               <Link
                 href={link.href}
-                className={`relative flex items-center gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 group ${
+                className={`relative flex items-center gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 group whitespace-nowrap ${
                   isActive(link.href)
                     ? "text-gold"
                     : scrolled
@@ -268,7 +268,7 @@ export default function Header() {
                       <Link
                         key={child.href}
                         href={child.href}
-                        className={`block px-5 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-navy/5 hover:text-gold hover:pl-6 ${
+                        className={`block px-5 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-navy/5 hover:text-gold hover:pl-6 whitespace-nowrap ${
                           pathname === child.href
                             ? "text-gold bg-gold/5"
                             : "text-navy"
@@ -285,7 +285,7 @@ export default function Header() {
         </div>
 
         {/* CTA area */}
-        <div className="hidden lg:flex items-center gap-2">
+        <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
           {isSignedIn ? (
             <div className="flex items-center gap-3">
               {userRole === "ADMIN" || userRole === "SUPER_ADMIN" ? (
@@ -334,7 +334,7 @@ export default function Header() {
               </SignInButton>
               <Link
                 href="/contact"
-                className="relative rounded-full bg-blue-500 px-4 py-2 font-mono font-bold text-white transition-colors duration-300 ease-linear before:absolute before:right-1/2 before:top-1/2 before:-z-[1] before:h-3/4 before:w-2/3 before:origin-bottom-left before:-translate-y-1/2 before:translate-x-1/2 before:animate-ping before:rounded-full before:bg-blue-500 hover:bg-blue-700 hover:before:bg-blue-700"
+                className="relative rounded-full bg-blue-500 px-4 py-2 font-mono font-bold text-white transition-colors duration-300 ease-linear before:absolute before:right-1/2 before:top-1/2 before:-z-[1] before:h-3/4 before:w-2/3 before:origin-bottom-left before:-translate-y-1/2 before:translate-x-1/2 before:animate-ping before:rounded-full before:bg-blue-500 hover:bg-blue-700 hover:before:bg-blue-700 whitespace-nowrap"
               >
                 <span className="relative z-10">Free Consultation</span>
                 

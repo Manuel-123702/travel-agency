@@ -58,7 +58,7 @@ export const heroFlags = [
     delay: 0.4,
   },
   {
-    emoji: "LU",
+    emoji: "🇱🇺",
     label: "Luxembourg",
     top: "48%",
     left: "3%",
@@ -104,7 +104,7 @@ export const heroDestinations = [
     code: "CA",
   },
   {
-    flag: "�",
+    flag: "🇱🇺",
     code: "LU",
   },
 ];
