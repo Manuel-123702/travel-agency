@@ -6,7 +6,7 @@ type VectorRecord = {
   id: string;
   text: string;
   embedding: number[];
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 };
 
 const DATA_PATH = path.resolve(process.cwd(), "vectors.json");

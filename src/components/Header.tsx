@@ -87,12 +87,8 @@ const navLinks = [
     ],
   },
   { label: "Pricing", href: "/pricing" },
-  { label: "Destinations", href: "/destinations" },
-  { label: "Blog", href: "/blog" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
-  { label: "Privacy", href: "/privacy-policy" },
-  { label: "Terms", href: "/terms" },
 ];
 
 export default function Header() {
@@ -100,20 +96,35 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname = usePathname();
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [isAdminEmail, setIsAdminEmail] = useState(false);
+
+  // Admin email for Sanity CMS access
+  const ADMIN_EMAIL = "tessohmanuel@gmail.com";
 
   useEffect(() => {
     // fetch current user's role for conditional admin buttons
     async function fetchRole() {
-      if (!isSignedIn) return setUserRole(null);
+      if (!isSignedIn) {
+        setUserRole(null);
+        setIsAdminEmail(false);
+        return;
+      }
       try {
         const res = await fetch("/api/auth/me");
-        if (!res.ok) return setUserRole(null);
+        if (!res.ok) {
+          setUserRole(null);
+          setIsAdminEmail(false);
+          return;
+        }
         const data = await res.json();
         setUserRole(data?.role ?? null);
+        // Check if user email matches admin email for CMS access
+        setIsAdminEmail(user?.emailAddresses?.[0]?.emailAddress === ADMIN_EMAIL);
       } catch (err) {
         setUserRole(null);
+        setIsAdminEmail(false);
       }
     }
 
@@ -121,7 +132,7 @@ export default function Header() {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [isSignedIn, user]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -194,8 +205,8 @@ export default function Header() {
             <Image
               src="/logo.png"
               alt="Travel Agency Logo"
-              width={110}
-              height={110}
+              width={80}
+              height={80}
               className="object-contain drop-shadow-lg"
               priority
             />
@@ -288,10 +299,11 @@ export default function Header() {
         <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
           {isSignedIn ? (
             <div className="flex items-center gap-3">
-              {userRole === "ADMIN" || userRole === "SUPER_ADMIN" ? (
+              {/* CMS button - only visible for admin email */}
+              {isAdminEmail && (
                 <Link
                   href="/studio"
-                  className={`text-sm font-semibold px-4 py-2 rounded-full transition-all ${
+                  className={`text-sm font-semibold  px-4 py-2 rounded-full transition-all ${
                     scrolled
                       ? "text-navy hover:bg-gray-100"
                       : "text-white hover:bg-white/10"
@@ -299,16 +311,51 @@ export default function Header() {
                 >
                   CMS
                 </Link>
-              ) : null}
+              )}
+              {/* Atlas button - visible for all signed-in users */}
               <Link
                 href="/dashboard"
-                className={`text-sm font-semibold px-4 py-2 rounded-full transition-all ${
-                  scrolled
-                    ? "text-navy hover:bg-gray-100"
-                    : "text-white hover:bg-white/10"
-                }`}
+                className="relative group cursor-pointer mx-4"
               >
-                Dashboard
+                <div
+                  className={`relative px-8 py-4 border-2 font-bold text-lg rounded-lg transform transition-all 
+                    duration-300 group-hover:translate-y-1 group-hover:translate-x-1 
+                    shadow-[6px_6px_10px_rgba(0,0,0,0.6),-6px_-6px_10px_rgba(255,255,255,0.1)] 
+                    group-hover:shadow-[8px_8px_15px_rgba(0,0,0,0.8),-8px_-8px_15px_rgba(255,255,255,0.15)] ${
+                    scrolled
+                      ? "text-gold border-gold"
+                      : "text-gold border-gold"
+                  }`}
+                >
+                  🌍 Atlas
+                </div>
+
+                <div
+                  className={`absolute inset-0 border-2 border-dashed rounded-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300 ${
+                    scrolled ? "border-gold" : "border-gold"
+                  }`}
+                ></div>
+
+                <div
+                  className={`absolute -top-2 -right-2 w-4 h-4 rounded-full animate-ping shadow-lg ${
+                    scrolled ? "bg-gold" : "bg-gold"
+                  }`}
+                ></div>
+                <div
+                  className={`absolute -bottom-2 -left-2 w-4 h-4 rounded-full animate-ping shadow-lg ${
+                    scrolled ? "bg-gold" : "bg-gold"
+                  }`}
+                ></div>
+                <div
+                  className={`absolute top-1/3 left-3 w-3 h-3 rounded-full animate-ping opacity-70 ${
+                    scrolled ? "bg-yellow-400" : "bg-yellow-400"
+                  }`}
+                ></div>
+                <div
+                  className={`absolute top-2/3 right-3 w-3 h-3 rounded-full animate-ping opacity-70 ${
+                    scrolled ? "bg-yellow-400" : "bg-yellow-400"
+                  }`}
+                ></div>
               </Link>
               <UserButton afterSignOutUrl="/" />
             </div>
@@ -316,7 +363,7 @@ export default function Header() {
             <>
               <SignInButton mode="modal">
                 <button
-                  className={`cursor-pointer text-white font-bold relative text-[14px] w-[9em] h-[3em] 
+                  className={`cursor-pointer text-white font-bold relative w-[7em] h-[3em] text-[16px] 
                     text-center bg-gradient-to-r from-violet-500 from-10% via-sky-500 via-30% to-pink-500 
                     to-90% bg-[length:400%] rounded-[30px] z-10 hover:animate-gradient-xy hover:bg-[length:100%] 
                     before:content-[''] before:absolute before:-top-[5px] before:-bottom-[5px] before:-left-[5px] 
@@ -334,10 +381,12 @@ export default function Header() {
               </SignInButton>
               <Link
                 href="/contact"
-                className="relative rounded-full bg-blue-500 px-4 py-2 font-mono font-bold text-white transition-colors duration-300 ease-linear before:absolute before:right-1/2 before:top-1/2 before:-z-[1] before:h-3/4 before:w-2/3 before:origin-bottom-left before:-translate-y-1/2 before:translate-x-1/2 before:animate-ping before:rounded-full before:bg-blue-500 hover:bg-blue-700 hover:before:bg-blue-700 whitespace-nowrap"
+                className="relative rounded-full bg-blue-500 px-4 py-4 text-white transition-colors w-[12em] h-[4em] font-bold text-center
+                duration-300 ease-linear before:absolute before:right-1/2 before:top-1/2 before:-z-[1] before:h-3/4 before:w-2/3 text-[16px]
+                before:origin-bottom-left before:-translate-y-1/2 before:translate-x-1/2 before:animate-ping before:rounded-full 
+                before:bg-blue-500 hover:bg-blue-700 hover:before:bg-blue-700 whitespace-nowrap"
               >
-                <span className="relative z-10">Free Consultation</span>
-                
+                <span>Free Consultation</span>
               </Link>
             </>
           )}
@@ -424,7 +473,8 @@ export default function Header() {
                 {isSignedIn ? (
                   <div className="flex items-center gap-3 px-4">
                     <UserButton afterSignOutUrl="/" />
-                    {userRole === "ADMIN" || userRole === "SUPER_ADMIN" ? (
+                    {/* CMS button - only visible for admin email */}
+                    {isAdminEmail && (
                       <Link
                         href="/studio"
                         onClick={() => setMobileOpen(false)}
@@ -432,13 +482,34 @@ export default function Header() {
                       >
                         CMS
                       </Link>
-                    ) : null}
+                    )}
                     <Link
                       href="/dashboard"
                       onClick={() => setMobileOpen(false)}
-                      className="text-sm font-bold text-navy"
+                      className="relative group cursor-pointer"
                     >
-                      My Dashboard
+                      <div
+                        className="relative px-8 py-4 border-2 text-gold border-gold font-bold text-lg rounded-lg transform transition-all duration-300 group-hover:translate-y-1 group-hover:translate-x-1 shadow-[6px_6px_10px_rgba(0,0,0,0.6),-6px_-6px_10px_rgba(255,255,255,0.1)] group-hover:shadow-[8px_8px_15px_rgba(0,0,0,0.8),-8px_-8px_15px_rgba(255,255,255,0.15)]"
+                      >
+                        🌍 Atlas
+                      </div>
+
+                      <div
+                        className="absolute inset-0 border-2 border-dashed border-gold rounded-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300"
+                      ></div>
+
+                      <div
+                        className="absolute -top-2 -right-2 w-4 h-4 bg-gold rounded-full animate-ping shadow-lg"
+                      ></div>
+                      <div
+                        className="absolute -bottom-2 -left-2 w-4 h-4 bg-gold rounded-full animate-ping shadow-lg"
+                      ></div>
+                      <div
+                        className="absolute top-1/3 left-3 w-3 h-3 bg-yellow-400 rounded-full animate-ping opacity-70"
+                      ></div>
+                      <div
+                        className="absolute top-2/3 right-3 w-3 h-3 bg-yellow-400 rounded-full animate-ping opacity-70"
+                      ></div>
                     </Link>
                   </div>
                 ) : (

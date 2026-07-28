@@ -3,11 +3,39 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Star } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
-import { testimonialsData } from "@/data/home";
+import { testimonialsData as defaultTestimonialsData } from "@/data/home";
+import { client } from "@/sanity/lib/client";
+import { testimonialsQuery } from "@/sanity/queries/testimonials";
 
+type Testimonial = {
+  name: string;
+  role: string;
+  country: string;
+  message: string;
+  rating: number;
+  avatar: string;
+  image?: string;
+};
 
 export default function Testimonials() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonialsData);
+
+  useEffect(() => {
+    async function fetchTestimonialsData() {
+      try {
+        const data = await client.fetch(testimonialsQuery);
+        if (data && data.length > 0) {
+          setTestimonials(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch testimonials data:", error);
+      }
+    }
+    fetchTestimonialsData();
+  }, []);
 
   const {
     ref,
@@ -118,7 +146,7 @@ export default function Testimonials() {
 
 
           {
-            testimonialsData.map(
+            testimonials.map(
               (
                 {
                   name,
@@ -126,9 +154,10 @@ export default function Testimonials() {
                   country,
                   message,
                   rating,
-                  avatar
+                  avatar,
+                  image
                 },
-                index
+                index: number
               ) => (
 
               <motion.div
@@ -217,23 +246,34 @@ export default function Testimonials() {
                 >
 
 
-                  <div
-                    className="
-                    w-12
-                    h-12
-                    rounded-full
-                    bg-navy
-                    text-white
-                    flex
-                    items-center
-                    justify-center
-                    font-bold
-                    "
-                  >
+                  {image ? (
+                    <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                      <Image
+                        src={image}
+                        alt={name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="
+                      w-12
+                      h-12
+                      rounded-full
+                      bg-navy
+                      text-white
+                      flex
+                      items-center
+                      justify-center
+                      font-bold
+                      "
+                    >
 
-                    {avatar}
+                      {avatar}
 
-                  </div>
+                    </div>
+                  )}
 
 
 

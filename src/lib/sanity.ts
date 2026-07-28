@@ -18,7 +18,7 @@ export const sanityClient = createClient({
 // Image URL builder
 const builder = imageUrlBuilder(sanityClient);
 
-export const urlFor = (source: any) => builder.image(source);
+export const urlFor = (source: Record<string, unknown>) => builder.image(source);
 
 // ===== Sanity Query Helpers =====
 

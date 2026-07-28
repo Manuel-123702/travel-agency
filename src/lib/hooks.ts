@@ -1,5 +1,6 @@
 // lib/hooks.ts - Custom React hooks
 
+import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import type { Application, Document, Appointment, Message, Notification } from './types';
@@ -339,5 +340,4 @@ export const useAsync = (
     return { execute, status, value, error };
 };
 
-// Import React
-import React from 'react';
+// Import React - already imported at top

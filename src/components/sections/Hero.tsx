@@ -2,20 +2,37 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect, useState } from "react";
 import { ArrowRight, CheckCircle, Star, Sparkles, Play } from "lucide-react";
 
 import {
   heroFlags,
   heroFeatures,
   heroDestinations,
-  heroContent,
+  heroContent as defaultHeroContent,
 } from "@/data/home";
 import { useWebsiteStats } from "@/hooks/useWebsiteData";
+import { client } from "@/sanity/lib/client";
+import { homepageQuery } from "@/sanity/queries/homepage";
 
 export default function Hero() {
   const { stats } = useWebsiteStats();
+  const [heroContent, setHeroContent] = useState(defaultHeroContent);
   const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    async function fetchHeroData() {
+      try {
+        const data = await client.fetch(homepageQuery);
+        if (data?.hero) {
+          setHeroContent(data.hero);
+        }
+      } catch (error) {
+        console.error("Failed to fetch hero data:", error);
+      }
+    }
+    fetchHeroData();
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: ref,

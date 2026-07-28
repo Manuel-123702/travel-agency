@@ -7,11 +7,41 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
-import { servicesData } from "@/data/home";
+import { servicesData as defaultServicesData } from "@/data/home";
+import { client } from "@/sanity/lib/client";
+import { servicesQuery } from "@/sanity/queries/services";
 
+type Service = {
+  icon?: any;
+  tag: string;
+  title: string;
+  desc: string;
+  features: string[];
+  color: string;
+  featured?: boolean;
+  href: string;
+  image?: string;
+};
 
 export default function Services() {
+  const [services, setServices] = useState<Service[]>(defaultServicesData);
+
+  useEffect(() => {
+    async function fetchServicesData() {
+      try {
+        const data = await client.fetch(servicesQuery);
+        if (data && data.length > 0) {
+          setServices(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch services data:", error);
+      }
+    }
+    fetchServicesData();
+  }, []);
 
   const {
     ref,
@@ -181,7 +211,7 @@ export default function Services() {
 
 
           {
-            servicesData.map(
+            services.map(
               (
                 {
                   icon: Icon,
@@ -191,9 +221,10 @@ export default function Services() {
                   features,
                   color,
                   featured,
-                  href
+                  href,
+                  image
                 },
-                i
+                i: number
               ) => (
 
 
@@ -306,25 +337,36 @@ export default function Services() {
 
 
 
-                    <div
-                      className="
-                      w-14
-                      h-14
-                      bg-white/20
-                      rounded-2xl
-                      flex
-                      items-center
-                      justify-center
-                      mb-4
-                      "
-                    >
+                    {image ? (
+                      <div className="relative w-full h-40 mb-4 rounded-xl overflow-hidden">
+                        <Image
+                          src={image}
+                          alt={title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="
+                        w-14
+                        h-14
+                        bg-white/20
+                        rounded-2xl
+                        flex
+                        items-center
+                        justify-center
+                        mb-4
+                        "
+                      >
 
-                      <Icon
-                        size={26}
-                        className="text-white"
-                      />
+                        <Icon
+                          size={26}
+                          className="text-white"
+                        />
 
-                    </div>
+                      </div>
+                    )}
 
 
 

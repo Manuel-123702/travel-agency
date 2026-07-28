@@ -9,7 +9,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Users, MessageSquare, FileText,
   Bell, Settings, Menu, ChevronRight, LogOut,
-  Globe, TrendingUp, Shield,
+  Globe, TrendingUp, Shield, Calendar, CreditCard,
+  Receipt, Ticket, Briefcase, GraduationCap, Building2,
 } from "lucide-react";
 
 const navItems = [
@@ -17,6 +18,13 @@ const navItems = [
   { label: "Clients & Cases", href: "/admin/clients", icon: Users, badge: 12 },
   { label: "Messages Inbox", href: "/admin/messages", icon: MessageSquare, badge: 5 },
   { label: "Document Review", href: "/admin/documents", icon: FileText, badge: 3 },
+  { label: "Appointments", href: "/admin/appointments", icon: Calendar },
+  { label: "Payments", href: "/admin/payments", icon: CreditCard },
+  { label: "Invoices", href: "/admin/invoices", icon: Receipt },
+  { label: "Support Tickets", href: "/admin/tickets", icon: Ticket, badge: 2 },
+  { label: "Staff Management", href: "/admin/staff", icon: Briefcase },
+  { label: "Universities", href: "/admin/universities", icon: GraduationCap },
+  { label: "Partners", href: "/admin/partners", icon: Building2 },
   { label: "Alerts", href: "/admin/alerts", icon: Bell, badge: 2 },
   { label: "Analytics", href: "/admin/analytics", icon: TrendingUp },
   { label: "AI Assistant", href: "/admin/ai", icon: Globe },

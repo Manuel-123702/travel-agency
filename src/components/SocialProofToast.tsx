@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
-const notifications = [
+const defaultNotifications = [
   {
     name: "Amara K.",
     location: "Nigeria → France 🇫🇷",
@@ -51,6 +51,24 @@ export default function SocialProofToast() {
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(0);
   const [dismissed, setDismissed] = useState(false);
+  const [notifications, setNotifications] = useState(defaultNotifications);
+
+  useEffect(() => {
+    async function fetchSocialProof() {
+      try {
+        const response = await fetch("/api/social-proof");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.notifications && data.notifications.length > 0) {
+            setNotifications(data.notifications);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch social proof:", error);
+      }
+    }
+    fetchSocialProof();
+  }, []);
 
   useEffect(() => {
     if (dismissed) return;

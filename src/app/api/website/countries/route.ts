@@ -2,8 +2,28 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { GraduationCap, Briefcase, Camera, TrendingUp } from "lucide-react";
 
+interface CountryData {
+  country: string;
+  slug: string;
+  flag: string;
+  name: string;
+  code: string;
+  capital: string;
+  tagline: string;
+  image: string;
+  color: string;
+  opportunities: Array<{
+    icon: any;
+    label: string;
+    value: string;
+  }>;
+  highlights: string[];
+  featured: boolean;
+  href: string;
+}
+
 // Default country data for France, Canada, Luxembourg
-const defaultCountries = [
+const defaultCountries: CountryData[] = [
   {
     country: "France",
     slug: "france",
@@ -70,8 +90,8 @@ export async function GET() {
     
     if (dbCountries.length > 0) {
       // Map database countries to the expected format
-      const countries = dbCountries.map((country: any) => {
-        const defaultData = defaultCountries.find((c: any) => c.code === country.code) || defaultCountries[0];
+      const countries: CountryData[] = dbCountries.map((country) => {
+        const defaultData = defaultCountries.find((c) => c.code === country.code) || defaultCountries[0];
         return {
           ...defaultData,
           name: country.name,

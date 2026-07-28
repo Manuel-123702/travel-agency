@@ -4,14 +4,47 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { destinationsData } from "@/data/home";
+import { destinationsData as defaultDestinationsData } from "@/data/home";
 import { useCountries } from "@/hooks/useWebsiteData";
+import { client } from "@/sanity/lib/client";
+import { destinationsQuery } from "@/sanity/queries/destinations";
 
+type Destination = {
+  flag?: string;
+  country: string;
+  tagline: string;
+  image: string;
+  color: string;
+  opportunities?: Array<{
+    label: string;
+    value: string;
+  }>;
+  highlights?: string[];
+  featured?: boolean;
+  href?: string;
+};
 
 export default function Destinations() {
   const { countries: dynamicCountries, loading } = useCountries();
-  const countriesToUse = dynamicCountries || destinationsData;
+  const [destinations, setDestinations] = useState<Destination[]>(defaultDestinationsData);
+
+  useEffect(() => {
+    async function fetchDestinationsData() {
+      try {
+        const data = await client.fetch(destinationsQuery);
+        if (data && data.length > 0) {
+          setDestinations(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch destinations data:", error);
+      }
+    }
+    fetchDestinationsData();
+  }, []);
+
+  const countriesToUse = dynamicCountries || destinations;
 
   const {
     ref,

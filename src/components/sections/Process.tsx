@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import Image from "next/image";
 
 import { processData } from "@/data/home";
 
@@ -161,6 +162,17 @@ export default function Process() {
 
                 </div>
 
+                {item.image && (
+                  <div className="relative w-full h-32 mt-4 rounded-xl overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+
 
 
 
@@ -197,7 +209,6 @@ export default function Process() {
 
                 {
                   index !== processData.length - 1 && (
-
                     <div
                       className="
                       hidden

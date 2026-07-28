@@ -5,7 +5,7 @@ import React, { useState } from "react";
 export default function AdminAIPage() {
   const [q, setQ] = useState("");
   const [assistantAnswer, setAssistantAnswer] = useState<string | null>(null);
-  const [assistantHits, setAssistantHits] = useState<any[] | null>(null);
+  const [assistantHits, setAssistantHits] = useState<Array<{ text: string; metadata?: Record<string, unknown>; score?: number }> | null>(null);
   const [assistantLoading, setAssistantLoading] = useState(false);
   const [assistantError, setAssistantError] = useState<string | null>(null);
 

@@ -91,58 +91,32 @@ export async function POST(request: NextRequest) {
       return unauthorizedResponse("User not found");
     }
 
-    const formData = await request.formData();
+    const body = await request.json();
 
-    const file = formData.get("file") as File;
+    const { fileUrl, fileName, fileSize, mimeType, type, applicationId } = body;
 
-    const type = formData.get("type") as string;
-
-    const applicationId = formData.get("applicationId") as string | null;
-
-    if (!file || !type) {
-      return badRequestResponse("File and type are required.");
+    if (!fileUrl || !fileName || !type) {
+      return badRequestResponse("File URL, file name, and type are required.");
     }
-
-    // Persist file to local public uploads folder as a fallback storage
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    await fs.mkdir(uploadsDir, { recursive: true });
-
-    const fileKey = `${Date.now()}-${file.name}`;
-    const filePath = path.join(uploadsDir, fileKey);
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    await fs.writeFile(filePath, buffer);
-
-    const fileUrl = `/uploads/${encodeURIComponent(fileKey)}`;
 
     const document = await db.document.create({
       data: {
         userId: user.id,
-
         applicationId: applicationId || null,
-
         type: type as any,
-
-        fileName: file.name,
-
+        fileName,
         fileUrl,
-
-        fileKey,
-
-        fileSize: file.size,
-
-        mimeType: file.type,
+        fileKey: fileUrl.split("/").pop() || fileName,
+        fileSize,
+        mimeType,
       },
     });
 
     await db.notification.create({
       data: {
         userId: user.id,
-
         title: "Document Uploaded",
-
-        message: `${file.name} uploaded successfully.`,
-
+        message: `${fileName} uploaded successfully.`,
         type: "DOCUMENT",
       },
     });

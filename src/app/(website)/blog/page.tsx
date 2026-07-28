@@ -185,20 +185,6 @@ export default function BlogPage() {
           </div>
         </div>
       </section>
-
-      {/* Newsletter */}
-      <section className="py-20 bg-navy">
-        <div className="max-w-2xl mx-auto px-6 text-center">
-          <h2 className="font-heading font-bold text-3xl text-white mb-3">Never Miss an Update</h2>
-          <p className="text-white/60 mb-8">Get the latest immigration guides, policy changes, and success stories delivered to your inbox.</p>
-          <form className="flex gap-3">
-            <input type="email" placeholder="Enter your email" className="flex-1 px-5 py-3.5 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-gold transition-all text-sm" />
-            <button type="submit" className="bg-gold text-navy font-bold px-7 py-3.5 rounded-full hover:shadow-lg hover:shadow-gold/30 transition-all text-sm flex-shrink-0">
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
     </div>
   );
 }

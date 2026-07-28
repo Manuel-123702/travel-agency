@@ -2,11 +2,41 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useEffect, useState } from "react";
 
-import { aboutData } from "@/data/home";
+import { aboutData as defaultAboutData } from "@/data/home";
+import { client } from "@/sanity/lib/client";
+import { aboutQuery } from "@/sanity/queries/about";
 
+type AboutData = {
+  badge: string;
+  title: string;
+  description: string;
+  mission: string;
+  vision: string;
+  image: string;
+  stats: Array<{
+    number: string;
+    label: string;
+  }>;
+};
 
 export default function About() {
+  const [aboutData, setAboutData] = useState<AboutData>(defaultAboutData);
+
+  useEffect(() => {
+    async function fetchAboutData() {
+      try {
+        const data = await client.fetch(aboutQuery);
+        if (data) {
+          setAboutData(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch about data:", error);
+      }
+    }
+    fetchAboutData();
+  }, []);
 
   const {
     ref,

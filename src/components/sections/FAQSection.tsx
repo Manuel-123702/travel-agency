@@ -4,11 +4,33 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
-import { faqData } from "@/data/home";
+import { faqData as defaultFaqData } from "@/data/home";
+import { client } from "@/sanity/lib/client";
+import { faqQuery } from "@/sanity/queries/faq";
 
+type FAQ = {
+  question: string;
+  answer: string;
+};
 
 export default function FAQSection() {
+  const [faqs, setFaqs] = useState<FAQ[]>(defaultFaqData);
+
+  useEffect(() => {
+    async function fetchFaqData() {
+      try {
+        const data = await client.fetch(faqQuery);
+        if (data && data.length > 0) {
+          setFaqs(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch FAQ data:", error);
+      }
+    }
+    fetchFaqData();
+  }, []);
 
   const [open, setOpen] = useState<number | null>(0);
 
@@ -127,10 +149,10 @@ export default function FAQSection() {
         >
 
           {
-            faqData.map(
+            faqs.map(
               (
                 item,
-                index
+                index: number
               ) => (
 
               <motion.div

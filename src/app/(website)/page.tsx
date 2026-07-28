@@ -14,7 +14,6 @@ import ConsultationPlanner from "@/components/sections/ConsultationPlanner";
 import EvaluationForm from "@/components/sections/EvaluationForm";
 import FAQSection from "@/components/sections/FAQSection";
 import BlogPreview from "@/components/sections/BlogPreview";
-import NewsletterCTA from "@/components/sections/NewsletterCTA";
 
 export default function HomePage() {
   return (
@@ -35,7 +34,6 @@ export default function HomePage() {
       <EvaluationForm />
       <FAQSection />
       <BlogPreview />
-      <NewsletterCTA />
     </>
   );
 }

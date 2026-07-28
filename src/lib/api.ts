@@ -39,7 +39,7 @@ export function paginatedResponse<T>(
     page: number,
     pageSize: number,
     message = 'Success'
-): NextResponse<any> {
+): NextResponse<PaginatedResponse<T>> {
     const hasMore =
         (page - 1) * pageSize +
         (Array.isArray(data) ? data.length : 0) <

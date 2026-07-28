@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+import NotificationProvider from "@/components/NotificationProvider";
+import { NotificationProvider as NotificationContextProvider } from "@/contexts/NotificationContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -69,7 +71,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        elements: {
+          formButtonPrimary: "bg-navy hover:bg-blue-800 text-white",
+        },
+      }}
+      afterSignInUrl="/"
+      afterSignUpUrl="/"
+    >
       <html
         lang="en"
         suppressHydrationWarning
@@ -93,7 +103,10 @@ export default function RootLayout({
         </head>
 
         <body className="font-body antialiased">
-          {children}
+          <NotificationContextProvider>
+            {children}
+            <NotificationProvider />
+          </NotificationContextProvider>
         </body>
       </html>
     </ClerkProvider>

@@ -34,10 +34,14 @@ export async function sendEmail(opts: {
 
 type TemplateName = "appointment" | "payment";
 
+interface EmailProps {
+  [key: string]: unknown;
+}
+
 export async function sendTemplatedEmail(
   name: TemplateName,
   to: string,
-  props: any,
+  props: EmailProps,
   subject?: string,
 ) {
   if (!process.env.RESEND_API_KEY) {
@@ -48,7 +52,7 @@ export async function sendTemplatedEmail(
     return null;
   }
 
-  let Component: any | null = null;
+  let Component: React.ComponentType<EmailProps> | null = null;
   if (name === "appointment") {
     Component = (await import("@/emails/AppointmentConfirmation")).default;
   }

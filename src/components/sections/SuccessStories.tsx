@@ -3,11 +3,37 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { successStoriesData } from "@/data/home";
+import { successStoriesData as defaultSuccessStoriesData } from "@/data/home";
+import { client } from "@/sanity/lib/client";
+import { successStoriesQuery } from "@/sanity/queries/successStories";
 
+type SuccessStory = {
+  name: string;
+  country: string;
+  category: string;
+  result: string;
+  description: string;
+  image: string;
+};
 
 export default function SuccessStories() {
+  const [successStories, setSuccessStories] = useState<SuccessStory[]>(defaultSuccessStoriesData);
+
+  useEffect(() => {
+    async function fetchSuccessStories() {
+      try {
+        const data = await client.fetch(successStoriesQuery);
+        if (data && data.length > 0) {
+          setSuccessStories(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch success stories:", error);
+      }
+    }
+    fetchSuccessStories();
+  }, []);
 
   const {
     ref,
@@ -124,7 +150,7 @@ export default function SuccessStories() {
         >
 
           {
-            successStoriesData.map(
+            successStories.map(
               (
                 {
                   name,

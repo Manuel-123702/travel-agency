@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     const hits = await queryVectors(qEmb, 5);
 
     // build context from hits
-    const contextText = hits.map((h: any) => `- ${h.text}`).join("\n");
+    const contextText = hits.map((h: { text: string }) => `- ${h.text}`).join("\n");
 
     // Simple prompt: combine context and question and call an LLM
     const prompt = `You are an assistant for Travel Agency. Use the following context to answer the question. Context:\n${contextText}\nQuestion: ${question}`;

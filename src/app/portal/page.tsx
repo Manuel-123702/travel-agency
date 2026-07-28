@@ -17,6 +17,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+interface PortalStats {
+  totalPaid: number;
+  pendingPayments: number;
+  completedPayments: number;
+  pendingInvoices: number;
+}
+
 export default function ClientPortal() {
   const { user } = useUser();
   const [activeTab, setActiveTab] = useState("overview");
@@ -24,7 +31,7 @@ export default function ClientPortal() {
   const [payments, setPayments] = useState<any[]>([]);
   const [invoices, setInvoices] = useState<any[]>([]);
   const [receipts, setReceipts] = useState<any[]>([]);
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<PortalStats>({
     totalPaid: 0,
     pendingPayments: 0,
     completedPayments: 0,

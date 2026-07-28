@@ -4,11 +4,46 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { blogPreviewData } from "@/data/home";
+import { blogPreviewData as defaultBlogPreviewData } from "@/data/home";
+import { client } from "@/sanity/lib/client";
+import { blogPreviewQuery } from "@/sanity/queries/blogPreview";
 
+type BlogPost = {
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  image: string;
+  href: string;
+};
 
 export default function BlogPreview() {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(defaultBlogPreviewData as BlogPost[]);
+
+  useEffect(() => {
+    async function fetchBlogPreview() {
+      try {
+        const data = await client.fetch(blogPreviewQuery);
+        if (data && data.length > 0) {
+          // Transform Sanity data to match our format
+          const transformedData: BlogPost[] = data.map((post: any) => ({
+            title: post.title,
+            excerpt: post.excerpt,
+            category: post.category,
+            date: new Date(post.publishedAt).toLocaleDateString(),
+            image: post.image,
+            href: `/blog/${post.slug}`,
+          }));
+          setBlogPosts(transformedData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch blog preview:", error);
+      }
+    }
+    fetchBlogPreview();
+  }, []);
 
   const {
     ref,
@@ -160,23 +195,12 @@ export default function BlogPreview() {
 
 
           {
-            blogPreviewData.map(
-              (
-                {
-                  title,
-                  excerpt,
-                  category,
-                  date,
-                  image,
-                  href
-                },
-                index
-              ) => (
+            blogPosts.map((post: BlogPost, index: number) => (
 
 
               <motion.article
 
-                key={title}
+                key={post.title}
 
                 initial={{
                   opacity:0,
@@ -219,9 +243,9 @@ export default function BlogPreview() {
 
                   <img
 
-                    src={image}
+                    src={post.image}
 
-                    alt={title}
+                    alt={post.title}
 
                     className="
                     w-full
@@ -258,7 +282,7 @@ export default function BlogPreview() {
                     "
                   >
 
-                    {category}
+                    {post.category}
 
                   </span>
 
@@ -274,7 +298,7 @@ export default function BlogPreview() {
                     "
                   >
 
-                    {title}
+                    {post.title}
 
                   </h3>
 
@@ -289,7 +313,7 @@ export default function BlogPreview() {
                     "
                   >
 
-                    {excerpt}
+                    {post.excerpt}
 
                   </p>
 
@@ -311,7 +335,7 @@ export default function BlogPreview() {
                       "
                     >
 
-                      {date}
+                      {post.date}
 
                     </span>
 
@@ -319,7 +343,7 @@ export default function BlogPreview() {
 
                     <Link
 
-                      href={href}
+                      href={post.href}
 
                       className="
                       text-blue-700

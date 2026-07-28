@@ -137,7 +137,7 @@ export async function getUserWithProfile(id: string) {
 export async function createApplication(
   userId: string,
   data: {
-    visaType: any;
+    visaType: string;
     country: string;
     status?: ApplicationStatus;
     notes?: string;

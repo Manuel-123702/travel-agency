@@ -19,7 +19,21 @@ import {
   Star,
 } from "lucide-react";
 
-const DashboardKpis = ({ stats }: { stats: any }) => {
+interface DashboardStats {
+  totalClients?: number;
+  approved?: number;
+  totalApplications?: number;
+}
+
+interface DashboardKpi {
+  icon: any;
+  label: string;
+  value: string | number;
+  sub: string;
+  color: string;
+}
+
+const DashboardKpis = ({ stats }: { stats: DashboardStats }): DashboardKpi[] => {
   const percent = stats?.totalApplications
     ? Math.round((stats.approved / Math.max(1, stats.totalApplications)) * 100)
     : 0;
@@ -55,40 +69,6 @@ const DashboardKpis = ({ stats }: { stats: any }) => {
   ];
 };
 
-const caseSteps = [
-  {
-    step: "Profile Evaluation",
-    status: "completed",
-    date: "June 10, 2026",
-    detail: "Approved for Canada Express Entry + France Student pathway",
-  },
-  {
-    step: "File Preparation",
-    status: "in-progress",
-    date: "June 15 – July 2, 2026",
-    detail:
-      "4 of 9 documents collected. Missing: bank statement, reference letter.",
-  },
-  {
-    step: "Application Submission",
-    status: "pending",
-    date: "Est. July 5, 2026",
-    detail: "Pending document completion",
-  },
-  {
-    step: "Interview Preparation",
-    status: "pending",
-    date: "Est. July 15, 2026",
-    detail: "Consular interview coaching sessions",
-  },
-  {
-    step: "Visa Obtained",
-    status: "pending",
-    date: "Est. Aug–Sept 2026",
-    detail: "Final approval and travel preparation",
-  },
-];
-
 const quickActions = [
   {
     icon: FileText,
@@ -120,47 +100,43 @@ const quickActions = [
   },
 ];
 
-const recentActivity = [
-  {
-    icon: CheckCircle,
-    color: "text-green-600",
-    text: "Your evaluation report was approved",
-    time: "2 days ago",
-  },
-  {
-    icon: MessageSquare,
-    color: "text-blue-600",
-    text: "Advisor Aminata sent you a message",
-    time: "3 days ago",
-  },
-  {
-    icon: Bell,
-    color: "text-orange-500",
-    text: "Reminder: Bank statement due July 2",
-    time: "5 days ago",
-  },
-  {
-    icon: FileText,
-    color: "text-purple-600",
-    text: "Passport copy uploaded successfully",
-    time: "1 week ago",
-  },
-];
 export default function DashboardOverview() {
   const { user } = useUser();
   const name = user?.firstName || "Client";
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [applications, setApplications] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
     async function load() {
       try {
-        const res = await fetch("/api/dashboard/stats");
-        if (!res.ok) return;
-        const data = await res.json();
-        if (mounted) setStats(data);
+        setLoading(true);
+        const [statsRes, appsRes, notifRes] = await Promise.all([
+          fetch("/api/dashboard/stats"),
+          fetch("/api/dashboard/applications"),
+          fetch("/api/dashboard/notifications"),
+        ]);
+
+        if (statsRes.ok && mounted) {
+          const statsData = await statsRes.json();
+          setStats(statsData);
+        }
+
+        if (appsRes.ok && mounted) {
+          const appsData = await appsRes.json();
+          setApplications(appsData.applications || []);
+        }
+
+        if (notifRes.ok && mounted) {
+          const notifData = await notifRes.json();
+          setNotifications(notifData.notifications || []);
+        }
       } catch (err) {
         console.error(err);
+      } finally {
+        if (mounted) setLoading(false);
       }
     }
     load();
@@ -170,6 +146,54 @@ export default function DashboardOverview() {
   }, []);
 
   const kpis = DashboardKpis({ stats });
+
+  // Get the most recent application for case progress
+  const latestApplication = applications[0];
+  const caseSteps = latestApplication?.timeline || [];
+  
+  // Get recent activity from notifications
+  const recentActivity = notifications.slice(0, 4).map(notif => ({
+    icon: notif.type === 'success' ? CheckCircle : 
+           notif.type === 'message' ? MessageSquare : 
+           notif.type === 'alert' ? Bell : FileText,
+    color: notif.type === 'success' ? 'text-green-600' : 
+           notif.type === 'message' ? 'text-blue-600' : 
+           notif.type === 'alert' ? 'text-orange-500' : 'text-purple-600',
+    text: notif.message,
+    time: new Date(notif.createdAt).toLocaleDateString(),
+  }));
+
+  // Calculate KPIs from actual data
+  const userKpis = [
+    {
+      icon: ClipboardList,
+      label: "Case Step",
+      value: `${latestApplication?.currentStep || 1} / 5`,
+      sub: latestApplication?.status || "Not started",
+      color: "blue",
+    },
+    {
+      icon: TrendingUp,
+      label: "Completion",
+      value: `${latestApplication?.progressPercentage || 0}%`,
+      sub: latestApplication?.progressPercentage >= 50 ? "On track" : "In progress",
+      color: "green",
+    },
+    {
+      icon: FileText,
+      label: "Documents",
+      value: `${latestApplication?.documents?.length || 0} / 9`,
+      sub: `${9 - (latestApplication?.documents?.length || 0)} missing`,
+      color: "orange",
+    },
+    {
+      icon: Clock,
+      label: "Est. Approval",
+      value: "~9 wks",
+      sub: "On schedule",
+      color: "purple",
+    },
+  ];
 
   return (
     <div className="p-6 md:p-8 max-w-6xl mx-auto">
@@ -199,36 +223,7 @@ export default function DashboardOverview() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {[
-          {
-            icon: ClipboardList,
-            label: "Case Step",
-            value: "2 / 5",
-            sub: "File Preparation",
-            color: "blue",
-          },
-          {
-            icon: TrendingUp,
-            label: "Completion",
-            value: "40%",
-            sub: "On track",
-            color: "green",
-          },
-          {
-            icon: FileText,
-            label: "Documents",
-            value: "4 / 9",
-            sub: "Missing 5",
-            color: "orange",
-          },
-          {
-            icon: Clock,
-            label: "Est. Approval",
-            value: "~9 wks",
-            sub: "On schedule",
-            color: "purple",
-          },
-        ].map(({ icon: Icon, label, value, sub, color }, i) => (
+        {userKpis.map(({ icon: Icon, label, value, sub, color }, i) => (
           <motion.div
             key={label}
             initial={{ opacity: 0, y: 20 }}
@@ -291,66 +286,72 @@ export default function DashboardOverview() {
           <div className="relative">
             <div className="absolute left-5 top-6 bottom-6 w-px bg-gray-200" />
             <div className="space-y-5">
-              {caseSteps.map(({ step, status, date, detail }) => (
-                <div key={step} className="flex gap-4 relative">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 z-10 border-2 ${
-                      status === "completed"
-                        ? "bg-green-100 border-green-500"
-                        : status === "in-progress"
-                          ? "bg-blue-100 border-blue-500"
-                          : "bg-gray-100 border-gray-200"
-                    }`}
-                  >
-                    {status === "completed" ? (
-                      <CheckCircle size={18} className="text-green-600" />
-                    ) : status === "in-progress" ? (
-                      <Clock
-                        size={18}
-                        className="text-blue-600 animate-pulse"
-                      />
-                    ) : (
-                      <div className="w-3 h-3 rounded-full bg-gray-300" />
-                    )}
-                  </div>
-                  <div className="flex-1 pb-1">
-                    <div className="flex items-center justify-between">
-                      <p
-                        className={`font-semibold text-sm ${
-                          status === "completed"
-                            ? "text-green-700"
-                            : status === "in-progress"
-                              ? "text-blue-700"
-                              : "text-gray-400"
-                        }`}
-                      >
-                        {step}
-                      </p>
-                      <span
-                        className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                          status === "completed"
-                            ? "bg-green-100 text-green-700"
-                            : status === "in-progress"
-                              ? "bg-blue-100 text-blue-700 animate-pulse"
-                              : "bg-gray-100 text-gray-400"
-                        }`}
-                      >
-                        {status === "completed"
-                          ? "✓ Done"
-                          : status === "in-progress"
-                            ? "● Active"
-                            : "Pending"}
-                      </span>
+              {caseSteps.length > 0 ? (
+                caseSteps.map((step: any) => (
+                  <div key={step.id} className="flex gap-4 relative">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 z-10 border-2 ${
+                        step.status === "COMPLETED"
+                          ? "bg-green-100 border-green-500"
+                          : step.status === "UNDER_REVIEW" || step.status === "PROCESSING"
+                            ? "bg-blue-100 border-blue-500"
+                            : "bg-gray-100 border-gray-200"
+                      }`}
+                    >
+                      {step.status === "COMPLETED" ? (
+                        <CheckCircle size={18} className="text-green-600" />
+                      ) : step.status === "UNDER_REVIEW" || step.status === "PROCESSING" ? (
+                        <Clock
+                          size={18}
+                          className="text-blue-600 animate-pulse"
+                        />
+                      ) : (
+                        <div className="w-3 h-3 rounded-full bg-gray-300" />
+                      )}
                     </div>
-                    <p className="text-gray-400 text-xs mt-0.5">{date}</p>
-                    {status !== "pending" && (
-                      <p className="text-gray-500 text-xs mt-1 leading-relaxed">
-                        {detail}
+                    <div className="flex-1 pb-1">
+                      <div className="flex items-center justify-between">
+                        <p
+                          className={`font-semibold text-sm ${
+                            step.status === "COMPLETED"
+                              ? "text-green-700"
+                              : step.status === "UNDER_REVIEW" || step.status === "PROCESSING"
+                                ? "text-blue-700"
+                                : "text-gray-400"
+                          }`}
+                        >
+                          {step.title}
+                        </p>
+                        <span
+                          className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                            step.status === "COMPLETED"
+                              ? "bg-green-100 text-green-700"
+                              : step.status === "UNDER_REVIEW" || step.status === "PROCESSING"
+                                ? "bg-blue-100 text-blue-700 animate-pulse"
+                                : "bg-gray-100 text-gray-400"
+                          }`}
+                        >
+                          {step.status === "COMPLETED"
+                            ? "✓ Done"
+                            : step.status === "UNDER_REVIEW" || step.status === "PROCESSING"
+                              ? "● Active"
+                              : "Pending"}
+                        </span>
+                      </div>
+                      <p className="text-gray-400 text-xs mt-0.5">
+                        {step.dueDate ? new Date(step.dueDate).toLocaleDateString() : "No date set"}
                       </p>
-                    )}
+                      {step.description && (
+                        <p className="text-gray-500 text-xs mt-1 leading-relaxed">
+                          {step.description}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">No application timeline available</p>
+              )}
             </div>
           </div>
         </motion.div>
@@ -369,19 +370,17 @@ export default function DashboardOverview() {
             </h3>
             <div className="flex items-center gap-3 mb-4">
               <div className="relative">
-                <img
-                  src="https://randomuser.me/api/portraits/women/44.jpg"
-                  alt="Advisor"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                <div className="w-12 h-12 rounded-full bg-navy text-white flex items-center justify-center font-bold">
+                  {latestApplication?.assignedStaff?.name?.charAt(0) || "A"}
+                </div>
                 <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white" />
               </div>
               <div>
                 <p className="font-heading font-bold text-navy text-sm">
-                  Aminata Coulibaly
+                  {latestApplication?.assignedStaff?.name || "Your assigned advisor"}
                 </p>
                 <p className="text-blue-700 text-xs font-medium">
-                  Senior Immigration Specialist
+                  {latestApplication?.assignedStaff?.position || "Immigration Specialist"}
                 </p>
                 <div className="flex gap-0.5 mt-0.5">
                   {[...Array(5)].map((_, i) => (
@@ -415,31 +414,37 @@ export default function DashboardOverview() {
             </div>
           </motion.div>
 
-          {/* Next deadline */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-red-50 border border-red-100 rounded-2xl p-5"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <AlertCircle size={16} className="text-red-500" />
-              <h3 className="font-heading font-bold text-red-700 text-sm">
-                Next Deadline
-              </h3>
-            </div>
-            <p className="font-heading font-bold text-red-800 text-lg">
-              July 2, 2026
-            </p>
-            <p className="text-red-600 text-sm mt-1">Bank Statement required</p>
-            <p className="text-red-400 text-xs mt-2">3 days remaining</p>
-            <Link
-              href="/dashboard/documents"
-              className="mt-3 w-full flex items-center justify-center gap-1.5 bg-red-600 text-white font-semibold py-2.5 rounded-xl text-sm hover:bg-red-700 transition-colors"
+          {/* Next deadline - Dynamic from timeline */}
+          {caseSteps.find((s: any) => s.status === "UNDER_REVIEW" || s.status === "PROCESSING") && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+              className="bg-red-50 border border-red-100 rounded-2xl p-5"
             >
-              Upload Now <ArrowRight size={13} />
-            </Link>
-          </motion.div>
+              <div className="flex items-center gap-2 mb-2">
+                <AlertCircle size={16} className="text-red-500" />
+                <h3 className="font-heading font-bold text-red-700 text-sm">
+                  Next Deadline
+                </h3>
+              </div>
+              <p className="font-heading font-bold text-red-800 text-lg">
+                {caseSteps.find((s: any) => s.status === "UNDER_REVIEW" || s.status === "PROCESSING")?.dueDate 
+                  ? new Date(caseSteps.find((s: any) => s.status === "UNDER_REVIEW" || s.status === "PROCESSING")?.dueDate).toLocaleDateString()
+                  : "No deadline set"}
+              </p>
+              <p className="text-red-600 text-sm mt-1">
+                {caseSteps.find((s: any) => s.status === "UNDER_REVIEW" || s.status === "PROCESSING")?.title || "Action required"}
+              </p>
+              <p className="text-red-400 text-xs mt-2">Action needed</p>
+              <Link
+                href="/dashboard/documents"
+                className="mt-3 w-full flex items-center justify-center gap-1.5 bg-red-600 text-white font-semibold py-2.5 rounded-xl text-sm hover:bg-red-700 transition-colors"
+              >
+                View Details <ArrowRight size={13} />
+              </Link>
+            </motion.div>
+          )}
         </div>
       </div>
 
@@ -493,17 +498,21 @@ export default function DashboardOverview() {
             </Link>
           </div>
           <div className="space-y-4">
-            {recentActivity.map(({ icon: Icon, color, text, time }) => (
-              <div key={text} className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Icon size={15} className={color} />
+            {recentActivity.length > 0 ? (
+              recentActivity.map(({ icon: Icon, color, text, time }) => (
+                <div key={text} className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Icon size={15} className={color} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-navy text-sm leading-snug">{text}</p>
+                    <p className="text-gray-400 text-xs mt-0.5">{time}</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-navy text-sm leading-snug">{text}</p>
-                  <p className="text-gray-400 text-xs mt-0.5">{time}</p>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-gray-500 text-sm">No recent activity</p>
+            )}
           </div>
         </motion.div>
       </div>

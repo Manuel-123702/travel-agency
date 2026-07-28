@@ -5,12 +5,19 @@ import { getBlogPosts, getCountriesContent, getServices } from "@/lib/sanity";
 import { requireAdmin } from "@/lib/auth";
 import { incAiIngestRequest } from "@/lib/metrics";
 
+interface VectorRecord {
+  id: string;
+  text: string;
+  embedding: number[];
+  metadata?: Record<string, unknown>;
+}
+
 // Ingest content from Sanity into the vector store: blog posts, countries, services
 export async function POST() {
   await requireAdmin();
   incAiIngestRequest();
 
-  const records: any[] = [];
+  const records: VectorRecord[] = [];
 
   // Blog posts
   const posts = await getBlogPosts(100);

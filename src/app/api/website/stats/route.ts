@@ -28,7 +28,7 @@ export async function GET() {
       where: { status: 'COMPLETED' },
       select: { amount: true }
     });
-    const totalRevenue = payments.reduce((sum: number, p: any) => sum + p.amount, 0);
+    const totalRevenue = payments.reduce((sum: number, p: { amount: number }) => sum + p.amount, 0);
 
     // Get applications by country
     const applicationsByCountry = await db.application.groupBy({
@@ -44,7 +44,7 @@ export async function GET() {
       countries,
       successRate,
       totalRevenue,
-      applicationsByCountry: applicationsByCountry.map((item: any) => ({
+      applicationsByCountry: applicationsByCountry.map((item: { country: string; _count: number }) => ({
         country: item.country,
         count: item._count
       }))

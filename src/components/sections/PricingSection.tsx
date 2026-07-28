@@ -3,11 +3,36 @@
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useInView } from "react-intersection-observer";
+import { useEffect, useState } from "react";
 
-import { pricingData } from "@/data/home";
+import { pricingData as defaultPricingData } from "@/data/home";
+import { client } from "@/sanity/lib/client";
+import { pricingQuery } from "@/sanity/queries/pricing";
 
+type Pricing = {
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+  popular?: boolean;
+};
 
 export default function PricingSection() {
+  const [pricing, setPricing] = useState<Pricing[]>(defaultPricingData);
+
+  useEffect(() => {
+    async function fetchPricingData() {
+      try {
+        const data = await client.fetch(pricingQuery);
+        if (data && data.length > 0) {
+          setPricing(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch pricing data:", error);
+      }
+    }
+    fetchPricingData();
+  }, []);
 
   const {
     ref,
@@ -102,10 +127,10 @@ export default function PricingSection() {
         >
 
           {
-            pricingData.map(
+            pricing.map(
               (
                 plan,
-                index
+                index: number
               ) => (
 
               <motion.div

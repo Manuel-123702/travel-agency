@@ -228,6 +228,9 @@ export const servicesData = [
 
     href:
       "/services#student",
+
+    image:
+      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80",
   },
 
   {
@@ -255,6 +258,9 @@ export const servicesData = [
 
     featured:
       true,
+
+    image:
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80",
   },
 
   {
@@ -279,6 +285,9 @@ export const servicesData = [
 
     href:
       "/services#visitor",
+
+    image:
+      "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80",
   },
 ];
 
@@ -415,6 +424,7 @@ export const testimonialsData = [
       "Got my French visa in just 3 weeks! The team guided me through every step.",
     rating: 5,
     avatar: "A",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80",
   },
   {
     name: "David M.",
@@ -424,6 +434,7 @@ export const testimonialsData = [
       "Excellent immigration support. They helped me prepare my documents perfectly.",
     rating: 5,
     avatar: "D",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
   },
   {
     name: "Sarah L.",
@@ -433,6 +444,7 @@ export const testimonialsData = [
       "A professional team that truly cares about clients success.",
     rating: 5,
     avatar: "S",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
   },
 ];
 export const successStoriesData = [
@@ -645,24 +657,28 @@ export const processData = [
     title: "Free Consultation",
     description:
       "Discuss your goals with our experts and understand the best immigration pathway for you.",
+    image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&q=80",
   },
   {
     step: "02",
     title: "Profile Evaluation",
     description:
       "We analyze your background, documents, and eligibility to create the right strategy.",
+    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&q=80",
   },
   {
     step: "03",
     title: "Application Preparation",
     description:
       "Our team helps you prepare documents and submit a complete application.",
+    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400&q=80",
   },
   {
     step: "04",
     title: "Visa Approval",
     description:
       "We guide you until your visa is approved and prepare you for your journey abroad.",
+    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&q=80",
   },
 ];
 

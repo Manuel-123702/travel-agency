@@ -239,8 +239,26 @@ async function processMTNMoMoPayment(
   };
 }
 
+interface PaymentResult {
+  success: boolean;
+  clientSecret?: string;
+  metadata?: Record<string, any>;
+  error?: string;
+}
+
+interface Payment {
+  id: string;
+  applicationId: string;
+  userId: string;
+  amount: number;
+  currency: string;
+  stripeCustomerId?: string | null;
+  stripePaymentId?: string | null;
+  receiptUrl?: string | null;
+}
+
 // Generate invoice
-async function generateInvoice(payment: any) {
+async function generateInvoice(payment: Payment) {
   try {
     const invoiceNumber = `INV-${Date.now()}-${payment.id.slice(-6)}`;
 
@@ -263,7 +281,7 @@ async function generateInvoice(payment: any) {
 }
 
 // Generate receipt (placeholder - would use PDF generation library)
-async function generateReceipt(payment: any) {
+async function generateReceipt(payment: Payment) {
   try {
     // TODO: Implement PDF receipt generation using jsPDF or similar
     const receiptUrl = `/receipts/${payment.id}.pdf`;
@@ -281,7 +299,7 @@ async function generateReceipt(payment: any) {
 }
 
 // Send payment confirmation email (placeholder)
-async function sendPaymentConfirmationEmail(payment: any) {
+async function sendPaymentConfirmationEmail(payment: Payment) {
   try {
     // TODO: Implement email sending using Resend, SendGrid, or similar
     console.log(`Sending payment confirmation email for payment ${payment.id}`);

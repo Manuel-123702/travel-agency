@@ -19,6 +19,12 @@ import {
   LogOut,
   HelpCircle,
   Phone,
+  Calendar,
+  CreditCard,
+  Receipt,
+  Download,
+  Settings,
+  Ticket,
 } from "lucide-react";
 
 const navItems = [
@@ -27,7 +33,13 @@ const navItems = [
   { label: "Documents", href: "/dashboard/documents", icon: FileText },
   { label: "Messages", href: "/dashboard/messages", icon: MessageSquare, badge: 2 },
   { label: "Notifications", href: "/dashboard/notifications", icon: Bell, badge: 3 },
+  { label: "Appointments", href: "/dashboard/appointments", icon: Calendar },
+  { label: "Payments", href: "/dashboard/payments", icon: CreditCard },
+  { label: "Invoices", href: "/dashboard/invoices", icon: Receipt },
+  { label: "Downloads", href: "/dashboard/downloads", icon: Download },
+  { label: "Support Tickets", href: "/dashboard/tickets", icon: Ticket },
   { label: "My Profile", href: "/dashboard/profile", icon: User },
+  { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

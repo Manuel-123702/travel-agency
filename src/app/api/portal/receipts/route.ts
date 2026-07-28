@@ -2,6 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 
+interface Receipt {
+  id: string;
+  paymentId: string;
+  invoiceNumber: string | null;
+  amount: number;
+  currency: string;
+  paymentMethod: string;
+  receiptUrl: string | null;
+  createdAt: Date;
+  application: {
+    id: string;
+    country: string;
+    visaType: string;
+  } | null;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { userId } = await auth();
@@ -45,7 +61,7 @@ export async function GET(req: NextRequest) {
     });
 
     // Transform to receipt format
-    const receipts = payments.map((payment: any) => ({
+    const receipts: Receipt[] = payments.map((payment) => ({
       id: payment.id,
       paymentId: payment.id,
       invoiceNumber: payment.invoice?.invoiceNumber || null,
