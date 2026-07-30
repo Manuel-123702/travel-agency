@@ -26,7 +26,7 @@ const services = [
       "Post-arrival guidance and local contacts",
     ],
     price: "From $450 USD",
-    img: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=85",
+    img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=85",
   },
   {
     id: "work",

@@ -15,11 +15,41 @@ export async function GET(request: NextRequest) {
 
     if (!user) return unauthorizedResponse();
 
-    const prismaUser = await db.user.findUnique({
+    let prismaUser = await db.user.findUnique({
       where: {
         clerkId: user.id,
       },
     });
+
+    // If user doesn't exist in database, try to create them from Clerk
+    if (!prismaUser) {
+      try {
+        const email = user.emailAddresses?.[0]?.emailAddress;
+        if (email) {
+          prismaUser = await db.user.create({
+            data: {
+              clerkId: user.id,
+              email,
+              firstName: user.firstName ?? null,
+              lastName: user.lastName ?? null,
+              avatarUrl: user.imageUrl ?? null,
+              role: "CLIENT",
+            },
+          });
+          
+          // Create associated profile records
+          await db.userProfile.create({
+            data: { userId: prismaUser.id },
+          });
+          
+          await db.client.create({
+            data: { userId: prismaUser.id },
+          });
+        }
+      } catch (error) {
+        console.error("Failed to create user from Clerk:", error);
+      }
+    }
 
     if (!prismaUser) {
       return unauthorizedResponse();
@@ -57,11 +87,41 @@ export async function POST(request: NextRequest) {
 
     if (!user) return unauthorizedResponse();
 
-    const prismaUser = await db.user.findUnique({
+    let prismaUser = await db.user.findUnique({
       where: {
         clerkId: user.id,
       },
     });
+
+    // If user doesn't exist in database, try to create them from Clerk
+    if (!prismaUser) {
+      try {
+        const email = user.emailAddresses?.[0]?.emailAddress;
+        if (email) {
+          prismaUser = await db.user.create({
+            data: {
+              clerkId: user.id,
+              email,
+              firstName: user.firstName ?? null,
+              lastName: user.lastName ?? null,
+              avatarUrl: user.imageUrl ?? null,
+              role: "CLIENT",
+            },
+          });
+          
+          // Create associated profile records
+          await db.userProfile.create({
+            data: { userId: prismaUser.id },
+          });
+          
+          await db.client.create({
+            data: { userId: prismaUser.id },
+          });
+        }
+      } catch (error) {
+        console.error("Failed to create user from Clerk:", error);
+      }
+    }
 
     if (!prismaUser) {
       return unauthorizedResponse();

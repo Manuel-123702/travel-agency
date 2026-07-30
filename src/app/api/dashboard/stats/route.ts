@@ -15,7 +15,37 @@ export async function GET(request: NextRequest) {
       return unauthorizedResponse();
     }
 
-    const user = await db.user.findUnique({ where: { clerkId: clerkUser.id } });
+    let user = await db.user.findUnique({ where: { clerkId: clerkUser.id } });
+
+    // If user doesn't exist in database, try to create them from Clerk
+    if (!user) {
+      try {
+        const email = clerkUser.emailAddresses?.[0]?.emailAddress;
+        if (email) {
+          user = await db.user.create({
+            data: {
+              clerkId: clerkUser.id,
+              email,
+              firstName: clerkUser.firstName ?? null,
+              lastName: clerkUser.lastName ?? null,
+              avatarUrl: clerkUser.imageUrl ?? null,
+              role: "CLIENT",
+            },
+          });
+          
+          // Create associated profile records
+          await db.userProfile.create({
+            data: { userId: user.id },
+          });
+          
+          await db.client.create({
+            data: { userId: user.id },
+          });
+        }
+      } catch (error) {
+        console.error("Failed to create user from Clerk:", error);
+      }
+    }
 
     if (!user) return unauthorizedResponse("User not found");
 

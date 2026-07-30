@@ -23,6 +23,32 @@ export async function POST(req: NextRequest) {
           clerkId,
         },
       });
+      
+      // If user doesn't exist in database, try to create them from Clerk
+      if (!prismaUser && clerkUser) {
+        const email = clerkUser?.emailAddresses?.[0]?.emailAddress;
+        if (email) {
+          prismaUser = await db.user.create({
+            data: {
+              clerkId,
+              email,
+              firstName: clerkUser?.firstName ?? null,
+              lastName: clerkUser?.lastName ?? null,
+              avatarUrl: clerkUser?.imageUrl ?? null,
+              role: "CLIENT",
+            },
+          });
+          
+          // Create associated profile records
+          await db.userProfile.create({
+            data: { userId: prismaUser.id },
+          });
+          
+          await db.client.create({
+            data: { userId: prismaUser.id },
+          });
+        }
+      }
     } catch (dbError) {
       console.error("Database connection error:", dbError);
       return NextResponse.json(

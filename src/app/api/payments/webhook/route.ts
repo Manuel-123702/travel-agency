@@ -25,13 +25,15 @@ export async function POST(req: Request) {
 
     // create payment record
     try {
-      await db.createPayment({
-        applicationId: metadata.applicationId || "",
-        userId: metadata.userId || "",
-        amount: session.amount_total || 0,
-        currency: session.currency || "USD",
-        stripePaymentId: session.payment_intent as string | undefined,
-        status: "COMPLETED",
+      await db.payment.create({
+        data: {
+          applicationId: metadata.applicationId || "",
+          userId: metadata.userId || "",
+          amount: session.amount_total || 0,
+          currency: session.currency || "USD",
+          stripePaymentId: session.payment_intent as string | undefined,
+          status: "COMPLETED",
+        },
       });
       // notify the user via in-app + email if possible
       try {

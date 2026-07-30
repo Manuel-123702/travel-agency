@@ -214,7 +214,7 @@ export default function Header() {
           <div className="hidden sm:block">
             <span
               className={`font-heading font-black text-xl leading-none block tracking-wide transition-colors duration-300 ${
-                scrolled ? "text-navy" : "text-white"
+                scrolled ? "text-navy" : "text-blue"
               }`}
             >
               TRAVEL <span className="text-gold">AGENCY</span>
