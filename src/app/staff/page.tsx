@@ -62,7 +62,7 @@ export default function StaffOverviewPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="font-heading font-bold text-2xl md:text-3xl text-navy">
-              Good morning, {name}! 👋
+              Staff Dashboard — Welcome, {name}! 👋
             </h1>
             <p className="text-gray-500 mt-1">
               Here's your staff dashboard overview

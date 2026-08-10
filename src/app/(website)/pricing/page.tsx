@@ -25,8 +25,8 @@ const packages = [
     price: 490,
     badge: null,
     color: "border-gray-200",
-    headerBg: "bg-gray-50",
-    btnClass: "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5",
+    headerBg: "bg-gradient-to-br from-gray-50 to-gray-100",
+    btnClass: "bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5",
     icon: Shield,
     features: [
       "Free profile evaluation",
@@ -54,8 +54,8 @@ const packages = [
     price: 990,
     badge: "Most Popular",
     color: "border-blue-500",
-    headerBg: "bg-navy",
-    btnClass: "bg-gradient-to-r from-amber-500 to-amber-600 text-navy hover:from-amber-600 hover:to-amber-700 shadow-lg hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-300 transform hover:-translate-y-0.5",
+    headerBg: "bg-gradient-to-br from-blue-600 to-blue-800",
+    btnClass: "bg-gradient-to-r from-amber-400 to-amber-500 text-navy hover:from-amber-500 hover:to-amber-600 shadow-lg hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-300 transform hover:-translate-y-0.5",
     icon: Star,
     features: [
       "Everything in Starter",
@@ -83,9 +83,9 @@ const packages = [
     tagline: "White-glove, end-to-end premium service",
     price: 1990,
     badge: "Best Results",
-    color: "border-gold",
-    headerBg: "bg-gradient-to-br from-[#0A0F1E] to-blue-900",
-    btnClass: "bg-gradient-to-r from-amber-400 to-amber-500 text-navy hover:from-amber-500 hover:to-amber-600 shadow-lg hover:shadow-xl hover:shadow-amber-400/30 transition-all duration-300 transform hover:-translate-y-0.5",
+    color: "border-amber-400",
+    headerBg: "bg-gradient-to-br from-amber-500 to-amber-700",
+    btnClass: "bg-gradient-to-r from-white to-gray-100 text-amber-700 hover:from-gray-100 hover:to-gray-200 shadow-lg hover:shadow-xl hover:shadow-amber-400/30 transition-all duration-300 transform hover:-translate-y-0.5",
     icon: Zap,
     features: [
       "Everything in Premium",
@@ -170,8 +170,8 @@ function PricingContent() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="bg-navy pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-gold/5" />{" "}
+      <section className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 pt-32 pb-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-gold/5" />
         <div className="absolute top-20 right-20 w-64 h-64 bg-gold/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 left-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
         <div className="max-w-4xl mx-auto px-6 text-center relative">
@@ -196,7 +196,7 @@ function PricingContent() {
             <h1 className="font-heading font-black text-4xl md:text-5xl text-white mb-5 leading-tight">
               Choose Your <span className="text-gold">Immigration</span> Package
             </h1>
-            <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
+            <p className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed">
               Flat-fee service. No hidden costs. No surprises. Our advisors
               handle everything — you focus on your future.
             </p>
@@ -207,7 +207,7 @@ function PricingContent() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex flex-wrap justify-center gap-6 mt-10 text-white/50 text-sm"
+            className="flex flex-wrap justify-center gap-6 mt-10 text-white/70 text-sm"
           >
             {[
               { icon: Shield, text: "Visa denial refund guarantee" },
@@ -215,8 +215,8 @@ function PricingContent() {
               { icon: Clock, text: "2,500+ cases approved" },
               { icon: Star, text: "4.9/5 client rating" },
             ].map(({ icon: Icon, text }) => (
-              <span key={text} className="flex items-center gap-1.5">
-                <Icon size={14} className="text-gold" /> {text}
+              <span key={text} className="flex items-center gap-2">
+                <Icon size={16} className="text-gold" /> {text}
               </span>
             ))}
           </motion.div>
@@ -224,7 +224,7 @@ function PricingContent() {
       </section>
 
       {/* Packages */}
-      <section className="py-16 px-6 bg-[#F8FAFC]">
+      <section className="py-16 px-6 bg-gradient-to-b from-blue-50 to-white">
         <div className="max-w-6xl mx-auto">
           {error && (
             <motion.div
@@ -237,7 +237,7 @@ function PricingContent() {
             </motion.div>
           )}
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-3 gap-8">
             {packages.map((pkg, i) => {
               const Icon = pkg.icon;
               const isLoading = loading === pkg.key;
@@ -249,9 +249,9 @@ function PricingContent() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
-                  className={`relative bg-white rounded-3xl border-2 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 ${pkg.color} ${
+                  className={`relative bg-white rounded-3xl border-2 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 ${pkg.color} ${
                     isPopular
-                      ? "lg:-translate-y-4 lg:scale-[1.02] shadow-xl"
+                      ? "lg:-translate-y-4 lg:scale-[1.02] shadow-2xl"
                       : ""
                   }`}
                 >
@@ -271,22 +271,22 @@ function PricingContent() {
                   )}
 
                   {/* Header */}
-                  <div className={`${pkg.headerBg} p-7`}>
+                  <div className={`${pkg.headerBg} p-8`}>
                     <div
-                      className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${
-                        isPopular ? "bg-white/20" : "bg-navy/10"
+                      className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
+                        isPopular ? "bg-white/20" : "bg-blue-100"
                       }`}
                     >
                       <Icon
-                        size={22}
-                        className={isPopular ? "text-white" : "text-navy"}
+                        size={24}
+                        className={isPopular ? "text-white" : "text-blue-600"}
                       />
                     </div>
                     <h2
-                      className={`font-heading font-black text-2xl mb-1 ${
+                      className={`font-heading font-black text-2xl mb-2 ${
                         pkg.key === "vip" || isPopular
                           ? "text-white"
-                          : "text-navy"
+                          : "text-gray-900"
                       }`}
                     >
                       {pkg.name}
@@ -294,8 +294,8 @@ function PricingContent() {
                     <p
                       className={`text-sm leading-snug mb-5 ${
                         pkg.key === "vip" || isPopular
-                          ? "text-white/60"
-                          : "text-gray-500"
+                          ? "text-white/70"
+                          : "text-gray-600"
                       }`}
                     >
                       {pkg.tagline}
@@ -305,7 +305,7 @@ function PricingContent() {
                         className={`font-heading font-black text-4xl ${
                           pkg.key === "vip" || isPopular
                             ? "text-white"
-                            : "text-navy"
+                            : "text-gray-900"
                         }`}
                       >
                         ${pkg.price.toLocaleString()}
@@ -313,7 +313,7 @@ function PricingContent() {
                       <span
                         className={`text-sm pb-1 ${
                           pkg.key === "vip" || isPopular
-                            ? "text-white/50"
+                            ? "text-white/60"
                             : "text-gray-400"
                         }`}
                       >
@@ -333,24 +333,24 @@ function PricingContent() {
                   </div>
 
                   {/* Features */}
-                  <div className="p-7">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
+                  <div className="p-8">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-5">
                       What's included
                     </p>
-                    <ul className="space-y-2.5 mb-6">
+                    <ul className="space-y-3 mb-6">
                       {pkg.features.map((f) => (
                         <li
                           key={f}
-                          className="flex items-start gap-2.5 text-sm text-gray-700"
+                          className="flex items-start gap-3 text-sm text-gray-700"
                         >
                           <CheckCircle
-                            size={15}
+                            size={16}
                             className="text-green-500 flex-shrink-0 mt-0.5"
                           />
                           <span
                             className={
                               f.includes("guarantee") || f.includes("Refund")
-                                ? "font-semibold"
+                                ? "font-semibold text-green-700"
                                 : ""
                             }
                           >
@@ -368,7 +368,7 @@ function PricingContent() {
                           {pkg.notIncluded.map((f) => (
                             <li
                               key={f}
-                              className="flex items-start gap-2.5 text-sm text-gray-300"
+                              className="flex items-start gap-3 text-sm text-gray-400"
                             >
                               <span className="mt-0.5 flex-shrink-0">✕</span>
                               <span>{f}</span>
@@ -378,8 +378,8 @@ function PricingContent() {
                       </>
                     )}
                     <div className="border-t border-gray-100 pt-5 mb-5">
-                      <p className="text-xs text-gray-400">
-                        <span className="font-semibold text-gray-600">
+                      <p className="text-xs text-gray-500">
+                        <span className="font-semibold text-gray-700">
                           Ideal for:
                         </span>{" "}
                         {pkg.ideal}
@@ -418,8 +418,8 @@ function PricingContent() {
                           </>
                         )}
                       </button>
-                    )}{" "}
-                    <p className="text-center text-xs text-gray-400 mt-3">
+                    )}
+                    <p className="text-center text-xs text-gray-400 mt-4">
                       🔒 Secure checkout via Stripe
                     </p>
                   </div>
@@ -433,11 +433,11 @@ function PricingContent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-center text-gray-400 text-sm mt-8"
+            className="text-center text-gray-500 text-sm mt-12"
           >
             * Refund applies to agency service fees only. Government filing fees
             are non-refundable. Conditions apply — see our{" "}
-            <a href="/terms" className="text-blue-700 hover:underline">
+            <a href="/terms" className="text-blue-600 hover:underline font-medium">
               Terms of Service
             </a>
             .

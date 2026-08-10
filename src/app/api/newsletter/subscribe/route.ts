@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
     // Send confirmation email using Resend
     if (process.env.RESEND_API_KEY) {
       try {
+        // Send confirmation to subscriber
         await resend.emails.send({
           from: "Travel Agency <noreply@travelagency.com>",
           to: email,
@@ -49,6 +50,25 @@ export async function POST(req: NextRequest) {
               <p style="color: #4a5568;">You'll receive the latest immigration updates, policy changes, and success stories directly in your inbox.</p>
               <p style="color: #4a5568;">If you didn't subscribe to this newsletter, please ignore this email.</p>
               <p style="color: #718096; font-size: 12px;">Travel Agency - Your Gateway to International Success</p>
+            </div>
+          `,
+        });
+
+        // Notify admin about new subscriber
+        await resend.emails.send({
+          from: "Travel Agency <noreply@travelagency.com>",
+          to: "tessohmanuel@gmail.com",
+          subject: "New Newsletter Subscriber",
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+              <h2 style="color: #1a365d; margin-bottom: 20px;">New Newsletter Subscriber</h2>
+              <div style="background-color: #f7fafc; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                <p style="margin: 5px 0;"><strong>Email:</strong> ${email}</p>
+                <p style="margin: 5px 0;"><strong>Subscribed:</strong> ${new Date().toLocaleString()}</p>
+              </div>
+              <p style="color: #718096; font-size: 12px; margin-top: 30px;">
+                This user subscribed via the Travel Agency website.
+              </p>
             </div>
           `,
         });

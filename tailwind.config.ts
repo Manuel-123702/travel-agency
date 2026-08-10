@@ -12,26 +12,36 @@ const config: Config = {
     extend: {
       colors: {
         navy: {
-          DEFAULT: "#0F172A",
-          50: "#E8EAF0",
-          100: "#C5CADB",
-          200: "#9DA6C2",
-          300: "#7582A9",
-          400: "#566494",
-          500: "#3A4D7E",
-          600: "#2D3D68",
-          700: "#1E2D52",
-          800: "#131E3C",
-          900: "#0F172A",
+          DEFAULT: "#1E3A8A",
+          50: "#EFF6FF",
+          100: "#DBEAFE",
+          200: "#BFDBFE",
+          300: "#93C5FD",
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
+          800: "#1E40AF",
+          900: "#1E3A8A",
         },
         blue: {
-          DEFAULT: "#1E40AF",
+          DEFAULT: "#3B82F6",
           professional: "#1E40AF",
+          light: "#60A5FA",
         },
         gold: {
           DEFAULT: "#F59E0B",
           light: "#FCD34D",
           dark: "#D97706",
+          shimmer: "#FFD700",
+        },
+        sky: {
+          DEFAULT: "#0EA5E9",
+          light: "#38BDF8",
+        },
+        emerald: {
+          DEFAULT: "#10B981",
+          light: "#34D399",
         },
       },
       fontFamily: {

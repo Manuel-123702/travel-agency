@@ -46,9 +46,23 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setLoading(false);
-    setSubmitted(true);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        alert(data.error || "Failed to send message");
+      }
+    } catch (error) {
+      alert("Failed to send message. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -175,17 +189,33 @@ export default function ContactPage() {
 
           {/* Map + WhatsApp */}
           <div className="space-y-6">
-            <div className="rounded-3xl overflow-hidden shadow-xl h-80">
+            <div className="rounded-3xl overflow-hidden shadow-xl h-96">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2795.785!2d-73.569!3d45.498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cc91a5b43b3bd13%3A0x3f76394d9c04c3bd!2sMontreal%2C%20QC!5e0!3m2!1sen!2sca!4v1700000000000!5m2!1sen!2sca"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2686342.6179073377!2d-3.4359722!3d46.2276383!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e5e0b3a3c7b9e7%3A0x4097b5c6e1e0e0e0!2sEurope!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Office Location"
+                title="Global Destinations"
               />
+            </div>
+            
+            {/* Destination markers */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-blue-50 rounded-xl p-3 text-center">
+                <p className="font-semibold text-blue-900 text-sm">Canada</p>
+                <p className="text-xs text-blue-600">Montreal, QC</p>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-3 text-center">
+                <p className="font-semibold text-blue-900 text-sm">France</p>
+                <p className="text-xs text-blue-600">Paris</p>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-3 text-center">
+                <p className="font-semibold text-blue-900 text-sm">Luxembourg</p>
+                <p className="text-xs text-blue-600">Luxembourg City</p>
+              </div>
             </div>
 
             {/* WhatsApp card */}

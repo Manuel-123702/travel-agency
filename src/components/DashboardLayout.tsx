@@ -63,7 +63,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <p className="font-heading font-bold text-white text-sm leading-none">
               TRAVEL <span className="text-gold">AGENCY</span>
             </p>
-            <p className="text-white/40 text-xs mt-0.5">Client Portal</p>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-pulse" />
+              <p className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-[10px] font-bold uppercase tracking-wider">VoyageurHub</p>
+            </div>
           </div>
         </Link>
       </div>

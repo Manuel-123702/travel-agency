@@ -1,172 +1,167 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Calendar, Clock, Video, Phone, MapPin, CheckCircle, XCircle, AlertCircle, Search, Filter, Plus } from "lucide-react";
-
-type Appointment = {
-  id: string;
-  clientName: string;
-  advisor: string;
-  title: string;
-  scheduledAt: string;
-  status: "confirmed" | "pending" | "completed" | "cancelled";
-  type: "google-meet" | "zoom" | "whatsapp" | "phone" | "physical";
-  notes?: string;
-};
+import { Search, Filter, MoreVertical, Eye, Edit, Calendar, Clock, Video, Phone, MapPin, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 
 export default function AdminAppointmentsPage() {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
 
-  async function load() {
-    const res = await fetch(`/api/admin/appointments`);
-    if (!res.ok) return;
-    const data = await res.json();
-    setAppointments(data);
-  }
+  const appointments = [
+    { id: "APT-001", client: "John Doe", advisor: "Aminata C.", date: "2024-01-20", time: "10:00 AM", type: "Google Meet", status: "scheduled", duration: 30 },
+    { id: "APT-002", client: "Jane Smith", advisor: "Jean-Pierre M.", date: "2024-01-21", time: "2:00 PM", type: "WhatsApp Call", status: "completed", duration: 45 },
+    { id: "APT-003", client: "Mike Johnson", advisor: "Marie L.", date: "2024-01-22", time: "11:30 AM", type: "Physical Office", status: "scheduled", duration: 60 },
+    { id: "APT-004", client: "Sarah Wilson", advisor: "Aminata C.", date: "2024-01-23", time: "3:00 PM", type: "Zoom", status: "cancelled", duration: 30 },
+    { id: "APT-005", client: "Tom Brown", advisor: "Thomas D.", date: "2024-01-24", time: "9:00 AM", type: "Phone Call", status: "no_show", duration: 30 },
+  ];
 
-  useEffect(() => {
-    load();
-  }, []);
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "confirmed": return "bg-green-100 text-green-700";
-      case "pending": return "bg-yellow-100 text-yellow-700";
-      case "completed": return "bg-blue-100 text-blue-700";
-      case "cancelled": return "bg-red-100 text-red-700";
-      default: return "bg-gray-100 text-gray-700";
-    }
+  const statusConfig = {
+    scheduled: { label: "Scheduled", color: "bg-blue-100 text-blue-700", icon: Clock },
+    completed: { label: "Completed", color: "bg-green-100 text-green-700", icon: CheckCircle },
+    cancelled: { label: "Cancelled", color: "bg-red-100 text-red-700", icon: XCircle },
+    no_show: { label: "No Show", color: "bg-yellow-100 text-yellow-700", icon: AlertCircle },
   };
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "google-meet": return Video;
-      case "zoom": return Video;
-      case "whatsapp": return Phone;
-      case "phone": return Phone;
-      case "physical": return MapPin;
-      default: return Calendar;
-    }
+  const typeConfig = {
+    "Google Meet": { icon: Video, color: "bg-blue-100 text-blue-600" },
+    "Zoom": { icon: Video, color: "bg-purple-100 text-purple-600" },
+    "WhatsApp Call": { icon: Phone, color: "bg-green-100 text-green-600" },
+    "Phone Call": { icon: Phone, color: "bg-gray-100 text-gray-600" },
+    "Physical Office": { icon: MapPin, color: "bg-orange-100 text-orange-600" },
   };
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="font-heading font-bold text-2xl md:text-3xl text-navy">Appointments</h1>
-          <p className="text-gray-500 mt-1">Manage all client appointments</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors">
-            <Filter size={16} />
-            Filter
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors">
-            <Search size={16} />
-            Search
-          </button>
-          <button className="flex items-center gap-2 bg-navy text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-800 transition-colors">
-            <Plus size={16} />
-            New Appointment
-          </button>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid md:grid-cols-4 gap-4 mb-8">
-        {[
-          { label: "Total", value: appointments.length, color: "bg-blue-100 text-blue-700" },
-          { label: "Confirmed", value: appointments.filter(a => a.status === "confirmed").length, color: "bg-green-100 text-green-700" },
-          { label: "Pending", value: appointments.filter(a => a.status === "pending").length, color: "bg-yellow-100 text-yellow-700" },
-          { label: "Completed", value: appointments.filter(a => a.status === "completed").length, color: "bg-purple-100 text-purple-700" },
-        ].map((stat, i) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100"
-          >
-            <p className="text-gray-500 text-sm">{stat.label}</p>
-            <p className={`font-heading font-bold text-2xl mt-1 ${stat.color.split(" ")[1]}`}>{stat.value}</p>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Appointments Table */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
-      >
-        <div className="p-6 border-b border-gray-100">
-          <h2 className="font-heading font-bold text-navy text-lg">All Appointments</h2>
-        </div>
-
-        {appointments.length === 0 ? (
-          <div className="p-12 text-center">
-            <Calendar className="text-gray-300 mx-auto mb-4" size={48} />
-            <p className="text-gray-500">No appointments scheduled</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-white p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-navy mb-2">Appointments</h1>
+            <p className="text-gray-600">Manage consultation appointments and meetings</p>
           </div>
-        ) : (
+          <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-navy to-blue-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
+            <Calendar size={20} />
+            Schedule Appointment
+          </button>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: "Total", value: "156", color: "from-blue-500 to-blue-600" },
+            { label: "Scheduled", value: "45", color: "from-blue-500 to-indigo-600" },
+            { label: "Completed", value: "98", color: "from-green-500 to-green-600" },
+            { label: "Cancelled", value: "13", color: "from-red-500 to-red-600" },
+          ].map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className={`bg-gradient-to-br ${stat.color} rounded-2xl p-6 text-white`}
+            >
+              <p className="text-3xl font-bold mb-1">{stat.value}</p>
+              <p className="text-white/80 text-sm">{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Filters */}
+        <div className="bg-white rounded-2xl p-4 mb-6 flex flex-col md:flex-row gap-4 items-center border border-gray-100">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="Search appointments by client, advisor, or date..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:border-navy focus:ring-2 focus:ring-navy/20 transition-all"
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:border-navy transition-all"
+            >
+              <option value="all">All Status</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="no_show">No Show</option>
+            </select>
+            <button className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 hover:bg-gray-100 transition-all">
+              <Filter size={18} />
+              More Filters
+            </button>
+          </div>
+        </div>
+
+        {/* Appointments Table */}
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Client</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Advisor</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Date & Time</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Type</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Actions</th>
+                  <th className="text-left px-6 py-4 text-sm font-semibold text-navy">Appointment ID</th>
+                  <th className="text-left px-6 py-4 text-sm font-semibold text-navy">Client</th>
+                  <th className="text-left px-6 py-4 text-sm font-semibold text-navy">Advisor</th>
+                  <th className="text-left px-6 py-4 text-sm font-semibold text-navy">Date & Time</th>
+                  <th className="text-left px-6 py-4 text-sm font-semibold text-navy">Type</th>
+                  <th className="text-left px-6 py-4 text-sm font-semibold text-navy">Duration</th>
+                  <th className="text-left px-6 py-4 text-sm font-semibold text-navy">Status</th>
+                  <th className="text-left px-6 py-4 text-sm font-semibold text-navy">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody>
                 {appointments.map((apt, i) => {
-                  const TypeIcon = getTypeIcon(apt.type);
+                  const status = statusConfig[apt.status as keyof typeof statusConfig];
+                  const StatusIcon = status.icon;
+                  const type = typeConfig[apt.type as keyof typeof typeConfig];
+                  const TypeIcon = type.icon;
                   return (
                     <motion.tr
                       key={apt.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 + i * 0.03 }}
-                      className="hover:bg-gray-50 transition-colors"
+                      transition={{ delay: i * 0.05 }}
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                     >
                       <td className="px-6 py-4">
-                        <p className="font-medium text-navy">{apt.clientName}</p>
+                        <span className="font-mono text-sm font-semibold text-navy">{apt.id}</span>
                       </td>
+                      <td className="px-6 py-4 font-medium text-navy">{apt.client}</td>
+                      <td className="px-6 py-4 text-gray-600">{apt.advisor}</td>
                       <td className="px-6 py-4">
-                        <p className="text-gray-600">{apt.advisor}</p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="text-gray-600">{apt.title}</p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-1.5 text-gray-600">
-                          <Clock size={14} />
-                          {new Date(apt.scheduledAt).toLocaleString()}
+                        <div className="flex flex-col">
+                          <span className="font-medium text-navy">{apt.date}</span>
+                          <span className="text-sm text-gray-500">{apt.time}</span>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-1.5">
-                          <TypeIcon size={14} className="text-gray-500" />
-                          <span className="text-gray-600">{apt.type.replace("-", " ")}</span>
-                        </div>
+                        <span className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${type.color}`}>
+                          <TypeIcon size={14} />
+                          {apt.type}
+                        </span>
                       </td>
+                      <td className="px-6 py-4 text-gray-600">{apt.duration} min</td>
                       <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(apt.status)}`}>
-                          {apt.status.charAt(0).toUpperCase() + apt.status.slice(1)}
+                        <span className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${status.color}`}>
+                          <StatusIcon size={14} />
+                          {status.label}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <button className="p-2 text-gray-400 hover:text-navy transition-colors">
-                            <CheckCircle size={18} />
+                          <button className="p-2 hover:bg-blue-100 rounded-lg transition-colors text-blue-600" title="View">
+                            <Eye size={18} />
                           </button>
-                          <button className="p-2 text-gray-400 hover:text-red-600 transition-colors">
-                            <XCircle size={18} />
+                          <button className="p-2 hover:bg-green-100 rounded-lg transition-colors text-green-600" title="Edit">
+                            <Edit size={18} />
+                          </button>
+                          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-600">
+                            <MoreVertical size={18} />
                           </button>
                         </div>
                       </td>
@@ -176,8 +171,8 @@ export default function AdminAppointmentsPage() {
               </tbody>
             </table>
           </div>
-        )}
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 }

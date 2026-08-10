@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
       db.document.count(),
       db.appointment.count(),
       db.message.count(),
-      db.application.count({ where: { status: { in: ["SUBMITTED", "UNDER_REVIEW", "VERIFICATION"] } } }),
+      db.application.count({ where: { status: { in: ["SUBMITTED", "UNDER_REVIEW", "PROCESSING"] } } }),
       db.application.count({ where: { status: "COMPLETED" } }),
       db.payment.aggregate({ _sum: { amount: true } }),
       db.user.findMany({ take: 5, orderBy: { createdAt: "desc" } }),

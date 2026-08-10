@@ -20,6 +20,7 @@ const posts = [
     author: "Aminata Coulibaly",
     authorImg: "https://randomuser.me/api/portraits/women/44.jpg",
     featured: true,
+    slug: "studying-in-france",
   },
   {
     category: "Canada",
@@ -31,6 +32,7 @@ const posts = [
     author: "James Okafor",
     authorImg: "https://randomuser.me/api/portraits/men/55.jpg",
     featured: true,
+    slug: "canada-immigration",
   },
   {
     category: "Luxembourg",
@@ -42,6 +44,7 @@ const posts = [
     author: "Sophie Kremer",
     authorImg: "https://randomuser.me/api/portraits/women/67.jpg",
     featured: true,
+    slug: "visa-preparation",
   },
   {
     category: "Tips & Guides",
@@ -53,6 +56,7 @@ const posts = [
     author: "Dr. Marc Fontaine",
     authorImg: "https://randomuser.me/api/portraits/men/41.jpg",
     featured: false,
+    slug: "visa-preparation",
   },
   {
     category: "Work Permit",
@@ -64,6 +68,7 @@ const posts = [
     author: "James Okafor",
     authorImg: "https://randomuser.me/api/portraits/men/55.jpg",
     featured: false,
+    slug: "canada-immigration",
   },
   {
     category: "Tips & Guides",
@@ -75,6 +80,7 @@ const posts = [
     author: "Aminata Coulibaly",
     authorImg: "https://randomuser.me/api/portraits/women/44.jpg",
     featured: false,
+    slug: "visa-preparation",
   },
 ];
 
@@ -117,7 +123,7 @@ export default function BlogPage() {
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="font-heading font-bold text-2xl text-navy mb-8">Featured Articles</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {featured.map(({ category, title, excerpt, img, date, readTime, author, authorImg }) => (
+            {featured.map(({ category, title, excerpt, img, date, readTime, author, authorImg, slug }) => (
               <article
                 key={title}
                 className="group bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
@@ -143,7 +149,7 @@ export default function BlogPage() {
                       <img src={authorImg} alt={author} className="w-8 h-8 rounded-full object-cover" />
                       <span className="text-xs text-gray-500 font-medium">{author}</span>
                     </div>
-                    <Link href="/blog" className="inline-flex items-center gap-1 text-blue-700 text-sm font-semibold hover:gap-2 transition-all">
+                    <Link href={`/blog/${slug}`} className="inline-flex items-center gap-1 text-blue-700 text-sm font-semibold hover:gap-2 transition-all">
                       Read <ArrowRight size={13} />
                     </Link>
                   </div>
@@ -159,7 +165,7 @@ export default function BlogPage() {
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="font-heading font-bold text-2xl text-navy mb-8">More Articles</h2>
           <div className="space-y-6">
-            {regular.map(({ category, title, excerpt, img, date, readTime, author, authorImg }) => (
+            {regular.map(({ category, title, excerpt, img, date, readTime, author, authorImg, slug }) => (
               <article
                 key={title}
                 className="group flex gap-6 bg-[#F8FAFC] rounded-2xl overflow-hidden hover:shadow-md transition-all"
@@ -173,11 +179,18 @@ export default function BlogPage() {
                     <span className="text-gray-400 text-xs">{date}</span>
                     <span className="text-gray-400 text-xs flex items-center gap-1"><Clock size={10} />{readTime}</span>
                   </div>
-                  <h3 className="font-heading font-bold text-navy text-lg mb-2 group-hover:text-blue-700 transition-colors">{title}</h3>
+                  <h3 className="font-heading font-bold text-navy text-lg mb-2 group-hover:text-blue-700 transition-colors">
+                    <Link href={`/blog/${slug}`} className="hover:text-blue-700 transition-colors">{title}</Link>
+                  </h3>
                   <p className="text-gray-500 text-sm mb-4 line-clamp-2">{excerpt}</p>
-                  <div className="flex items-center gap-2">
-                    <img src={authorImg} alt={author} className="w-7 h-7 rounded-full object-cover" />
-                    <span className="text-xs text-gray-500">{author}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <img src={authorImg} alt={author} className="w-7 h-7 rounded-full object-cover" />
+                      <span className="text-xs text-gray-500">{author}</span>
+                    </div>
+                    <Link href={`/blog/${slug}`} className="inline-flex items-center gap-1 text-blue-700 text-sm font-semibold hover:gap-2 transition-all">
+                      Read <ArrowRight size={13} />
+                    </Link>
                   </div>
                 </div>
               </article>

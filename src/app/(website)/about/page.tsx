@@ -101,14 +101,14 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="relative">
-            <img
-              src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=85"
-              alt="Our team"
-              className="rounded-3xl shadow-2xl w-full h-[500px] object-cover"
+            <img 
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" 
+              alt="Team collaboration" 
+              className="rounded-3xl shadow-2xl w-full h-96 object-cover"
             />
-            <div className="absolute -bottom-6 -left-6 bg-gold rounded-2xl p-6 shadow-xl">
-              <div className="font-heading font-bold text-3xl text-navy">2500+</div>
-              <div className="text-navy/70 text-sm">Successful Cases</div>
+            <div className="absolute -bottom-6 -right-6 bg-gold rounded-2xl p-6 shadow-xl">
+              <div className="font-heading font-bold text-3xl text-navy">97%</div>
+              <div className="text-sm text-navy/70">Success Rate</div>
             </div>
           </div>
         </div>
@@ -122,13 +122,29 @@ export default function AboutPage() {
             <p className="text-gray-500 text-lg max-w-xl mx-auto">The principles that guide everything we do — every day, with every client.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-white rounded-3xl p-8 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all">
-                <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mb-5">
-                  <Icon size={26} className="text-blue-700" />
+            {values.map(({ icon: Icon, title, desc }, index) => (
+              <div key={title} className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all">
+                <div className="h-32 bg-gradient-to-br from-blue-600 to-blue-800 relative">
+                  <img 
+                    src={[
+                      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&q=80",
+                      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&q=80",
+                      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&q=80",
+                      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&q=80"
+                    ][index]}
+                    alt={title}
+                    className="w-full h-full object-cover opacity-30"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                      <Icon size={26} className="text-white" />
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-heading font-bold text-navy text-lg mb-2">{title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+                <div className="p-6">
+                  <h3 className="font-heading font-bold text-navy text-lg mb-2">{title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+                </div>
               </div>
             ))}
           </div>

@@ -484,27 +484,77 @@ export const faqData = [
   {
     question: "How long does the immigration process take?",
     answer:
-      "The processing time depends on the destination country, visa type, and completeness of your documents. Our team helps you prepare everything correctly to avoid unnecessary delays.",
+      "The processing time depends on the destination country, visa type, and completeness of your documents. Our team helps you prepare everything correctly to avoid unnecessary delays. France typically takes 15-30 days for student visas, Canada 30-90 days for work permits, and Luxembourg 30-45 days for most applications.",
   },
   {
     question: "Do you guarantee visa approval?",
     answer:
-      "No agency can guarantee visa approval. However, we maximize your chances by carefully reviewing your profile, documents, and application strategy.",
+      "No agency can guarantee visa approval. However, we maximize your chances by carefully reviewing your profile, documents, and application strategy. Our 97% success rate speaks to our expertise and dedication to preparing strong applications.",
   },
   {
     question: "Which countries do you support?",
     answer:
-      "We provide immigration guidance for France, Canada, and Luxembourg with expert support for students, professionals, and families.",
+      "We provide immigration guidance for France, Canada, and Luxembourg with expert support for students, professionals, and families. Each destination has unique requirements and pathways, and our specialists are certified in all three regions.",
   },
   {
     question: "Can I apply if I do not have all my documents yet?",
     answer:
-      "Yes. Our consultants will help you understand the required documents and create a preparation plan based on your situation.",
+      "Yes. Our consultants will help you understand the required documents and create a preparation plan based on your situation. We provide a comprehensive checklist and guide you through obtaining each document efficiently.",
   },
   {
     question: "Do you offer online consultations?",
     answer:
-      "Yes. Clients can book online consultations and receive professional guidance from anywhere.",
+      "Yes. Clients can book online consultations and receive professional guidance from anywhere. We offer video consultations via Google Meet, WhatsApp calls, and phone consultations to accommodate your preferences.",
+  },
+  {
+    question: "What are the payment options for your services?",
+    answer:
+      "We accept multiple payment methods including Stripe, PayPal, Orange Money, and MTN MoMo for your convenience. Payment plans are available for our Professional and Premium packages to make our services accessible.",
+  },
+  {
+    question: "How do I track my application progress?",
+    answer:
+      "Once you become a client, you'll have access to our Client Portal where you can track your application status in real-time, view document requirements, communicate with your advisor, and receive notifications about important updates.",
+  },
+  {
+    question: "What happens if my visa application is refused?",
+    answer:
+      "In the unfortunate event of a refusal, we provide a detailed analysis of the refusal reasons and guidance on appeal or reapplication strategies. Our Premium package includes refusal analysis and reapplication support.",
+  },
+  {
+    question: "Do you help with post-arrival services?",
+    answer:
+      "Yes. Our Premium package includes post-arrival guidance such as accommodation assistance, banking setup, local registration, and integration support to help you settle smoothly in your new country.",
+  },
+  {
+    question: "Can you help with language test preparation?",
+    answer:
+      "We provide guidance on required language tests (IELTS, TEF, DELF/DALF) and can recommend preparation resources. While we don't conduct language training ourselves, we partner with certified language schools to support your preparation.",
+  },
+  {
+    question: "What documents are typically required for immigration?",
+    answer:
+      "Common requirements include a valid passport, educational certificates, language test results, proof of funds, employment letters, police clearance certificates, medical examination results, and specific documents based on your visa category.",
+  },
+  {
+    question: "How much money do I need to show for proof of funds?",
+    answer:
+      "Proof of funds requirements vary by country and visa type. For Canada, you typically need to show funds for tuition plus CAD 10,000-25,000 depending on family size. France requires proof of monthly income of at least €615. Luxembourg has similar requirements. We provide exact calculations during your consultation.",
+  },
+  {
+    question: "Can I work while studying abroad?",
+    answer:
+      "Yes, most countries allow students to work part-time during their studies. In France, students can work up to 964 hours per year. Canada allows 20 hours per week off-campus and full-time during breaks. Luxembourg allows limited work hours for students with specific permits.",
+  },
+  {
+    question: "Do you support family sponsorship applications?",
+    answer:
+      "Yes. We assist with family sponsorship including spouse sponsorship, parent sponsorship, and dependent children applications. Each country has specific requirements and processing times for family reunification.",
+  },
+  {
+    question: "What makes Travel Agency different from other immigration consultants?",
+    answer:
+      "Our 97% success rate, 10+ years of experience, personalized approach, certified consultants, and comprehensive support from consultation to post-arrival set us apart. We treat each case with individual attention and provide transparent, ethical guidance throughout your journey.",
   },
 ];
 
@@ -822,8 +872,9 @@ export const evaluationFormData = {
     {
       name: "country",
       label: "Preferred Destination",
-      placeholder: "Example: Canada",
-      type: "text",
+      placeholder: "Select destination",
+      type: "select",
+      options: ["Canada", "France", "Luxembourg", "United States", "United Kingdom", "Germany", "Australia"],
     },
   ],
 

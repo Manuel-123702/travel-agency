@@ -3,6 +3,9 @@ import { db } from "@/lib/db";
 
 export async function GET() {
   try {
+    // Check if database is available
+    await db.$connect();
+    
     // Calculate statistics from real database data
     const [
       totalApplications,
@@ -64,5 +67,7 @@ export async function GET() {
       totalRevenue: 0,
       applicationsByCountry: []
     });
+  } finally {
+    await db.$disconnect();
   }
 }

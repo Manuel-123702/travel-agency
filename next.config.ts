@@ -89,6 +89,17 @@ const nextConfig: NextConfig = {
         destination: "/blog/:slug",
         permanent: false,
       },
+      // Redirect old /studio Sanity path to new /admin
+      {
+        source: "/studio",
+        destination: "/admin",
+        permanent: true,
+      },
+      {
+        source: "/studio/:path*",
+        destination: "/admin/:path*",
+        permanent: true,
+      },
     ];
   },
 };

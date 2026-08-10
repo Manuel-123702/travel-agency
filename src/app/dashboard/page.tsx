@@ -206,7 +206,7 @@ export default function DashboardOverview() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="font-heading font-bold text-2xl md:text-3xl text-navy">
-              Good morning, {name}! 👋
+              Client Portal — Good morning, {name}! 👋
             </h1>
             <p className="text-gray-500 mt-1">
               Here's your immigration case overview — June 29, 2026

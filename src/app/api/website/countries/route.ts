@@ -85,6 +85,9 @@ const defaultCountries: CountryData[] = [
 
 export async function GET() {
   try {
+    // Check if database is available
+    await db.$connect();
+    
     // Try to fetch countries from database
     const dbCountries = await db.country.findMany();
     
@@ -107,5 +110,7 @@ export async function GET() {
     console.error("Error fetching countries:", error);
     // Return default countries on error
     return NextResponse.json(defaultCountries);
+  } finally {
+    await db.$disconnect();
   }
 }

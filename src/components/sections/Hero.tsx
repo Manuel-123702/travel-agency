@@ -109,18 +109,34 @@ export default function Hero() {
       className="relative isolate min-h-screen flex items-center overflow-hidden"
     >
       {/* Background */}
-
       <motion.div style={{ y: bgY }} className="absolute inset-0 z-0 scale-110">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('${heroContent.backgroundImage}')`,
-          }}
-        />
+        {/* Video Background */}
+        <div className="absolute inset-0 bg-navy">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            poster="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80"
+          >
+            <source
+              src="https://assets.mixkit.co/videos/preview/mixkit-airplane-flying-over-clouds-2719-large.mp4"
+              type="video/mp4"
+            />
+            {/* Fallback for browsers that don't support the video */}
+            <div
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80')`,
+              }}
+            />
+          </video>
+        </div>
 
-        <div className="absolute inset-0 bg-gradient-to-r from-navy/80 via-navy/55 to-navy/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-800/70 to-blue-900/50" />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-navy/70 via-transparent to-navy/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-transparent to-blue-900/30" />
       </motion.div>
 
       {/* Particles */}

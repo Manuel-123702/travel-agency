@@ -32,10 +32,11 @@ interface TimelineStep {
 // GET /api/applications/[id]/timeline
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const clerkUser = await currentUser();
+    const { id } = await params;
 
     if (!clerkUser) {
       return unauthorizedResponse();
@@ -50,7 +51,7 @@ export async function GET(
     }
 
     const application = await db.application.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         documents: true,
         appointments: true,

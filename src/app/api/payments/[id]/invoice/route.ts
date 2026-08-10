@@ -29,10 +29,11 @@ interface User {
 // GET /api/payments/[id]/invoice
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const clerkUser = await currentUser();
+    const { id } = await params;
 
     if (!clerkUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -47,7 +48,7 @@ export async function GET(
     }
 
     const payment = await db.payment.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         application: true,
       },

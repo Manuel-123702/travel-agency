@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Phone, Mail, Globe } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, Mail } from "lucide-react";
+import LanguageSwitcher from "./LanguageSwitcher";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 // ── Social icons with brand colors ──────────────────────────────────────────
@@ -84,10 +85,38 @@ const navLinks = [
       { label: "🇫🇷 France", href: "/france" },
       { label: "🇨🇦 Canada", href: "/canada" },
       { label: "🇱🇺 Luxembourg", href: "/luxembourg" },
+      { divider: true },
+      { label: "📚 Universities", href: "/universities" },
+      { label: "💼 Jobs Abroad", href: "/jobs-abroad" },
+      { label: "🎓 Scholarships", href: "/scholarships" },
     ],
   },
-  { label: "Pricing", href: "/pricing" },
-  { label: "FAQ", href: "/faq" },
+  {
+    label: "Discover",
+    href: "/success-stories",
+    children: [
+      { label: "🏆 Success Stories", href: "/success-stories" },
+      { label: "👥 Our Team", href: "/team" },
+      { label: "📸 Gallery", href: "/gallery" },
+      { label: "📅 Events", href: "/events" },
+      { label: "✍️ Careers", href: "/careers" },
+      { label: "📰 Blog", href: "/blog" },
+    ],
+  },
+  {
+    label: "Resources",
+    href: "/resources",
+    children: [
+      { label: "📖 Resources Hub", href: "/resources" },
+      { label: "⬇️ Downloads", href: "/downloads" },
+      { label: "💳 Pricing", href: "/pricing" },
+      { label: "❓ FAQ", href: "/faq" },
+      { label: "📜 Privacy Policy", href: "/privacy-policy" },
+      { label: "🍪 Cookie Policy", href: "/cookie-policy" },
+      { label: "💸 Refund Policy", href: "/refund-policy" },
+      { label: "⚖️ Terms of Service", href: "/terms" },
+    ],
+  },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -141,8 +170,8 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-white/90 backdrop-blur-xl shadow-2xl border-b border-white/30"
-          : "bg-transparent"
+          ? "bg-white/95 backdrop-blur-xl shadow-2xl border-b border-gray-200"
+          : "bg-gradient-to-b from-white/95 to-white/80 backdrop-blur-md border-b border-gray-100"
       }`}
     >
       {/* ── Top info bar ───────────────────────────────────────────────────── */}
@@ -171,7 +200,7 @@ export default function Header() {
             </a>
           </div>
 
-          {/* Right: socials + hours */}
+          {/* Right: socials + language + hours */}
           <div className="flex items-center gap-4">
             {/* Social icons with brand-color backgrounds */}
             <div className="flex items-center gap-1.5">
@@ -193,6 +222,8 @@ export default function Header() {
             <span className="text-gold font-semibold text-xs">
               24/7 WhatsApp
             </span>
+            <span className="text-white/20">|</span>
+            <LanguageSwitcher scrolled={false} />
           </div>
         </div>
       </div>
@@ -275,19 +306,25 @@ export default function Header() {
                   >
                     {/* Gold accent bar */}
                     <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-gold to-yellow-400" />
-                    {link.children.map((child) => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        className={`block px-5 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-navy/5 hover:text-gold hover:pl-6 whitespace-nowrap ${
-                          pathname === child.href
-                            ? "text-gold bg-gold/5"
-                            : "text-navy"
-                        }`}
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
+                    {link.children.map((child, index) => {
+                      if (child.divider) {
+                        return <div key={`divider-${index}`} className="my-2 border-t border-gray-100" />;
+                      }
+                      if (!child.href) return null;
+                      return (
+                        <Link
+                          key={child.href || index}
+                          href={child.href}
+                          className={`block px-5 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-navy/5 hover:text-gold hover:pl-6 whitespace-nowrap ${
+                            pathname === child.href
+                              ? "text-gold bg-gold/5"
+                              : "text-navy"
+                          }`}
+                        >
+                          {child.label}
+                        </Link>
+                      );
+                    })}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -296,20 +333,23 @@ export default function Header() {
         </div>
 
         {/* CTA area */}
-        <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
+        <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
           {isSignedIn ? (
             <div className="flex items-center gap-3">
+              {/* Language switcher - visible when top bar is scrolled away */}
+              {scrolled && <LanguageSwitcher scrolled={scrolled} />}
               {/* CMS button - only visible for admin email */}
               {isAdminEmail && (
                 <Link
-                  href="/studio"
-                  className={`text-sm font-semibold  px-4 py-2 rounded-full transition-all ${
+                  href="/admin"
+                  className={`text-sm font-semibold px-4 py-2 rounded-full transition-all flex items-center gap-1.5 ${
                     scrolled
-                      ? "text-navy hover:bg-gray-100"
-                      : "text-white hover:bg-white/10"
+                      ? "bg-gradient-to-r from-gold to-yellow-500 text-navy hover:shadow-lg hover:shadow-gold/30"
+                      : "bg-gradient-to-r from-gold to-yellow-500 text-navy hover:shadow-lg hover:shadow-gold/30"
                   }`}
                 >
-                  CMS
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  CMS Admin
                 </Link>
               )}
               {/* Atlas button - visible for all signed-in users */}
@@ -318,7 +358,7 @@ export default function Header() {
                 className="relative group cursor-pointer mx-4"
               >
                 <div
-                  className={`relative px-8 py-4 border-2 font-bold text-lg rounded-lg transform transition-all 
+                  className={`relative px-10 py-5 border-2 font-bold text-xl rounded-lg transform transition-all 
                     duration-300 group-hover:translate-y-1 group-hover:translate-x-1 
                     shadow-[6px_6px_10px_rgba(0,0,0,0.6),-6px_-6px_10px_rgba(255,255,255,0.1)] 
                     group-hover:shadow-[8px_8px_15px_rgba(0,0,0,0.8),-8px_-8px_15px_rgba(255,255,255,0.15)] ${
@@ -357,10 +397,12 @@ export default function Header() {
                   }`}
                 ></div>
               </Link>
-              <UserButton afterSignOutUrl="/" />
+              <UserButton fallbackRedirectUrl="/" />
             </div>
           ) : (
             <>
+              {/* Language switcher - visible when top bar is scrolled away */}
+              {scrolled && <LanguageSwitcher scrolled={scrolled} />}
               <SignInButton mode="modal">
                 <button
                   className={`cursor-pointer text-white font-bold relative w-[7em] h-[3em] text-[16px] 
@@ -447,6 +489,16 @@ export default function Header() {
                 </div>
               ))}
 
+              {/* Mobile language switcher */}
+              <div className="pt-4 border-t border-gray-100">
+                <p className="text-xs text-gray-400 font-semibold uppercase tracking-widest px-4 mb-3">
+                  Language / Langue
+                </p>
+                <div className="px-4">
+                  <LanguageSwitcher scrolled={true} />
+                </div>
+              </div>
+
               {/* Mobile socials */}
               <div className="pt-4 border-t border-gray-100">
                 <p className="text-xs text-gray-400 font-semibold uppercase tracking-widest px-4 mb-3">
@@ -472,15 +524,16 @@ export default function Header() {
               <div className="pt-3 border-t border-gray-100 space-y-2">
                 {isSignedIn ? (
                   <div className="flex items-center gap-3 px-4">
-                    <UserButton afterSignOutUrl="/" />
+                    <UserButton fallbackRedirectUrl="/" />
                     {/* CMS button - only visible for admin email */}
                     {isAdminEmail && (
                       <Link
-                        href="/studio"
+                        href="/admin"
                         onClick={() => setMobileOpen(false)}
-                        className="text-sm font-bold text-navy"
+                        className="text-sm font-bold bg-gradient-to-r from-gold to-yellow-500 text-navy px-4 py-2 rounded-full flex items-center gap-2"
                       >
-                        CMS
+                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                        CMS Admin
                       </Link>
                     )}
                     <Link

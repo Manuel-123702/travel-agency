@@ -14,11 +14,40 @@ export default function EvaluationForm() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    country: "",
+    projectType: "",
+  });
 
-  function handleSubmit(e: React.FormEvent) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setLoading(true);
 
-    setSubmitted(true);
+    try {
+      const response = await fetch("/api/evaluation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        alert(data.error || "Failed to submit evaluation");
+      }
+    } catch (error) {
+      alert("Failed to submit evaluation. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -133,12 +162,36 @@ export default function EvaluationForm() {
                       {field.label}
                     </label>
 
-                    <input
-                      type={field.type}
-
-                      placeholder={field.placeholder}
-
-                      className="
+                    {field.type === "select" ? (
+                      <select
+                        name={field.name}
+                        value={formData[field.name as keyof typeof formData]}
+                        onChange={handleChange}
+                        className="
+                        w-full
+                        border
+                        border-gray-200
+                        rounded-xl
+                        px-4
+                        py-3
+                        outline-none
+                        focus:border-gold
+                        bg-white
+                        "
+                      >
+                        <option value="">Select destination</option>
+                        {field.options?.map((option: string) => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type={field.type}
+                        name={field.name}
+                        value={formData[field.name as keyof typeof formData]}
+                        onChange={handleChange}
+                        placeholder={field.placeholder}
+                        className="
                         w-full
                         border
                         border-gray-200
@@ -148,7 +201,8 @@ export default function EvaluationForm() {
                         outline-none
                         focus:border-gold
                         "
-                    />
+                      />
+                    )}
                   </div>
                 ))}
 
@@ -170,6 +224,9 @@ export default function EvaluationForm() {
                   </label>
 
                   <select
+                    name="projectType"
+                    value={formData.projectType}
+                    onChange={handleChange}
                     className="
                     w-full
                     border
@@ -177,17 +234,19 @@ export default function EvaluationForm() {
                     rounded-xl
                     px-4
                     py-3
+                    bg-white
                     "
                   >
+                    <option value="">Select immigration goal</option>
                     {evaluationFormData.projectTypes.map((item) => (
-                      <option key={item}>{item}</option>
+                      <option key={item} value={item}>{item}</option>
                     ))}
                   </select>
                 </div>
 
                 <button
                   type="submit"
-
+                  disabled={loading}
                   className="
                   md:col-span-2
                   flex
@@ -201,10 +260,11 @@ export default function EvaluationForm() {
                   font-bold
                   hover:bg-blue-800
                   transition
+                  disabled:opacity-70
                   "
                 >
-                  Submit Evaluation
-                  <Send size={18} />
+                  {loading ? "Submitting..." : "Submit Evaluation"}
+                  {!loading && <Send size={18} />}
                 </button>
               </form>
             </>

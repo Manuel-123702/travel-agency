@@ -61,7 +61,7 @@ export default function Stats() {
       ref={ref}
       className="
       py-20
-      bg-navy
+      bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800
       relative
       overflow-hidden
       "

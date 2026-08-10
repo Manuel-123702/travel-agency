@@ -1,21 +1,17 @@
 // lib/constants.ts - Application constants
 
 // ===== Application Info =====
-export const APP_NAME = 'Manuel Immigration Agency';
-export const APP_DESCRIPTION = 'Premium immigration visa consulting and processing platform';
+export const APP_NAME = 'TRAVEL AGENCY';
+export const APP_DESCRIPTION = 'Premium immigration, study abroad, visa consulting and processing platform';
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 // ===== Locales =====
-export const LOCALES = (process.env.NEXT_PUBLIC_LOCALES || 'en,fr,de,es,it,ar').split(',');
+export const LOCALES = (process.env.NEXT_PUBLIC_LOCALES || 'en,fr').split(',');
 export const DEFAULT_LOCALE = process.env.NEXT_PUBLIC_DEFAULT_LOCALE || 'en';
 
 export const LOCALE_LABELS: Record<string, string> = {
     en: 'English',
     fr: 'Français',
-    de: 'Deutsch',
-    es: 'Español',
-    it: 'Italiano',
-    ar: 'العربية',
 };
 
 // ===== Routes =====
@@ -184,8 +180,10 @@ export const ALLOWED_FILE_TYPES = [
 ];
 
 // ===== Email Configuration =====
-export const EMAIL_FROM = 'noreply@manuelimmigration.com';
-export const EMAIL_FROM_NAME = 'Manuel Immigration Agency';
+export const EMAIL_FROM = 'noreply@travelagency.com';
+export const EMAIL_FROM_NAME = 'TRAVEL AGENCY';
+export const SUPER_ADMIN_EMAIL = 'tessohmanuel@gmail.com';
+export const ADMIN_PHONE = '+237650921917';
 
 // ===== Stripe =====
 export const STRIPE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
