@@ -269,7 +269,7 @@ export default function Header() {
                 className={`relative flex items-center text-navy-700 font-semibold gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 group  ${isActive(link.href)
                     ? "text-gold"
                     : scrolled
-                      ? "text-navy hover:text-gold"
+                      ? "text-gold hover:text-gold"
                       : "text-white/90 hover:text-gold"
                   }`}
               >
@@ -330,14 +330,11 @@ export default function Header() {
               {/* CMS button - only visible for admin email */}
               {isAdminEmail && (
                 <Link
-                  href="/studio"
-                  className={`text-sm font-semibold px-4 py-2 rounded-full transition-all flex items-center gap-1.5 ${scrolled
-                      ? "bg-gradient-to-r from-gold to-yellow-500 text-navy hover:shadow-lg hover:shadow-gold/30"
-                      : "bg-gradient-to-r from-gold to-yellow-500 text-navy hover:shadow-lg hover:shadow-gold/30"
-                    }`}
+                  href="/admin-dashboard"
+                  className="bg-orange-400 hover:bg-orange-700 text-white font-bold px-8 py-3 rounded-lg animate-pulse"
                 >
-                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  CMS Admin
+                  <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
+                  ADMIN
                 </Link>
               )}
               {/* Atlas button - visible for all signed-in users */}
