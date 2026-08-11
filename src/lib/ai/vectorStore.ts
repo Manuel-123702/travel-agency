@@ -41,7 +41,7 @@ export async function upsertVectors(records: VectorRecord[]) {
   if (supabase) {
     // upsert via supabase
     const rows = records.map((r) => ({ id: r.id, text: r.text, embedding: r.embedding, metadata: r.metadata }));
-    const { data, error } = await supabase.from("vectors").upsert(rows, { onConflict: "id" });
+    const { data, error } = await supabase.from("vectors").upsert(rows as any, { onConflict: "id" });
     if (error) {
       console.error("Supabase upsert error:", error);
       // Hard fail when Supabase is configured to avoid silent fallback
@@ -78,6 +78,7 @@ export async function queryVectors(embedding: number[], topK = 5) {
   if (supabase && SUPABASE_MATCH_FUNCTION) {
     try {
       // call RPC function: expects (query_embedding float8[], match_count int)
+      // @ts-ignore
       const resp = await supabase.rpc(SUPABASE_MATCH_FUNCTION, { query_embedding: embedding, match_count: topK });
       // rpc may return rows with id, text, metadata, score
       // @ts-ignore

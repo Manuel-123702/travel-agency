@@ -29,20 +29,20 @@ import Link from "next/link";
 const ADMIN_EMAIL = "tessohmanuel@gmail.com";
 
 const adminSections = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/admin", color: "from-blue-500 to-blue-600" },
-  { id: "clients", label: "Clients & Cases", icon: Users, href: "/admin/clients", color: "from-green-500 to-green-600" },
-  { id: "staff", label: "Staff Management", icon: Briefcase, href: "/admin/staff", color: "from-purple-500 to-purple-600" },
-  { id: "applications", label: "Applications", icon: FileText, href: "/admin/applications", color: "from-orange-500 to-orange-600" },
-  { id: "documents", label: "Document Review", icon: FileText, href: "/admin/documents", color: "from-cyan-500 to-cyan-600" },
-  { id: "countries", label: "Countries", icon: Globe, href: "/admin/countries", color: "from-indigo-500 to-indigo-600" },
-  { id: "universities", label: "Universities", icon: GraduationCap, href: "/admin/universities", color: "from-pink-500 to-pink-600" },
-  { id: "payments", label: "Payments", icon: DollarSign, href: "/admin/payments", color: "from-emerald-500 to-emerald-600" },
-  { id: "appointments", label: "Appointments", icon: Calendar, href: "/admin/appointments", color: "from-amber-500 to-amber-600" },
-  { id: "messages", label: "Messages", icon: MessageSquare, href: "/admin/messages", color: "from-sky-500 to-sky-600" },
-  { id: "notifications", label: "Notifications", icon: Bell, href: "/admin/notifications", color: "from-rose-500 to-rose-600" },
-  { id: "analytics", label: "Analytics", icon: BarChart3, href: "/admin/analytics", color: "from-violet-500 to-violet-600" },
-  { id: "roles", label: "Roles & Permissions", icon: Shield, href: "/admin/roles", color: "from-red-500 to-red-600" },
-  { id: "settings", label: "Settings", icon: Settings, href: "/admin/settings", color: "from-gray-500 to-gray-600" },
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/admin-dashboard", color: "from-blue-500 to-blue-600" },
+  { id: "clients", label: "Clients & Cases", icon: Users, href: "/admin-dashboard/clients", color: "from-green-500 to-green-600" },
+  { id: "staff", label: "Staff Management", icon: Briefcase, href: "/admin-dashboard/staff", color: "from-purple-500 to-purple-600" },
+  { id: "applications", label: "Applications", icon: FileText, href: "/admin-dashboard/applications", color: "from-orange-500 to-orange-600" },
+  { id: "documents", label: "Document Review", icon: FileText, href: "/admin-dashboard/documents", color: "from-cyan-500 to-cyan-600" },
+  { id: "countries", label: "Countries", icon: Globe, href: "/admin-dashboard/countries", color: "from-indigo-500 to-indigo-600" },
+  { id: "universities", label: "Universities", icon: GraduationCap, href: "/admin-dashboard/universities", color: "from-pink-500 to-pink-600" },
+  { id: "payments", label: "Payments", icon: DollarSign, href: "/admin-dashboard/payments", color: "from-emerald-500 to-emerald-600" },
+  { id: "appointments", label: "Appointments", icon: Calendar, href: "/admin-dashboard/appointments", color: "from-amber-500 to-amber-600" },
+  { id: "messages", label: "Messages", icon: MessageSquare, href: "/admin-dashboard/messages", color: "from-sky-500 to-sky-600" },
+  { id: "notifications", label: "Notifications", icon: Bell, href: "/admin-dashboard/notifications", color: "from-rose-500 to-rose-600" },
+  { id: "analytics", label: "Analytics", icon: BarChart3, href: "/admin-dashboard/analytics", color: "from-violet-500 to-violet-600" },
+  { id: "roles", label: "Roles & Permissions", icon: Shield, href: "/admin-dashboard/roles", color: "from-red-500 to-red-600" },
+  { id: "settings", label: "Settings", icon: Settings, href: "/admin-dashboard/settings", color: "from-gray-500 to-gray-600" },
 ];
 
 export default function AdminDashboard() {

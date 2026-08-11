@@ -70,6 +70,7 @@ export function errorResponse(
     return NextResponse.json(
         {
             success: false,
+            data: null,
             error: error?.message || message,
             message,
             timestamp: new Date(),

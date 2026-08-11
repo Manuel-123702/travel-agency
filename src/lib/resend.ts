@@ -52,7 +52,7 @@ export async function sendTemplatedEmail(
     return null;
   }
 
-  let Component: React.ComponentType<EmailProps> | null = null;
+  let Component: any = null;
   if (name === "appointment") {
     Component = (await import("@/emails/AppointmentConfirmation")).default;
   }

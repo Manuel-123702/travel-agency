@@ -19,7 +19,6 @@ const cookieCategories = [
       "Authentication cookies (Clerk) to keep you signed in",
       "Load balancer session affinity cookies",
       "CSRF security tokens to prevent attacks",
-      "Language preference cookies (next-intl)",
       "Shopping cart & payment state cookies",
     ],
   },

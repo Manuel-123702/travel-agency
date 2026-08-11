@@ -1,53 +1,54 @@
-// src/sanity/schemaTypes/index.ts
+import { type SchemaTypeDefinition } from 'sanity'
+import about from './about'
+import category from './category'
+import countryContent from './countryContent'
+import destination from './destination'
+import faq from './faq'
+import footer from './footer'
+import globalSettings from './globalSettings'
+import hero from './hero'
+import heroCountry from './heroCountry'
+import heroFeature from './heroFeature'
+import heroFlag from './heroFlag'
+import heroSlide from './heroSlide'
+import heroStat from './heroStat'
+import navigation from './navigation'
+import page from './page'
+import post from './post'
+import pricingTier from './pricingTier'
+import process from './process'
+import service from './service'
+import socialLinks from './socialLinks'
+import stat from './stat'
+import successStory from './successStory'
+import teamMember from './teamMember'
+import testimonial from './testimonial'
 
-import hero from "./hero";
-import about from "./about";
-import stat from "./stat";
-import service from "./service";
-import process from "./process";
-import destination from "./destination";
-import successStory from "./successStory";
-import heroSlide from "./heroSlide";
-import countryContent from "./countryContent";
-import pricingTier from "./pricingTier";
-import faq from "./faq";
-import post from "./post";
-import testimonial from "./testimonial";
-import teamMember from "./teamMember";
-import page from "./page";
-import globalSettings from "./globalSettings";
-import socialLinks from "./socialLinks";
-import footer from "./footer";
-import navigation from "./navigation";
-import category from "./category";
-import heroCountry from "./heroCountry";
-import heroFeature from "./heroFeature";
-import heroStat from "./heroStat";
-import heroFlag from "./heroFlag";
-
-export const schemaTypes = [
-  hero,
-  about,
-  stat,
-  service,
-  process,
-  destination,
-  successStory,
-  heroSlide,
-  countryContent,
-  pricingTier,
-  faq,
-  post,
-  testimonial,
-  teamMember,
-  page,
-  globalSettings,
-  socialLinks,
-  footer,
-  navigation,
-  heroCountry,
-  heroFeature,
-  heroStat,
-  heroFlag,
-  category,
-];
+export const schema: { types: SchemaTypeDefinition[] } = {
+  types: [
+    about,
+    category,
+    countryContent,
+    destination,
+    faq,
+    footer,
+    globalSettings,
+    hero,
+    heroCountry,
+    heroFeature,
+    heroFlag,
+    heroSlide,
+    heroStat,
+    navigation,
+    page,
+    post,
+    pricingTier,
+    process,
+    service,
+    socialLinks,
+    stat,
+    successStory,
+    teamMember,
+    testimonial,
+  ],
+}

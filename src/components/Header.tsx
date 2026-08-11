@@ -6,7 +6,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, Phone, Mail } from "lucide-react";
-import LanguageSwitcher from "./LanguageSwitcher";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 // ── Social icons with brand colors ──────────────────────────────────────────
@@ -168,17 +167,15 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
           ? "bg-white/95 backdrop-blur-xl shadow-2xl border-b border-gray-200"
           : "bg-gradient-to-b from-white/95 to-white/80 backdrop-blur-md border-b border-gray-100"
-      }`}
+        }`}
     >
       {/* ── Top info bar ───────────────────────────────────────────────────── */}
       <div
-        className={`hidden lg:block transition-all duration-300 overflow-hidden ${
-          scrolled ? "h-0 opacity-0" : "h-10 opacity-100"
-        } bg-gradient-to-r from-navy via-navy-800 to-navy`}
+        className={`hidden lg:block transition-all duration-300 overflow-hidden ${scrolled ? "h-0 opacity-0" : "h-10 opacity-100"
+          } bg-gradient-to-r from-navy via-navy-800 to-navy`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-full">
           {/* Left: contact */}
@@ -222,8 +219,6 @@ export default function Header() {
             <span className="text-gold font-semibold text-xs">
               24/7 WhatsApp
             </span>
-            <span className="text-white/20">|</span>
-            <LanguageSwitcher scrolled={false} />
           </div>
         </div>
       </div>
@@ -244,16 +239,14 @@ export default function Header() {
           </div>
           <div className="hidden sm:block">
             <span
-              className={`font-heading font-black text-xl leading-none block tracking-wide transition-colors duration-300 ${
-                scrolled ? "text-navy" : "text-blue"
-              }`}
+              className={`font-heading font-black text-xl leading-none block tracking-wide transition-colors duration-300 ${scrolled ? "text-navy" : "text-blue"
+                }`}
             >
               TRAVEL <span className="text-gold">AGENCY</span>
             </span>
             <span
-              className={`text-xs transition-colors duration-300 ${
-                scrolled ? "text-gray-400" : "text-white/60"
-              }`}
+              className={`text-xs transition-colors text-orange-900 duration-300 ${scrolled ? "text-orange-900" : "text-orange-800"
+                }`}
             >
               Together toward your international success
             </span>
@@ -273,13 +266,12 @@ export default function Header() {
             >
               <Link
                 href={link.href}
-                className={`relative flex items-center gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 group whitespace-nowrap ${
-                  isActive(link.href)
+                className={`relative flex items-center text-navy-700 font-semibold gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 group  ${isActive(link.href)
                     ? "text-gold"
                     : scrolled
                       ? "text-navy hover:text-gold"
                       : "text-white/90 hover:text-gold"
-                }`}
+                  }`}
               >
                 {link.label}
                 {link.children && (
@@ -315,11 +307,10 @@ export default function Header() {
                         <Link
                           key={child.href || index}
                           href={child.href}
-                          className={`block px-5 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-navy/5 hover:text-gold hover:pl-6 whitespace-nowrap ${
-                            pathname === child.href
+                          className={`block px-5 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-navy/5 hover:text-gold hover:pl-6 whitespace-nowrap ${pathname === child.href
                               ? "text-gold bg-gold/5"
                               : "text-navy"
-                          }`}
+                            }`}
                         >
                           {child.label}
                         </Link>
@@ -336,17 +327,14 @@ export default function Header() {
         <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
           {isSignedIn ? (
             <div className="flex items-center gap-3">
-              {/* Language switcher - visible when top bar is scrolled away */}
-              {scrolled && <LanguageSwitcher scrolled={scrolled} />}
               {/* CMS button - only visible for admin email */}
               {isAdminEmail && (
                 <Link
-                  href="/admin"
-                  className={`text-sm font-semibold px-4 py-2 rounded-full transition-all flex items-center gap-1.5 ${
-                    scrolled
+                  href="/studio"
+                  className={`text-sm font-semibold px-4 py-2 rounded-full transition-all flex items-center gap-1.5 ${scrolled
                       ? "bg-gradient-to-r from-gold to-yellow-500 text-navy hover:shadow-lg hover:shadow-gold/30"
                       : "bg-gradient-to-r from-gold to-yellow-500 text-navy hover:shadow-lg hover:shadow-gold/30"
-                  }`}
+                    }`}
                 >
                   <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                   CMS Admin
@@ -358,51 +346,20 @@ export default function Header() {
                 className="relative group cursor-pointer mx-4"
               >
                 <div
-                  className={`relative px-10 py-5 border-2 font-bold text-xl rounded-lg transform transition-all 
-                    duration-300 group-hover:translate-y-1 group-hover:translate-x-1 
-                    shadow-[6px_6px_10px_rgba(0,0,0,0.6),-6px_-6px_10px_rgba(255,255,255,0.1)] 
-                    group-hover:shadow-[8px_8px_15px_rgba(0,0,0,0.8),-8px_-8px_15px_rgba(255,255,255,0.15)] ${
-                    scrolled
-                      ? "text-gold border-gold"
-                      : "text-gold border-gold"
-                  }`}
+                  className="cursor-pointer transition-all text-xl font-bold flex items-center gap-4 bg-blue-500 text-white px-8 py-3 rounded-lg
+                border-blue-600
+                border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
+                active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
                 >
-                  🌍 Atlas
+                   Atlas 🌍
                 </div>
-
-                <div
-                  className={`absolute inset-0 border-2 border-dashed rounded-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300 ${
-                    scrolled ? "border-gold" : "border-gold"
-                  }`}
-                ></div>
-
-                <div
-                  className={`absolute -top-2 -right-2 w-4 h-4 rounded-full animate-ping shadow-lg ${
-                    scrolled ? "bg-gold" : "bg-gold"
-                  }`}
-                ></div>
-                <div
-                  className={`absolute -bottom-2 -left-2 w-4 h-4 rounded-full animate-ping shadow-lg ${
-                    scrolled ? "bg-gold" : "bg-gold"
-                  }`}
-                ></div>
-                <div
-                  className={`absolute top-1/3 left-3 w-3 h-3 rounded-full animate-ping opacity-70 ${
-                    scrolled ? "bg-yellow-400" : "bg-yellow-400"
-                  }`}
-                ></div>
-                <div
-                  className={`absolute top-2/3 right-3 w-3 h-3 rounded-full animate-ping opacity-70 ${
-                    scrolled ? "bg-yellow-400" : "bg-yellow-400"
-                  }`}
-                ></div>
               </Link>
-              <UserButton fallbackRedirectUrl="/" />
+              <div className="ml-4">
+                <UserButton afterSignOutUrl="/" />
+              </div>
             </div>
           ) : (
             <>
-              {/* Language switcher - visible when top bar is scrolled away */}
-              {scrolled && <LanguageSwitcher scrolled={scrolled} />}
               <SignInButton mode="modal">
                 <button
                   className={`cursor-pointer text-white font-bold relative w-[7em] h-[3em] text-[16px] 
@@ -412,11 +369,10 @@ export default function Header() {
                     before:-right-[5px] before:bg-gradient-to-r before:from-violet-500 before:from-10% before:via-sky-500 
                     before:via-30% before:to-pink-500 before:bg-[length:400%] before:-z-10 before:rounded-[35px] before:hover:blur-xl 
                     before:transition-all before:ease-in-out before:duration-[1s] before:hover:bg-[length:10%] active:bg-violet-700 focus:ring-violet-700 
-                    hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px] ${
-                    scrolled
+                    hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px] ${scrolled
                       ? "text-navy hover:bg-gray-100"
                       : "text-white hover:bg-white/10"
-                  }`}
+                    }`}
                 >
                   Sign In
                 </button>
@@ -437,11 +393,10 @@ export default function Header() {
         {/* Mobile toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className={`lg:hidden p-2 rounded-full transition-all ${
-            scrolled
+          className={`lg:hidden p-2 rounded-full transition-all ${scrolled
               ? "text-navy hover:bg-gray-100"
               : "text-white hover:bg-white/10"
-          }`}
+            }`}
           aria-label="Toggle mobile menu"
         >
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -464,40 +419,31 @@ export default function Header() {
                   <Link
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                      isActive(link.href)
+                    className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive(link.href)
                         ? "bg-gold/10 text-gold font-bold"
                         : "text-navy hover:bg-gray-50 hover:text-gold"
-                    }`}
+                      }`}
                   >
                     {link.label}
                   </Link>
                   {link.children && (
                     <div className="ml-4 mt-1 space-y-0.5">
                       {link.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          onClick={() => setMobileOpen(false)}
-                          className="block px-4 py-2 text-sm text-gray-500 hover:text-gold rounded-lg hover:bg-gray-50 transition-all"
-                        >
-                          {child.label}
-                        </Link>
+                        child.href ? (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            onClick={() => setMobileOpen(false)}
+                            className="block px-4 py-2 text-sm text-gray-500 hover:text-gold rounded-lg hover:bg-gray-50 transition-all"
+                          >
+                            {child.label}
+                          </Link>
+                        ) : null
                       ))}
                     </div>
                   )}
                 </div>
               ))}
-
-              {/* Mobile language switcher */}
-              <div className="pt-4 border-t border-gray-100">
-                <p className="text-xs text-gray-400 font-semibold uppercase tracking-widest px-4 mb-3">
-                  Language / Langue
-                </p>
-                <div className="px-4">
-                  <LanguageSwitcher scrolled={true} />
-                </div>
-              </div>
 
               {/* Mobile socials */}
               <div className="pt-4 border-t border-gray-100">
@@ -524,11 +470,11 @@ export default function Header() {
               <div className="pt-3 border-t border-gray-100 space-y-2">
                 {isSignedIn ? (
                   <div className="flex items-center gap-3 px-4">
-                    <UserButton fallbackRedirectUrl="/" />
+                    <UserButton afterSignOutUrl="/" />
                     {/* CMS button - only visible for admin email */}
                     {isAdminEmail && (
                       <Link
-                        href="/admin"
+                        href="/studio"
                         onClick={() => setMobileOpen(false)}
                         className="text-sm font-bold bg-gradient-to-r from-gold to-yellow-500 text-navy px-4 py-2 rounded-full flex items-center gap-2"
                       >

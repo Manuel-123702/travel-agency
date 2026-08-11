@@ -64,7 +64,8 @@ export default function NewsletterCTA() {
 
           initial={{
             opacity:0,
-            y:30
+            y:30,
+            scale: 0.9
           }}
 
           animate={
@@ -72,16 +73,21 @@ export default function NewsletterCTA() {
             ?
             {
               opacity:1,
-              y:0
+              y:0,
+              scale: 1
             }
             :
             {}
           }
 
+          transition={{
+            type: "spring",
+            stiffness: 100
+          }}
         >
 
 
-          <div
+          <motion.div
             className="
             w-16
             h-16
@@ -93,6 +99,13 @@ export default function NewsletterCTA() {
             mx-auto
             mb-6
             "
+            whileHover={{
+              rotate: [0, -10, 10, -10, 0],
+              scale: 1.1
+            }}
+            transition={{
+              duration: 0.5
+            }}
           >
 
             <Mail
@@ -102,7 +115,7 @@ export default function NewsletterCTA() {
               "
             />
 
-          </div>
+          </motion.div>
 
 
 

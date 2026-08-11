@@ -34,7 +34,7 @@ interface DashboardKpi {
 }
 
 const DashboardKpis = ({ stats }: { stats: DashboardStats }): DashboardKpi[] => {
-  const percent = stats?.totalApplications
+  const percent = stats?.totalApplications && stats?.approved !== undefined
     ? Math.round((stats.approved / Math.max(1, stats.totalApplications)) * 100)
     : 0;
   return [
@@ -145,7 +145,7 @@ export default function DashboardOverview() {
     };
   }, []);
 
-  const kpis = DashboardKpis({ stats });
+  const kpis = DashboardKpis({ stats: stats || {} });
 
   // Get the most recent application for case progress
   const latestApplication = applications[0];

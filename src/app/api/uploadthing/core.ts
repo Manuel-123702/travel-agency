@@ -3,8 +3,8 @@ import { auth } from "@clerk/nextjs/server";
 
 const f = createUploadthing();
 
-const authHandler = () => {
-  const { userId } = auth();
+const authHandler = async () => {
+  const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
   return { userId };
 };

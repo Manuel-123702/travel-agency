@@ -4,8 +4,27 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "FAQ | Travel Agency",
-  description: "Answers to the most common questions about immigration to France, Canada, and Luxembourg.",
+  title: "Immigration FAQ | Common Questions Answered | Travel Agency",
+  description: "Find answers to the most common questions about immigration to France, Canada, and Luxembourg. Visa requirements, processing times, costs, and more.",
+  keywords: "immigration FAQ, visa questions, immigration requirements, visa processing time, immigration costs, study visa FAQ",
+  openGraph: {
+    title: "Immigration FAQ | Travel Agency",
+    description: "Answers to the most common questions about immigration to France, Canada, and Luxembourg.",
+    url: "/faq",
+    type: "website",
+    images: [{
+      url: "/og-faq.jpg",
+      width: 1200,
+      height: 630,
+      alt: "Immigration FAQ"
+    }]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Immigration FAQ | Travel Agency",
+    description: "Answers to the most common questions about immigration to France, Canada, and Luxembourg.",
+    images: ["/og-faq.jpg"]
+  }
 };
 
 export default function FAQPage() {

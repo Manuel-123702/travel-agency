@@ -8,10 +8,12 @@ export async function notifyUserById(
   options?: { sendEmail?: boolean; emailSubject?: string; emailBody?: string }
 ) {
   // create in-app notification
-  await db.createNotification({ userId, title, message, type: "INFO" });
+  await db.notification.create({
+    data: { userId, title, message, type: "INFO" },
+  });
 
   if (options?.sendEmail) {
-    const user = await db.getUserById(userId);
+    const user = await db.user.findUnique({ where: { id: userId } });
     if (user?.email) {
       try {
         await sendEmail({

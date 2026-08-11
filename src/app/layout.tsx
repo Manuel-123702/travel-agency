@@ -77,8 +77,8 @@ export default function RootLayout({
           formButtonPrimary: "bg-navy hover:bg-blue-800 text-white",
         },
       }}
-      afterSignInUrl="/"
-      afterSignUpUrl="/"
+      signInFallbackRedirectUrl="/"
+      signUpFallbackRedirectUrl="/"
     >
       <html
         lang="en"

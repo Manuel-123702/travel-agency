@@ -82,25 +82,7 @@ const nextConfig: NextConfig = {
 
   // Redirects
   async redirects() {
-    return [
-      // Redirect old blog URLs if needed
-      {
-        source: "/blog/:slug",
-        destination: "/blog/:slug",
-        permanent: false,
-      },
-      // Redirect old /studio Sanity path to new /admin
-      {
-        source: "/studio",
-        destination: "/admin",
-        permanent: true,
-      },
-      {
-        source: "/studio/:path*",
-        destination: "/admin/:path*",
-        permanent: true,
-      },
-    ];
+    return [];
   },
 };
 

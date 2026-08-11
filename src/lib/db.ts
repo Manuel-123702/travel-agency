@@ -147,7 +147,7 @@ export async function createApplication(
   return db.application.create({
     data: {
       userId,
-      visaType: data.visaType,
+      visaType: data.visaType as any,
       country: data.country,
       status: data.status ?? ApplicationStatus.DRAFT,
       notes: data.notes,
@@ -921,11 +921,11 @@ export async function updateSystemSetting(key: string, value: unknown) {
       key,
     },
     update: {
-      value,
+      value: value as any,
     },
     create: {
       key,
-      value,
+      value: value as any,
     },
   });
 }

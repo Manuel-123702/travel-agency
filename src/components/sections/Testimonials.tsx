@@ -166,7 +166,8 @@ export default function Testimonials() {
 
                 initial={{
                   opacity:0,
-                  y:40
+                  y:40,
+                  rotateX: 10
                 }}
 
                 animate={
@@ -174,15 +175,24 @@ export default function Testimonials() {
                   ?
                   {
                     opacity:1,
-                    y:0
+                    y:0,
+                    rotateX: 0
                   }
                   :
                   {}
                 }
 
+                whileHover={{
+                  y: -10,
+                  scale: 1.02,
+                  rotateY: 5
+                }}
+
                 transition={{
                   duration:0.5,
-                  delay:index*0.15
+                  delay:index*0.15,
+                  type: "spring",
+                  stiffness: 100
                 }}
 
                 className="
@@ -190,8 +200,9 @@ export default function Testimonials() {
                 rounded-3xl
                 p-8
                 shadow-sm
-                hover:shadow-xl
+                hover:shadow-2xl
                 transition-all
+                cursor-pointer
                 "
               >
 

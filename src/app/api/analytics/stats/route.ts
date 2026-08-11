@@ -48,9 +48,9 @@ export async function GET(request: NextRequest) {
 
     // Applications by destination
     const applicationsByDestination = await db.application.groupBy({
-      by: ["destination"],
+      by: ["country"],
       _count: true,
-      orderBy: { _count: { destination: "desc" } },
+      orderBy: { _count: { country: "desc" } },
     });
 
     // Applications by status
@@ -63,17 +63,30 @@ export async function GET(request: NextRequest) {
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-    const revenueByMonth = await db.payment.groupBy({
-      by: {
-        createdAt: true,
-      },
+    const recentPayments = await db.payment.findMany({
       where: {
         createdAt: { gte: sixMonthsAgo },
-        status: "COMPLETED",
       },
-      _sum: { amount: true },
-      orderBy: { createdAt: "asc" },
+      select: {
+        createdAt: true,
+        amount: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
     });
+
+    // Group by month manually
+    const revenueByMonth = recentPayments.reduce((acc, payment) => {
+      const monthKey = new Date(payment.createdAt).toISOString().slice(0, 7); // YYYY-MM
+      if (!acc[monthKey]) {
+        acc[monthKey] = { createdAt: payment.createdAt, _sum: { amount: 0 } };
+      }
+      acc[monthKey]._sum.amount += payment.amount;
+      return acc;
+    }, {} as Record<string, { createdAt: Date; _sum: { amount: number } }>);
+
+    const revenueByMonthArray = Object.values(revenueByMonth);
 
     return NextResponse.json({
       overview: {
@@ -89,7 +102,7 @@ export async function GET(request: NextRequest) {
       },
       applicationsByDestination,
       applicationsByStatus,
-      revenueByMonth,
+      revenueByMonth: revenueByMonthArray,
       recentUsers,
       recentApplications,
     });

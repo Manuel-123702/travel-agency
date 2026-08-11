@@ -2,9 +2,27 @@ import type { Metadata } from "next";
 import { CheckCircle, Award, Users, Globe, Shield, Target } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Us | Travel Agency",
-  description:
-    "Learn about Travel Agency — 10+ years of excellence in international immigration consulting for France, Canada, and Luxembourg.",
+  title: "About Us | 10+ Years Immigration Excellence | Travel Agency",
+  description: "Learn about Travel Agency — 10+ years of excellence in international immigration consulting for France, Canada, and Luxembourg with 97% success rate. Meet our expert team.",
+  keywords: "immigration agency about, immigration consultants, visa experts, travel agency team, immigration success rate",
+  openGraph: {
+    title: "About Us | Travel Agency",
+    description: "Learn about Travel Agency — 10+ years of excellence in international immigration consulting.",
+    url: "/about",
+    type: "website",
+    images: [{
+      url: "/og-about.jpg",
+      width: 1200,
+      height: 630,
+      alt: "About Travel Agency"
+    }]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Us | Travel Agency",
+    description: "Learn about Travel Agency — 10+ years of excellence in international immigration consulting.",
+    images: ["/og-about.jpg"]
+  }
 };
 
 const team = [

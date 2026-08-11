@@ -3,8 +3,27 @@ import { CheckCircle, GraduationCap, Briefcase, Camera, ArrowRight, FileText, Cl
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Immigration to Canada | Travel Agency",
-  description: "Expert Canadian immigration services. Express Entry, study permits, work permits, and visitor visas with 97% success rate.",
+  title: "Immigration to Canada | Express Entry, Study & Work Permits | Travel Agency",
+  description: "Expert Canadian immigration services with 97% success rate. Express Entry, study permits, work permits, visitor visas, and family sponsorship. Start your journey today.",
+  keywords: "Canada immigration, Express Entry, study permit Canada, work permit Canada, visitor visa Canada, PR Canada, Canadian citizenship",
+  openGraph: {
+    title: "Immigration to Canada | Travel Agency",
+    description: "Expert Canadian immigration services with 97% success rate. Express Entry, study permits, work permits, and more.",
+    url: "/canada",
+    type: "website",
+    images: [{
+      url: "/og-canada.jpg",
+      width: 1200,
+      height: 630,
+      alt: "Canada Immigration Services"
+    }]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Immigration to Canada | Travel Agency",
+    description: "Expert Canadian immigration services with 97% success rate.",
+    images: ["/og-canada.jpg"]
+  }
 };
 
 export default function CanadaPage() {

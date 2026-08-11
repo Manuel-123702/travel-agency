@@ -143,21 +143,30 @@ export default function Stats() {
 
                   initial={{
                     opacity:0,
-                    y:30
+                    y:30,
+                    scale: 0.9
                   }}
 
                   animate={
                     inView
                     ? {
                       opacity:1,
-                      y:0
+                      y:0,
+                      scale: 1
                     }
                     : {}
                   }
 
+                  whileHover={{
+                    scale: 1.05,
+                    y: -5
+                  }}
+
                   transition={{
                     duration:0.6,
-                    delay:i * 0.1
+                    delay:i * 0.1,
+                    type: "spring",
+                    stiffness: 100
                   }}
 
                   className="
@@ -168,7 +177,7 @@ export default function Stats() {
 
 
 
-                  <div
+                  <motion.div
                     className={`
                     w-16
                     h-16
@@ -180,10 +189,15 @@ export default function Stats() {
                     justify-center
                     mx-auto
                     mb-5
-                    group-hover:scale-110
-                    transition-transform
                     shadow-lg
                     `}
+                    whileHover={{
+                      rotate: [0, -10, 10, -10, 0],
+                      scale: 1.15
+                    }}
+                    transition={{
+                      duration: 0.5
+                    }}
                   >
 
                     <Icon
@@ -191,7 +205,7 @@ export default function Stats() {
                       className="text-white"
                     />
 
-                  </div>
+                  </motion.div>
 
 
 

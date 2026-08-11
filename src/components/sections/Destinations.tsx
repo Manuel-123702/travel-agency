@@ -233,7 +233,8 @@ export default function Destinations() {
 
                 initial={{
                   opacity:0,
-                  y:40
+                  y:40,
+                  scale: 0.95
                 }}
 
                 animate={
@@ -241,15 +242,24 @@ export default function Destinations() {
                   ?
                   {
                     opacity:1,
-                    y:0
+                    y:0,
+                    scale: 1
                   }
                   :
                   {}
                 }
 
+                whileHover={{
+                  y: -15,
+                  scale: 1.03,
+                  rotateX: 5
+                }}
+
                 transition={{
                   duration:0.6,
-                  delay:i*0.15
+                  delay:i*0.15,
+                  type: "spring",
+                  stiffness: 100
                 }}
 
                 className={`
@@ -259,8 +269,8 @@ export default function Destinations() {
                 overflow-hidden
                 shadow-xl
                 hover:shadow-2xl
-                hover:-translate-y-2
                 transition-all
+                cursor-pointer
                 ${
                   featuredData
                   ?

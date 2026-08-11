@@ -58,7 +58,7 @@ export default function Services() {
       id="services"
       className="
       py-24
-      bg-[#F8FAFC]
+      bg-gradient-to-b from-white via-blue-50/30 to-white
       relative
       overflow-hidden
       "
@@ -73,9 +73,9 @@ export default function Services() {
         w-full
         h-1
         bg-gradient-to-r
-        from-navy
-        via-blue-700
-        to-gold
+        from-blue-600
+        via-purple-600
+        to-pink-600
         "
       />
 

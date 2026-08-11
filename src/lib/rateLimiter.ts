@@ -34,7 +34,6 @@ export async function isRedisHealthy(): Promise<boolean> {
     return true;
   } catch (e) {
     console.error("Redis health check failed", e);
-    try { setRedisHealthy(false); } catch (_) {}
     return false;
   }
 }

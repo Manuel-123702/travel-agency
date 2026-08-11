@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
         if (clerkUser) {
           const email = clerkUser.emailAddresses?.[0]?.emailAddress;
           if (email) {
-            user = await db.user.create({
+            const newUser = await db.user.create({
               data: {
                 clerkId: userId,
                 email,
@@ -42,11 +42,11 @@ export async function GET(req: NextRequest) {
             
             // Create associated profile records
             await db.userProfile.create({
-              data: { userId: user.id },
+              data: { userId: newUser.id },
             });
             
             await db.client.create({
-              data: { userId: user.id },
+              data: { userId: newUser.id },
             });
             
             // Refetch with notifications

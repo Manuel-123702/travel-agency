@@ -113,7 +113,8 @@ export default function Process() {
 
                 initial={{
                   opacity:0,
-                  y:40
+                  y:40,
+                  scale: 0.8
                 }}
 
                 animate={
@@ -121,19 +122,29 @@ export default function Process() {
                   ?
                   {
                     opacity:1,
-                    y:0
+                    y:0,
+                    scale: 1
                   }
                   :
                   {}
                 }
 
+                whileHover={{
+                  y: -10,
+                  scale: 1.1,
+                  rotate: 5
+                }}
+
                 transition={{
-                  delay:index*0.15
+                  delay:index*0.15,
+                  type: "spring",
+                  stiffness: 100
                 }}
 
                 className="
                 relative
                 text-center
+                cursor-pointer
                 "
               >
 
@@ -141,7 +152,7 @@ export default function Process() {
 
                 {/* Number */}
 
-                <div
+                <motion.div
                   className="
                   w-16
                   h-16
@@ -156,11 +167,18 @@ export default function Process() {
                   font-black
                   shadow-lg
                   "
+                  whileHover={{
+                    rotate: [0, -15, 15, -15, 0],
+                    scale: 1.2
+                  }}
+                  transition={{
+                    duration: 0.5
+                  }}
                 >
 
                   {item.step}
 
-                </div>
+                </motion.div>
 
                 {item.image && (
                   <div className="relative w-full h-32 mt-4 rounded-xl overflow-hidden">

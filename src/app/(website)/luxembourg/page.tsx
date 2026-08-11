@@ -3,8 +3,27 @@ import { CheckCircle, GraduationCap, Briefcase, Camera, ArrowRight, FileText, Cl
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Immigration to Luxembourg | Travel Agency",
-  description: "Luxembourg immigration services — EU Blue Card, work permits, student visas. Europe's financial capital awaits.",
+  title: "Immigration to Luxembourg | EU Blue Card, Work & Student Visas | Travel Agency",
+  description: "Luxembourg immigration services with 97% success rate. EU Blue Card, work permits, student visas, and residence permits in Europe's financial capital.",
+  keywords: "Luxembourg immigration, EU Blue Card Luxembourg, work permit Luxembourg, student visa Luxembourg, residence permit Luxembourg",
+  openGraph: {
+    title: "Immigration to Luxembourg | Travel Agency",
+    description: "Luxembourg immigration services with 97% success rate. EU Blue Card, work permits, and more.",
+    url: "/luxembourg",
+    type: "website",
+    images: [{
+      url: "/og-luxembourg.jpg",
+      width: 1200,
+      height: 630,
+      alt: "Luxembourg Immigration Services"
+    }]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Immigration to Luxembourg | Travel Agency",
+    description: "Luxembourg immigration services with 97% success rate.",
+    images: ["/og-luxembourg.jpg"]
+  }
 };
 
 export default function LuxembourgPage() {

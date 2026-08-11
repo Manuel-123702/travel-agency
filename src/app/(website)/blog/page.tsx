@@ -3,8 +3,27 @@ import { Clock, Tag, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Immigration Blog | Travel Agency",
-  description: "Expert immigration guides, visa tips, and destination insights for France, Canada, and Luxembourg.",
+  title: "Immigration Blog | Expert Guides & Tips | Travel Agency",
+  description: "Expert immigration guides, visa tips, and destination insights for France, Canada, and Luxembourg. Stay updated with the latest immigration news and requirements.",
+  keywords: "immigration blog, visa guides, immigration tips, Canada immigration news, France visa updates, Luxembourg immigration",
+  openGraph: {
+    title: "Immigration Blog | Travel Agency",
+    description: "Expert immigration guides, visa tips, and destination insights for France, Canada, and Luxembourg.",
+    url: "/blog",
+    type: "website",
+    images: [{
+      url: "/og-blog.jpg",
+      width: 1200,
+      height: 630,
+      alt: "Immigration Blog"
+    }]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Immigration Blog | Travel Agency",
+    description: "Expert immigration guides, visa tips, and destination insights for France, Canada, and Luxembourg.",
+    images: ["/og-blog.jpg"]
+  }
 };
 
 const categories = ["All", "Student Visa", "Work Permit", "Canada", "France", "Luxembourg", "Tips & Guides"];

@@ -3,8 +3,27 @@ import { CheckCircle, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Our Services | Travel Agency",
-  description: "Complete immigration services for France, Canada, and Luxembourg. Student visas, work permits, visitor visas, and more.",
+  title: "Immigration Services | Student, Work & Visitor Visas | Travel Agency",
+  description: "Complete immigration services for France, Canada, and Luxembourg with 97% success rate. Student visas, work permits, visitor visas, family sponsorship, and citizenship applications.",
+  keywords: "immigration services, student visa, work permit, visitor visa, family sponsorship, citizenship application, visa consultant",
+  openGraph: {
+    title: "Immigration Services | Travel Agency",
+    description: "Complete immigration services for France, Canada, and Luxembourg with 97% success rate.",
+    url: "/services",
+    type: "website",
+    images: [{
+      url: "/og-services.jpg",
+      width: 1200,
+      height: 630,
+      alt: "Immigration Services"
+    }]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Immigration Services | Travel Agency",
+    description: "Complete immigration services for France, Canada, and Luxembourg with 97% success rate.",
+    images: ["/og-services.jpg"]
+  }
 };
 
 const services = [

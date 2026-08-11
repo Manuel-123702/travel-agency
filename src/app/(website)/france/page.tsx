@@ -3,8 +3,27 @@ import { CheckCircle, GraduationCap, Briefcase, Camera, ArrowRight, FileText, Cl
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Immigration to France | Travel Agency",
-  description: "Complete guide to studying, working, and visiting France. Expert immigration services with 97% success rate.",
+  title: "Immigration to France | Student Visa, Work Permit & Residence | Travel Agency",
+  description: "Complete guide to studying, working, and living in France with 97% success rate. Student visas, work permits, visitor visas, and French citizenship services.",
+  keywords: "France immigration, student visa France, work permit France, visitor visa France, French citizenship, residence permit France",
+  openGraph: {
+    title: "Immigration to France | Travel Agency",
+    description: "Complete guide to studying, working, and living in France with 97% success rate.",
+    url: "/france",
+    type: "website",
+    images: [{
+      url: "/og-france.jpg",
+      width: 1200,
+      height: 630,
+      alt: "France Immigration Services"
+    }]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Immigration to France | Travel Agency",
+    description: "Complete guide to studying, working, and living in France with 97% success rate.",
+    images: ["/og-france.jpg"]
+  }
 };
 
 export default function FrancePage() {

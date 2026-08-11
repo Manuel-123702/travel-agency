@@ -10,11 +10,14 @@ interface PaymentWithApplication {
   currency: string;
   status: string;
   paymentMethod: string;
-  transactionId: string | null;
+  stripePaymentId: string | null;
+  paypalOrderId: string | null;
+  paypalPaymentId: string | null;
+  orangeTransactionId: string | null;
   createdAt: Date;
   application: {
     id: string;
-    destination: string;
+    country: string;
     visaType: string;
   } | null;
 }
@@ -23,7 +26,6 @@ interface User {
   firstName: string | null;
   lastName: string | null;
   email: string;
-  phone: string | null;
 }
 
 // GET /api/payments/[id]/invoice
@@ -65,7 +67,7 @@ export async function GET(
     // Generate PDF invoice
     const pdfBuffer = await generateInvoicePDF(payment as PaymentWithApplication, user as User);
 
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(pdfBuffer as unknown as BodyInit, {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `attachment; filename="invoice-${payment.id}.pdf"`,
@@ -112,7 +114,6 @@ async function generateInvoicePDF(payment: PaymentWithApplication, user: User) {
       doc.fontSize(12).font("Helvetica-Bold").text("Bill To:");
       doc.fontSize(10).font("Helvetica").text(`${user.firstName} ${user.lastName}`);
       doc.text(user.email);
-      doc.text(user.phone || "");
 
       // Payment details
       doc.moveDown(2);
@@ -120,14 +121,15 @@ async function generateInvoicePDF(payment: PaymentWithApplication, user: User) {
       doc.fontSize(10).font("Helvetica").text(`Amount: $${payment.amount.toFixed(2)}`);
       doc.text(`Currency: ${payment.currency}`);
       doc.text(`Payment Method: ${payment.paymentMethod}`);
-      doc.text(`Transaction ID: ${payment.transactionId || "N/A"}`);
+      const transactionId = payment.stripePaymentId || payment.paypalOrderId || payment.paypalPaymentId || payment.orangeTransactionId || "N/A";
+      doc.text(`Transaction ID: ${transactionId}`);
 
       // Application reference
       if (payment.application) {
         doc.moveDown(2);
         doc.fontSize(12).font("Helvetica-Bold").text("Application Reference:");
         doc.fontSize(10).font("Helvetica").text(`Application ID: ${payment.application.id}`);
-        doc.text(`Destination: ${payment.application.destination}`);
+        doc.text(`Country: ${payment.application.country}`);
         doc.text(`Visa Type: ${payment.application.visaType}`);
       }
 
