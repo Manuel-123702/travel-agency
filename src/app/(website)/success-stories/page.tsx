@@ -269,15 +269,15 @@ export default function SuccessStoriesPage() {
                   <div className={`bg-gradient-to-r ${s.color} bg-opacity-[0.08] rounded-2xl p-4 mb-4 border border-opacity-10`}>
                     <div className="grid grid-cols-3 gap-3 text-center">
                       <div>
-                        <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Visa</p>
-                        <p className={`font-heading font-black text-base bg-gradient-to-r ${s.color} bg-clip-text text-transparent leading-tight mt-0.5`}>{s.visa}</p>
+                        <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Visa</p>
+                        <p className="font-heading font-black text-base text-navy leading-tight mt-0.5">{s.visa}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Approved</p>
+                        <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Approved</p>
                         <p className="font-heading font-black text-navy text-base mt-0.5">{s.approved}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Investment</p>
+                        <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Investment</p>
                         <p className="font-heading font-black text-navy text-base mt-0.5">{s.stats.cost}</p>
                       </div>
                     </div>

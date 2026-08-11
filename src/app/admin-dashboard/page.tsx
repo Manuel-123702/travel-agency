@@ -11,7 +11,6 @@ import {
   FileText,
   Globe,
   GraduationCap,
-  DollarSign,
   Calendar,
   MessageSquare,
   Bell,
@@ -36,7 +35,6 @@ const adminSections = [
   { id: "documents", label: "Document Review", icon: FileText, href: "/admin-dashboard/documents", color: "from-cyan-500 to-cyan-600" },
   { id: "countries", label: "Countries", icon: Globe, href: "/admin-dashboard/countries", color: "from-indigo-500 to-indigo-600" },
   { id: "universities", label: "Universities", icon: GraduationCap, href: "/admin-dashboard/universities", color: "from-pink-500 to-pink-600" },
-  { id: "payments", label: "Payments", icon: DollarSign, href: "/admin-dashboard/payments", color: "from-emerald-500 to-emerald-600" },
   { id: "appointments", label: "Appointments", icon: Calendar, href: "/admin-dashboard/appointments", color: "from-amber-500 to-amber-600" },
   { id: "messages", label: "Messages", icon: MessageSquare, href: "/admin-dashboard/messages", color: "from-sky-500 to-sky-600" },
   { id: "notifications", label: "Notifications", icon: Bell, href: "/admin-dashboard/notifications", color: "from-rose-500 to-rose-600" },
@@ -187,7 +185,7 @@ export default function AdminDashboard() {
               {[
                 { label: "Total Clients", value: "1,547", change: "+12%", color: "from-blue-500 to-blue-600", icon: Users },
                 { label: "Active Applications", value: "342", change: "+8%", color: "from-green-500 to-green-600", icon: FileText },
-                { label: "Revenue (MTD)", value: "$45,230", change: "+23%", color: "from-emerald-500 to-emerald-600", icon: DollarSign },
+                { label: "Completed Cases", value: "1,205", change: "+23%", color: "from-emerald-500 to-emerald-600", icon: BarChart3 },
                 { label: "Success Rate", value: "97%", change: "+2%", color: "from-purple-500 to-purple-600", icon: BarChart3 },
               ].map((stat, i) => {
                 const Icon = stat.icon;
@@ -253,7 +251,6 @@ export default function AdminDashboard() {
               <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
                 {[
                   { action: "New application submitted", user: "John Doe", time: "2 minutes ago", type: "application" },
-                  { action: "Payment received", user: "Jane Smith", time: "15 minutes ago", type: "payment" },
                   { action: "Document uploaded", user: "Mike Johnson", time: "1 hour ago", type: "document" },
                   { action: "Appointment scheduled", user: "Sarah Wilson", time: "2 hours ago", type: "appointment" },
                   { action: "Message sent", user: "Tom Brown", time: "3 hours ago", type: "message" },
@@ -264,13 +261,11 @@ export default function AdminDashboard() {
                   >
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                       activity.type === "application" ? "bg-blue-100 text-blue-600" :
-                      activity.type === "payment" ? "bg-green-100 text-green-600" :
                       activity.type === "document" ? "bg-orange-100 text-orange-600" :
                       activity.type === "appointment" ? "bg-purple-100 text-purple-600" :
                       "bg-sky-100 text-sky-600"
                     }`}>
                       {activity.type === "application" && <FileText size={18} />}
-                      {activity.type === "payment" && <DollarSign size={18} />}
                       {activity.type === "document" && <FileText size={18} />}
                       {activity.type === "appointment" && <Calendar size={18} />}
                       {activity.type === "message" && <MessageSquare size={18} />}

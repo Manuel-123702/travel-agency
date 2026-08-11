@@ -106,13 +106,10 @@ const navLinks = [
     label: "Resources",
     href: "/resources",
     children: [
-      { label: "📖 Resources Hub", href: "/resources" },
-      { label: "⬇️ Downloads", href: "/downloads" },
-      { label: "💳 Pricing", href: "/pricing" },
+      { label: " Pricing", href: "/pricing" },
       { label: "❓ FAQ", href: "/faq" },
       { label: "📜 Privacy Policy", href: "/privacy-policy" },
       { label: "🍪 Cookie Policy", href: "/cookie-policy" },
-      { label: "💸 Refund Policy", href: "/refund-policy" },
       { label: "⚖️ Terms of Service", href: "/terms" },
     ],
   },
@@ -269,8 +266,8 @@ export default function Header() {
                 className={`relative flex items-center text-navy-700 font-semibold gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 group  ${isActive(link.href)
                     ? "text-gold"
                     : scrolled
-                      ? "text-gold hover:text-gold"
-                      : "text-white/90 hover:text-gold"
+                      ? "text-navy hover:text-gold"
+                      : "text-navy hover:text-gold"
                   }`}
               >
                 {link.label}

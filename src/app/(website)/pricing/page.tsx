@@ -1,491 +1,287 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
-import { SignInButton } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   CheckCircle,
   Star,
-  Zap,
   Shield,
   Clock,
   ArrowRight,
   Phone,
   AlertCircle,
+  Zap,
 } from "lucide-react";
 import { Suspense } from "react";
 
 const packages = [
   {
-    key: "starter" as const,
-    name: "Starter Pack",
-    tagline: "Perfect for visitor visas & initial guidance",
-    price: 490,
+    key: "student" as const,
+    name: "Student Visa",
+    tagline: "Complete support for international students",
+    price: 650,
     badge: null,
-    color: "border-gray-200",
-    headerBg: "bg-gradient-to-br from-gray-50 to-gray-100",
-    btnClass: "bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5",
+    color: "from-blue-500 to-blue-600",
     icon: Shield,
     features: [
-      "Free profile evaluation",
-      "Document checklist tailored to your case",
-      "1 advisory call (45 minutes)",
-      "Application form review",
-      "Basic interview tips PDF",
-      "Email support — 72h response",
-      "Access to client portal",
-      "Refund if visa denied*",
+      "University & college research",
+      "Admissions application assistance",
+      "Student dossier preparation",
+      "Student visa application",
+      "CAQ application for Quebec",
+      "Study Permit application",
+      "Scholarship research",
+      "Pre-departure orientation",
     ],
-    notIncluded: [
-      "Full file preparation",
-      "Advisor-managed submissions",
-      "Interview coaching sessions",
-      "Priority support",
-    ],
-    ideal: "Visitor visa, short stays, simple cases",
-    timeline: "Est. 4–6 weeks processing",
+    ideal: "Students pursuing education abroad",
+    timeline: "8–12 weeks",
   },
   {
-    key: "premium" as const,
-    name: "Premium Pack",
-    tagline: "Our most popular — student visa & work permit",
-    price: 990,
-    badge: "Most Popular",
-    color: "border-blue-500",
-    headerBg: "bg-gradient-to-br from-blue-600 to-blue-800",
-    btnClass: "bg-gradient-to-r from-amber-400 to-amber-500 text-navy hover:from-amber-500 hover:to-amber-600 shadow-lg hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-300 transform hover:-translate-y-0.5",
+    key: "work" as const,
+    name: "Work Permit",
+    tagline: "Build your international career",
+    price: 950,
+    badge: "Popular",
+    color: "from-amber-400 to-amber-500",
     icon: Star,
     features: [
-      "Everything in Starter",
-      "Full document collection & review",
-      "Complete application preparation",
-      "Advisor-managed submissions",
-      "2 interview coaching sessions",
-      "WhatsApp direct support line",
-      "Priority email — 24h response",
-      "Case tracker dashboard access",
-      "Post-approval relocation guide",
-      "Refund guarantee if visa denied*",
-    ],
-    notIncluded: [
+      "Professional profile assessment",
       "Express Entry optimization",
-      "Multiple destination filing",
-      "Dedicated senior advisor",
+      "Provincial Nominee Program guidance",
+      "Talent Passport applications",
+      "EU Blue Card applications",
+      "Work permit applications",
+      "Job market guidance",
+      "Credential recognition",
     ],
-    ideal: "Student visa, work permit, long-stay visa",
-    timeline: "Est. 8–12 weeks processing",
+    ideal: "Professionals seeking international work",
+    timeline: "10–16 weeks",
   },
   {
-    key: "vip" as const,
-    name: "VIP Prestige",
-    tagline: "White-glove, end-to-end premium service",
-    price: 1990,
-    badge: "Best Results",
-    color: "border-amber-400",
-    headerBg: "bg-gradient-to-br from-amber-500 to-amber-700",
-    btnClass: "bg-gradient-to-r from-white to-gray-100 text-amber-700 hover:from-gray-100 hover:to-gray-200 shadow-lg hover:shadow-xl hover:shadow-amber-400/30 transition-all duration-300 transform hover:-translate-y-0.5",
+    key: "visitor" as const,
+    name: "Visitor Visa",
+    tagline: "Travel with confidence",
+    price: 350,
+    badge: null,
+    color: "from-gray-400 to-gray-500",
     icon: Zap,
     features: [
-      "Everything in Premium",
-      "Dedicated senior advisor (named)",
-      "Express Entry CRS optimization",
-      "Multiple destination strategy",
-      "Unlimited advisory calls",
-      "24/7 WhatsApp emergency line",
-      "4 interview coaching sessions",
-      "Family member included at 50% off",
-      "Travel & accommodation guidance",
-      "Post-arrival settlement support",
-      "Full refund if visa denied*",
-      "Priority processing — fast-track",
+      "Schengen visa applications",
+      "Canadian Temporary Resident Visa",
+      "Tourist visa applications",
+      "Family reunion visitor visas",
+      "Business visitor applications",
+      "Invitation letter preparation",
+      "Financial documentation",
+      "Refusal case recovery",
     ],
-    notIncluded: [],
-    ideal: "Express Entry, PR, complex cases, families",
-    timeline: "Est. 10–16 weeks processing",
+    ideal: "Tourists, business travelers",
+    timeline: "4–8 weeks",
+  },
+  {
+    key: "business" as const,
+    name: "Business Visa",
+    tagline: "Entrepreneur & investor immigration",
+    price: 1500,
+    badge: null,
+    color: "from-green-500 to-green-600",
+    icon: Shield,
+    features: [
+      "Business plan development",
+      "Company registration",
+      "Investor visa applications",
+      "Entrepreneur visa applications",
+      "Immigration pathway planning",
+      "Financial documentation",
+      "Market research",
+      "Legal compliance guidance",
+    ],
+    ideal: "Entrepreneurs and investors",
+    timeline: "12–20 weeks",
+  },
+  {
+    key: "family" as const,
+    name: "Family Reunification",
+    tagline: "Bring your family together",
+    price: 1200,
+    badge: null,
+    color: "from-purple-500 to-purple-600",
+    icon: Star,
+    features: [
+      "Sponsorship eligibility assessment",
+      "Spouse & partner applications",
+      "Parent & grandparent sponsorship",
+      "Dependent child visa applications",
+      "EU family reunification",
+      "Super visa applications",
+      "Financial requirements assessment",
+      "Relationship documentation",
+    ],
+    ideal: "Families seeking reunification",
+    timeline: "12–24 weeks",
   },
 ];
 
 const faqs = [
   {
-    q: "When do I pay?",
-    a: "Payment is due upfront to open your file. We accept all major credit/debit cards and bank transfers via Stripe — fully secure.",
+    q: "How do I get started?",
+    a: "Contact us via WhatsApp or fill out the contact form. We'll schedule a free consultation to discuss your needs and provide a personalized quote.",
   },
   {
-    q: "What if my visa is denied?",
-    a: "We offer a refund guarantee on all packages. If your visa is denied despite following our guidance, you receive a full refund of service fees (government fees excluded).",
+    q: "What payment methods do you accept?",
+    a: "We accept bank transfers and other secure payment methods. Payment details will be discussed during your consultation.",
   },
   {
-    q: "Can I upgrade my package later?",
-    a: "Yes — you can upgrade from Starter to Premium or VIP at any time. You'll only pay the difference.",
+    q: "Can I get a custom quote?",
+    a: "Yes — every case is unique. Contact us for a personalized assessment and quote based on your specific situation.",
   },
   {
     q: "Are government fees included?",
     a: "No — government filing fees (e.g. $1,365 CAD for Express Entry) are separate and paid directly to the immigration authority. We guide you through every step.",
   },
   {
-    q: "How do I get started after payment?",
-    a: "Immediately after payment, you receive a welcome email with login access to your client portal. Your advisor contacts you within 24 hours.",
+    q: "How long does the process take?",
+    a: "Processing times vary by visa type and country. Student visas typically take 8-12 weeks, work permits 10-16 weeks, and family reunification 12-24 weeks.",
   },
 ];
 
 function PricingContent() {
-  const [loading, setLoading] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const cancelled = searchParams.get("cancelled");
-  const { isSignedIn, isLoaded } = useAuth();
 
-  const handleCheckout = async (packageKey: "starter" | "premium" | "vip") => {
-    setLoading(packageKey);
-    setError(null);
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ packageKey }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        // If no application exists, redirect to create one
-        if (data.error === "Please create an application first.") {
-          router.push("/dashboard?newApplication=true&package=" + packageKey);
-          return;
-        }
-        throw new Error(data.error || "Something went wrong");
-      }
-      if (data.url) window.location.href = data.url;
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Payment failed. Please try again.",
-      );
-      setLoading(null);
-    }
+  const handleContact = (packageKey: string, price: number) => {
+    const whatsappNumber = "237650921917";
+    const message = encodeURIComponent(`Hello, I'm interested in the ${packageKey} package ($${price}). I'd like to discuss pricing and details.`);
+    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-gold/5" />
-        <div className="absolute top-20 right-20 w-64 h-64 bg-gold/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 left-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="max-w-4xl mx-auto px-6 text-center relative">
-          {cancelled && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 text-orange-300 rounded-full px-5 py-2.5 text-sm font-medium mb-6"
-            >
-              <AlertCircle size={15} /> Payment was cancelled — your card was
-              not charged.
-            </motion.div>
-          )}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <span className="inline-flex items-center gap-2 bg-gold/20 border border-gold/30 text-gold rounded-full px-4 py-1.5 text-sm font-semibold mb-6">
-              <Star size={13} className="fill-gold" /> Transparent, one-time
-              pricing
-            </span>
-            <h1 className="font-heading font-black text-4xl md:text-5xl text-white mb-5 leading-tight">
-              Choose Your <span className="text-gold">Immigration</span> Package
-            </h1>
-            <p className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed">
-              Flat-fee service. No hidden costs. No surprises. Our advisors
-              handle everything — you focus on your future.
-            </p>
-          </motion.div>
-
-          {/* Trust bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-wrap justify-center gap-6 mt-10 text-white/70 text-sm"
-          >
-            {[
-              { icon: Shield, text: "Visa denial refund guarantee" },
-              { icon: CheckCircle, text: "97% success rate" },
-              { icon: Clock, text: "2,500+ cases approved" },
-              { icon: Star, text: "4.9/5 client rating" },
-            ].map(({ icon: Icon, text }) => (
-              <span key={text} className="flex items-center gap-2">
-                <Icon size={16} className="text-gold" /> {text}
-              </span>
-            ))}
-          </motion.div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <section className="bg-white py-20 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="font-heading font-bold text-4xl md:text-5xl text-navy mb-4">
+            Choose Your Package
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Professional immigration services tailored to your needs
+          </p>
         </div>
       </section>
 
-      {/* Packages */}
-      <section className="py-16 px-6 bg-gradient-to-b from-blue-50 to-white">
-        <div className="max-w-6xl mx-auto">
-          {error && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 rounded-2xl px-5 py-4 mb-8 max-w-lg mx-auto"
-            >
-              <AlertCircle size={18} className="flex-shrink-0" />
-              <p className="text-sm font-medium">{error}</p>
-            </motion.div>
-          )}
-
-          <div className="grid lg:grid-cols-3 gap-8">
+      {/* Pricing Cards */}
+      <section className="py-16 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {packages.map((pkg, i) => {
               const Icon = pkg.icon;
-              const isLoading = loading === pkg.key;
-              const isPopular = pkg.badge === "Most Popular";
+              const isPopular = pkg.badge === "Popular";
 
               return (
                 <motion.div
                   key={pkg.key}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
-                  className={`relative bg-white rounded-3xl border-2 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 ${pkg.color} ${
-                    isPopular
-                      ? "lg:-translate-y-4 lg:scale-[1.02] shadow-2xl"
-                      : ""
+                  className={`relative bg-white rounded-2xl shadow-sm border-2 overflow-hidden ${
+                    isPopular ? "border-amber-400 shadow-lg" : "border-gray-200"
                   }`}
                 >
-                  {/* Badge */}
-                  {pkg.badge && (
-                    <div className="absolute top-4 right-4 z-10">
-                      <span
-                        className={`text-xs font-bold px-3 py-1.5 rounded-full ${
-                          pkg.badge === "Most Popular"
-                            ? "bg-gold text-navy"
-                            : "bg-blue-600 text-white"
-                        }`}
-                      >
-                        {pkg.badge}
-                      </span>
+                  {isPopular && (
+                    <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-amber-400 to-amber-500 text-white text-center py-2 text-sm font-semibold">
+                      Most Popular
                     </div>
                   )}
 
-                  {/* Header */}
-                  <div className={`${pkg.headerBg} p-8`}>
-                    <div
-                      className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
-                        isPopular ? "bg-white/20" : "bg-blue-100"
-                      }`}
-                    >
-                      <Icon
-                        size={24}
-                        className={isPopular ? "text-white" : "text-blue-600"}
-                      />
+                  <div className="p-8 pt-12">
+                    <div className="flex justify-center mb-6">
+                      <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${pkg.color} flex items-center justify-center`}>
+                        <Icon size={32} className="text-white" />
+                      </div>
                     </div>
-                    <h2
-                      className={`font-heading font-black text-2xl mb-2 ${
-                        pkg.key === "vip" || isPopular
-                          ? "text-white"
-                          : "text-gray-900"
-                      }`}
-                    >
+
+                    <h3 className="font-heading font-bold text-2xl text-navy text-center mb-2">
                       {pkg.name}
-                    </h2>
-                    <p
-                      className={`text-sm leading-snug mb-5 ${
-                        pkg.key === "vip" || isPopular
-                          ? "text-white/70"
-                          : "text-gray-600"
-                      }`}
-                    >
+                    </h3>
+                    <p className="text-gray-500 text-center text-sm mb-6">
                       {pkg.tagline}
                     </p>
-                    <div className="flex items-end gap-2">
-                      <span
-                        className={`font-heading font-black text-4xl ${
-                          pkg.key === "vip" || isPopular
-                            ? "text-white"
-                            : "text-gray-900"
-                        }`}
-                      >
-                        ${pkg.price.toLocaleString()}
-                      </span>
-                      <span
-                        className={`text-sm pb-1 ${
-                          pkg.key === "vip" || isPopular
-                            ? "text-white/60"
-                            : "text-gray-400"
-                        }`}
-                      >
-                        USD · one-time
-                      </span>
-                    </div>
-                    <p
-                      className={`text-xs mt-2 ${
-                        pkg.key === "vip" || isPopular
-                          ? "text-white/40"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      <Clock size={10} className="inline mr-1" />
-                      {pkg.timeline}
-                    </p>
-                  </div>
 
-                  {/* Features */}
-                  <div className="p-8">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-5">
-                      What's included
-                    </p>
-                    <ul className="space-y-3 mb-6">
-                      {pkg.features.map((f) => (
-                        <li
-                          key={f}
-                          className="flex items-start gap-3 text-sm text-gray-700"
-                        >
-                          <CheckCircle
-                            size={16}
-                            className="text-green-500 flex-shrink-0 mt-0.5"
-                          />
-                          <span
-                            className={
-                              f.includes("guarantee") || f.includes("Refund")
-                                ? "font-semibold text-green-700"
-                                : ""
-                            }
-                          >
-                            {f}
-                          </span>
+                    <div className="text-center mb-8">
+                      <span className="font-heading font-bold text-5xl text-navy">
+                        ${pkg.price}
+                      </span>
+                      <span className="text-gray-400 text-sm">/one-time</span>
+                    </div>
+
+                    <ul className="space-y-4 mb-8">
+                      {pkg.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start gap-3">
+                          <CheckCircle size={20} className="text-green-500 flex-shrink-0 mt-0.5" />
+                          <span className="text-gray-600 text-sm">{feature}</span>
                         </li>
                       ))}
                     </ul>
-                    {pkg.notIncluded.length > 0 && (
-                      <>
-                        <p className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3">
-                          Not included
-                        </p>
-                        <ul className="space-y-2 mb-6">
-                          {pkg.notIncluded.map((f) => (
-                            <li
-                              key={f}
-                              className="flex items-start gap-3 text-sm text-gray-400"
-                            >
-                              <span className="mt-0.5 flex-shrink-0">✕</span>
-                              <span>{f}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </>
-                    )}
-                    <div className="border-t border-gray-100 pt-5 mb-5">
-                      <p className="text-xs text-gray-500">
-                        <span className="font-semibold text-gray-700">
-                          Ideal for:
-                        </span>{" "}
-                        {pkg.ideal}
+
+                    <button
+                      onClick={() => handleContact(pkg.name, pkg.price)}
+                      className={`w-full py-4 rounded-xl font-heading font-bold text-white transition-all duration-300 transform hover:-translate-y-0.5 ${
+                        isPopular
+                          ? "bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 shadow-lg hover:shadow-xl"
+                          : `bg-gradient-to-r ${pkg.color} hover:opacity-90`
+                      }`}
+                    >
+                      Get Started
+                    </button>
+
+                    <div className="mt-6 text-center">
+                      <p className="text-gray-400 text-xs flex items-center justify-center gap-1">
+                        <Clock size={12} />
+                        {pkg.timeline} processing time
                       </p>
                     </div>
-                    {!isLoaded ? (
-                      <button
-                        disabled
-                        className="w-full py-4 rounded-2xl bg-gray-300"
-                      >
-                        Loading...
-                      </button>
-                    ) : !isSignedIn ? (
-                      <SignInButton mode="modal">
-                        <button
-                          className={`w-full py-4 rounded-2xl font-heading font-bold ${pkg.btnClass}`}
-                        >
-                          Sign in to Continue
-                        </button>
-                      </SignInButton>
-                    ) : (
-                      <button
-                        onClick={() => handleCheckout(pkg.key)}
-                        disabled={!!loading}
-                        className={`w-full py-4 rounded-2xl font-heading font-bold ${pkg.btnClass}`}
-                      >
-                        {isLoading ? (
-                          <>
-                            <div className="w-5 h-5 border-2 border-current/30 border-t-current rounded-full animate-spin" />
-                            Processing...
-                          </>
-                        ) : (
-                          <>
-                            Proceed to Payment
-                            <ArrowRight size={16} />
-                          </>
-                        )}
-                      </button>
-                    )}
-                    <p className="text-center text-xs text-gray-400 mt-4">
-                      🔒 Secure checkout via Stripe
-                    </p>
                   </div>
                 </motion.div>
               );
             })}
           </div>
-
-          {/* Bottom note */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-center text-gray-500 text-sm mt-12"
-          >
-            * Refund applies to agency service fees only. Government filing fees
-            are non-refundable. Conditions apply — see our{" "}
-            <a href="/terms" className="text-blue-600 hover:underline font-medium">
-              Terms of Service
-            </a>
-            .
-          </motion.p>
         </div>
       </section>
 
-      {/* Custom quote CTA */}
-      <section className="py-12 px-6 bg-white border-y border-gray-100">
-        <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="font-heading font-bold text-navy text-xl">
-              Not sure which package fits you?
-            </h3>
-            <p className="text-gray-500 mt-1">
-              Book a free 15-minute call — we'll recommend the right path for
-              your profile.
-            </p>
-          </div>
-          <a
-            href="/contact"
-            className="flex-shrink-0 flex items-center gap-2 bg-navy text-white font-heading font-bold px-7 py-4 rounded-2xl hover:bg-blue-800 hover:-translate-y-0.5 transition-all shadow-lg"
-          >
-            <Phone size={16} /> Free Consultation
-          </a>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-16 px-6 bg-[#F8FAFC]">
+      {/* FAQ Section */}
+      <section className="py-16 px-6 bg-white">
         <div className="max-w-3xl mx-auto">
-          <h2 className="font-heading font-bold text-navy text-3xl text-center mb-10">
-            Pricing FAQ
+          <h2 className="font-heading font-bold text-3xl text-navy text-center mb-12">
+            Frequently Asked Questions
           </h2>
-          <div className="space-y-4">
-            {faqs.map(({ q, a }, i) => (
-              <motion.div
-                key={q}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
-              >
-                <h3 className="font-heading font-bold text-navy mb-2">{q}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{a}</p>
-              </motion.div>
+          <div className="space-y-6">
+            {faqs.map((faq, i) => (
+              <div key={i} className="border border-gray-200 rounded-xl p-6">
+                <h3 className="font-heading font-bold text-navy mb-2">{faq.q}</h3>
+                <p className="text-gray-600 text-sm">{faq.a}</p>
+              </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 px-6 bg-navy">
+        <div className="max-w-4xl mx-auto text-center text-white">
+          <h2 className="font-heading font-bold text-3xl mb-4">
+            Not sure which package is right for you?
+          </h2>
+          <p className="text-white/80 mb-8">
+            Contact us for a free consultation and personalized recommendation
+          </p>
+          <button
+            onClick={() => window.open("https://wa.me/237650921917", "_blank")}
+            className="inline-flex items-center gap-2 bg-gold text-navy font-heading font-bold px-8 py-4 rounded-xl hover:bg-yellow-500 transition-colors"
+          >
+            <Phone size={20} />
+            Contact on WhatsApp
+          </button>
         </div>
       </section>
     </div>

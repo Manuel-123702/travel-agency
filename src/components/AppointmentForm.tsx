@@ -11,6 +11,8 @@ const schema = z.object({
   time: z.string().min(1, "Select a time"),
   meetingType: z.enum(["Google Meet", "Zoom", "WhatsApp", "Physical"]),
   title: z.string().min(3),
+  travelDate: z.string().optional(),
+  numberOfTravelers: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -52,6 +54,17 @@ export default function AppointmentForm({ onBooked }: { onBooked?: () => void })
         <div>
           <label className="block text-sm">Time</label>
           <input type="time" className="w-full p-2 border rounded" {...register("time")} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label className="block text-sm">Travel Date (Optional)</label>
+          <input type="date" className="w-full p-2 border rounded" {...register("travelDate")} />
+        </div>
+        <div>
+          <label className="block text-sm">Number of Travelers (Optional)</label>
+          <input type="number" min="1" className="w-full p-2 border rounded" {...register("numberOfTravelers")} />
         </div>
       </div>
 
