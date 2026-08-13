@@ -127,14 +127,31 @@ export default function ContactPage() {
             <p className="text-gray-500 text-sm mb-8">We respond within 24 hours on business days.</p>
 
             {submitted ? (
-              <div className="text-center py-12">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <CheckCircle size={40} className="text-green-600" />
+              <div className="text-center py-10 px-4 bg-emerald-50/50 rounded-3xl border border-emerald-100">
+                <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                  <CheckCircle size={44} />
                 </div>
-                <h3 className="font-heading font-bold text-2xl text-navy mb-3">Message Sent!</h3>
-                <p className="text-gray-500">
-                  Thank you for contacting us. We&apos;ll respond within 24 business hours.
+                <h3 className="font-heading font-bold text-2xl text-navy mb-2">Inquiry Received!</h3>
+                <p className="text-gray-600 text-sm max-w-md mx-auto mb-6 leading-relaxed">
+                  Thank you for contacting us, <strong className="text-navy">{form.name}</strong>. Our immigration advisors will review your request regarding <strong className="text-navy">{form.subject || "your inquiry"}</strong> and contact you within 24 hours.
                 </p>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-emerald-100">
+                  <a
+                    href={`mailto:tessohmanuel@gmail.com?subject=${encodeURIComponent("Inquiry: " + (form.subject || "Immigration"))}&body=${encodeURIComponent(`Hello Travel Agency team,\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nMessage: ${form.message}`)}`}
+                    className="w-full sm:w-auto px-5 py-3 bg-navy text-white text-xs font-heading font-bold rounded-xl hover:bg-blue-800 transition-all flex items-center justify-center gap-2 shadow-md"
+                  >
+                    <Mail size={15} /> Send Direct Email Backup
+                  </a>
+                  <a
+                    href={`https://wa.me/237650921917?text=${encodeURIComponent(`Hello! I submitted an inquiry for ${form.subject || "immigration"}. My name is ${form.name}.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto px-5 py-3 bg-[#25D366] text-white text-xs font-heading font-bold rounded-xl hover:bg-green-600 transition-all flex items-center justify-center gap-2 shadow-md"
+                  >
+                    <Send size={15} /> Chat on WhatsApp Now
+                  </a>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">

@@ -20,8 +20,8 @@ const services = [
   { label: "Student Immigration", href: "/services#student" },
   { label: "Work Permits",        href: "/services#work"    },
   { label: "Visitor Visa",        href: "/services#visitor" },
-  { label: "Profile Evaluation",  href: "/#evaluation"     },
-  { label: "Document Assistance", href: "/services"         },
+  { label: "Business Visa",       href: "/services/business-visa" },
+  { label: "Family Reunification",href: "/services/family-reunification" },
 ];
 
 const destinations = [

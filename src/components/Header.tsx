@@ -73,8 +73,8 @@ const navLinks = [
       { label: "Student Immigration", href: "/services#student" },
       { label: "Work Permits", href: "/services#work" },
       { label: "Visitor Visa", href: "/services#visitor" },
-      { label: "Business Visa", href: "/services#business" },
-      { label: "Family Reunification", href: "/services#family" },
+      { label: "Business Visa", href: "/services/business-visa" },
+      { label: "Family Reunification", href: "/services/family-reunification" },
     ],
   },
   {
@@ -97,7 +97,6 @@ const navLinks = [
       { label: "🏆 Success Stories", href: "/success-stories" },
       { label: "👥 Our Team", href: "/team" },
       { label: "📸 Gallery", href: "/gallery" },
-      { label: "📅 Events", href: "/events" },
       { label: "✍️ Careers", href: "/careers" },
       { label: "📰 Blog", href: "/blog" },
     ],
@@ -106,7 +105,7 @@ const navLinks = [
     label: "Resources",
     href: "/resources",
     children: [
-      { label: " Pricing", href: "/pricing" },
+      { label: "🏷️ Pricing", href: "/pricing" },
       { label: "❓ FAQ", href: "/faq" },
       { label: "📜 Privacy Policy", href: "/privacy-policy" },
       { label: "🍪 Cookie Policy", href: "/cookie-policy" },
@@ -263,7 +262,7 @@ export default function Header() {
             >
               <Link
                 href={link.href}
-                className={`relative flex items-center text-navy-700 font-semibold gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 group  ${isActive(link.href)
+                className={`relative flex items-center text-navy-700 gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 group  ${isActive(link.href)
                     ? "text-gold"
                     : scrolled
                       ? "text-navy hover:text-gold"
@@ -327,28 +326,14 @@ export default function Header() {
               {/* CMS button - only visible for admin email */}
               {isAdminEmail && (
                 <Link
-                  href="/admin-dashboard"
-                  className="bg-orange-400 hover:bg-orange-700 text-white font-bold px-8 py-3 rounded-lg animate-pulse"
+                  href="/studio"
+                  className="bg-gold hover:bg-yellow-400 text-navy font-heading font-bold px-6 py-2.5 rounded-full flex items-center gap-2 shadow-lg transition-all"
                 >
-                  <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
-                  ADMIN
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  CMS Studio
                 </Link>
               )}
-              {/* Atlas button - visible for all signed-in users */}
-              <Link
-                href="/dashboard"
-                className="relative group cursor-pointer mx-4"
-              >
-                <div
-                  className="cursor-pointer transition-all text-xl font-bold flex items-center gap-4 bg-blue-500 text-white px-8 py-3 rounded-lg
-                border-blue-600
-                border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
-                active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
-                >
-                   Atlas 🌍
-                </div>
-              </Link>
-              <div className="ml-4">
+              <div className="ml-2 w-20">
                 <UserButton afterSignOutUrl="/" />
               </div>
             </div>
@@ -473,37 +458,9 @@ export default function Header() {
                         className="text-sm font-bold bg-gradient-to-r from-gold to-yellow-500 text-navy px-4 py-2 rounded-full flex items-center gap-2"
                       >
                         <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                        CMS Admin
+                        CMS Studio
                       </Link>
                     )}
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setMobileOpen(false)}
-                      className="relative group cursor-pointer"
-                    >
-                      <div
-                        className="relative px-8 py-4 border-2 text-gold border-gold font-bold text-lg rounded-lg transform transition-all duration-300 group-hover:translate-y-1 group-hover:translate-x-1 shadow-[6px_6px_10px_rgba(0,0,0,0.6),-6px_-6px_10px_rgba(255,255,255,0.1)] group-hover:shadow-[8px_8px_15px_rgba(0,0,0,0.8),-8px_-8px_15px_rgba(255,255,255,0.15)]"
-                      >
-                        🌍 Atlas
-                      </div>
-
-                      <div
-                        className="absolute inset-0 border-2 border-dashed border-gold rounded-lg opacity-50 group-hover:opacity-100 transition-opacity duration-300"
-                      ></div>
-
-                      <div
-                        className="absolute -top-2 -right-2 w-4 h-4 bg-gold rounded-full animate-ping shadow-lg"
-                      ></div>
-                      <div
-                        className="absolute -bottom-2 -left-2 w-4 h-4 bg-gold rounded-full animate-ping shadow-lg"
-                      ></div>
-                      <div
-                        className="absolute top-1/3 left-3 w-3 h-3 bg-yellow-400 rounded-full animate-ping opacity-70"
-                      ></div>
-                      <div
-                        className="absolute top-2/3 right-3 w-3 h-3 bg-yellow-400 rounded-full animate-ping opacity-70"
-                      ></div>
-                    </Link>
                   </div>
                 ) : (
                   <>

@@ -33,7 +33,7 @@ const images = [
     category: "study",
     location: "Paris, France",
     date: "Feb 8, 2026",
-    img: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80",
+    img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80",
     height: "wide",
   },
   {
@@ -236,6 +236,9 @@ export default function GalleryPage() {
                 <img
                   src={img.img}
                   alt={img.title}
+                  onError={(e) => {
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80";
+                  }}
                   className={`w-full object-cover transition-transform duration-500 group-hover:scale-110 ${
                     img.height === "tall" ? "h-96" : img.height === "wide" ? "h-56" : "h-72"
                   }`}

@@ -217,3 +217,18 @@ Any Node.js hosting platform works. Run `npm run build` then `npm run start`.
 ## License
 
 © 2026 Travel Agency. All rights reserved.
+
+-i saw you fix the different packages and design it well in the pricing page but in the homepage the pricing is not the same do same same packages and design and also in the option list of the resources the pricing is not having an icon
+-remove/delete the tawk.to not important again and arrange the top buttom know and shift it down same level with the whatsapp button and abit right again 
+-in the section of (Find Your Best Immigration Path) increase question useful question even 10
+-in the section of testimonial re-design it professionally and increase the number of testimonial 6
+-in this section (Real People.Real Results.) on those card i'm seeing an arrowright if it is a blog create it page then so when i click it should react 
+-even the adnin-dashboard does pages you created some button there are just static not reacting when i click on it for those button of add ...
+-In the services page in your option list i'm seeing 5 but 3 are having their pages arenot havingg the Business visa and  family reunification create their pages too
+-I told you there are some card lacking images that is 
+in the gallery page on the study abroad you implemented 3 card the first is lacking his images
+-Delete/remove the event page not neccesary again
+-When your done, the website will be finish so it is the last modification your are doing like that. So when done take a view to everything informations etc you insert ensure those information are real and actually good up to date informations since it is a travel agency website you we whre building so i don't know everything 
+- Another problem the resend email you told it ia by a used of an API it should give but is not another way to implement that without using an APi so to receive email because when building the website w3agency and e-commerce the way i used there way no api so to have that result
+-remove/delete the admin-dashboard, the staff dashboard and the client portal dashboard not neccessary again. Only the sanity CMS dashboard should remain and should be accessible by entring /studio
+-and you see the protection i implement in the admin-dashboard do same in the sanity cms dashboard 

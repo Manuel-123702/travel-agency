@@ -8,7 +8,6 @@ import BackToTop from "@/components/BackToTop";
 import PageLoader from "@/components/PageLoader";
 import CookieConsent from "@/components/CookieConsent";
 import SocialProofToast from "@/components/SocialProofToast";
-import LiveChat from "@/components/LiveChat";
 
 export default function WebsiteLayout({ children }: { children: ReactNode }) {
   return (
@@ -28,8 +27,6 @@ export default function WebsiteLayout({ children }: { children: ReactNode }) {
       <CookieConsent />
 
       <SocialProofToast />
-
-      <LiveChat />
     </ClerkProvider>
   );
 }
