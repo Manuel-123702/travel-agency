@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
+import emailjs from "@emailjs/browser";
 import { db } from "@/lib/db";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,47 +33,43 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Send confirmation email using Resend
-    if (process.env.RESEND_API_KEY) {
+    // Send emails via EmailJS
+    const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+    const serviceId = process.env.EMAILJS_SERVICE_ID;
+    const subscriberTemplateId = process.env.EMAILJS_SUBSCRIBER_TEMPLATE_ID;
+    const adminTemplateId = process.env.EMAILJS_ADMIN_TEMPLATE_ID;
+
+    if (publicKey && serviceId && subscriberTemplateId && adminTemplateId) {
       try {
         // Send confirmation to subscriber
-        await resend.emails.send({
-          from: "Travel Agency <noreply@travelagency.com>",
-          to: email,
-          subject: "Welcome to Travel Agency Newsletter",
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <h1 style="color: #1a365d;">Welcome to Travel Agency!</h1>
-              <p style="color: #4a5568;">Thank you for subscribing to our newsletter.</p>
-              <p style="color: #4a5568;">You'll receive the latest immigration updates, policy changes, and success stories directly in your inbox.</p>
-              <p style="color: #4a5568;">If you didn't subscribe to this newsletter, please ignore this email.</p>
-              <p style="color: #718096; font-size: 12px;">Travel Agency - Your Gateway to International Success</p>
-            </div>
-          `,
-        });
+        await emailjs.send(
+          serviceId,
+          subscriberTemplateId,
+          {
+            to_email: email,
+            subscribed_date: new Date().toLocaleDateString(),
+          },
+          publicKey
+        );
 
         // Notify admin about new subscriber
-        await resend.emails.send({
-          from: "Travel Agency <noreply@travelagency.com>",
-          to: "tessohmanuel@gmail.com",
-          subject: "New Newsletter Subscriber",
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
-              <h2 style="color: #1a365d; margin-bottom: 20px;">New Newsletter Subscriber</h2>
-              <div style="background-color: #f7fafc; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-                <p style="margin: 5px 0;"><strong>Email:</strong> ${email}</p>
-                <p style="margin: 5px 0;"><strong>Subscribed:</strong> ${new Date().toLocaleString()}</p>
-              </div>
-              <p style="color: #718096; font-size: 12px; margin-top: 30px;">
-                This user subscribed via the Travel Agency website.
-              </p>
-            </div>
-          `,
-        });
-      } catch (emailError) {
-        console.error("Failed to send confirmation email:", emailError);
-        // Continue even if email fails - subscription is saved
+        await emailjs.send(
+          serviceId,
+          adminTemplateId,
+          {
+            subscriber_email: email,
+            subscribed_date: new Date().toLocaleString(),
+            admin_email: "tessohmanuel@gmail.com",
+          },
+          publicKey
+        );
+
+        console.log("✅ Newsletter emails sent successfully via EmailJS");
+      } catch (emailjsError) {
+        console.warn("EmailJS email dispatch failed:", emailjsError);
       }
+    } else {
+      console.warn("EmailJS credentials not configured in environment variables");
     }
 
     return NextResponse.json(

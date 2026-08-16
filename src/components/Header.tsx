@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Phone, Mail } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, Mail, LayoutDashboard } from "lucide-react";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 // ── Social icons with brand colors ──────────────────────────────────────────
@@ -327,10 +327,10 @@ export default function Header() {
               {isAdminEmail && (
                 <Link
                   href="/studio"
-                  className="bg-gold hover:bg-yellow-400 text-navy font-heading font-bold px-6 py-2.5 rounded-full flex items-center gap-2 shadow-lg transition-all"
+                  className="bg-gold hover:bg-yellow-400 text-navy font-heading font-bold px-4 py-2.5 rounded-full flex items-center gap-2 shadow-lg transition-all"
+                  title="CMS Studio"
                 >
-                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  CMS Studio
+                  <LayoutDashboard size={20} />
                 </Link>
               )}
               <div className="ml-2 w-20">
@@ -455,10 +455,10 @@ export default function Header() {
                       <Link
                         href="/studio"
                         onClick={() => setMobileOpen(false)}
-                        className="text-sm font-bold bg-gradient-to-r from-gold to-yellow-500 text-navy px-4 py-2 rounded-full flex items-center gap-2"
+                        className="text-sm font-bold bg-gradient-to-r from-gold to-yellow-500 text-navy px-3 py-2 rounded-full flex items-center gap-2"
+                        title="CMS Studio"
                       >
-                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                        CMS Studio
+                        <LayoutDashboard size={18} />
                       </Link>
                     )}
                   </div>
